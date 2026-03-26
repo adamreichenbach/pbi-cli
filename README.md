@@ -1,26 +1,14 @@
-<p align="center">
-  <img src="assets/header.svg" alt="pbi-cli" width="800"/>
-</p>
+<img src="assets/header.svg" alt="pbi-cli" width="800"/>
 
-<p align="center">
-  <strong>Give Claude Code the Power BI skills it needs.</strong><br/>
-  Install once, then just ask Claude to work with your semantic models.
-</p>
+**Give Claude Code the Power BI skills it needs.**
+Install once, then just ask Claude to work with your semantic models.
 
-<p align="center">
-  <a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/v/pbi-cli-tool?style=flat-square&color=f2c811&label=PyPI" alt="PyPI"></a>
-  <a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
-  <a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
-  <a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
-</p>
+<a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/v/pbi-cli-tool?style=flat-square&color=f2c811&label=PyPI" alt="PyPI"></a>
+<a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
+<a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
+<a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
 
-<p align="center">
-  <a href="#-get-started">Get Started</a> &bull;
-  <a href="#-skills">Skills</a> &bull;
-  <a href="#-all-commands">All Commands</a> &bull;
-  <a href="#-repl-mode">REPL Mode</a> &bull;
-  <a href="#-contributing">Contributing</a>
-</p>
+[Get Started](#get-started) &bull; [Skills](#skills) &bull; [All Commands](#all-commands) &bull; [REPL Mode](#repl-mode) &bull; [Contributing](#contributing)
 
 ---
 
