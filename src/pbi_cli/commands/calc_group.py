@@ -31,10 +31,14 @@ def create(ctx: PbiContext, name: str, description: str | None, precedence: int 
         required={"name": name},
         optional={"description": description, "calculationGroupPrecedence": precedence},
     )
-    run_tool(ctx, "calculation_group_operations", {
-        "operation": "CreateGroup",
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "calculation_group_operations",
+        {
+            "operation": "CreateGroup",
+            "definitions": [definition],
+        },
+    )
 
 
 @calc_group.command()
@@ -50,10 +54,14 @@ def delete(ctx: PbiContext, name: str) -> None:
 @pass_context
 def list_items(ctx: PbiContext, group_name: str) -> None:
     """List calculation items in a group."""
-    run_tool(ctx, "calculation_group_operations", {
-        "operation": "ListItems",
-        "calculationGroupName": group_name,
-    })
+    run_tool(
+        ctx,
+        "calculation_group_operations",
+        {
+            "operation": "ListItems",
+            "calculationGroupName": group_name,
+        },
+    )
 
 
 @calc_group.command(name="create-item")
@@ -70,8 +78,12 @@ def create_item(
         required={"name": item_name, "expression": expression},
         optional={"ordinal": ordinal},
     )
-    run_tool(ctx, "calculation_group_operations", {
-        "operation": "CreateItem",
-        "calculationGroupName": group,
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "calculation_group_operations",
+        {
+            "operation": "CreateItem",
+            "calculationGroupName": group,
+            "definitions": [definition],
+        },
+    )

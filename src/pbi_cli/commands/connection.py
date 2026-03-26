@@ -140,10 +140,13 @@ def disconnect(ctx: PbiContext, name: str | None) -> None:
     repl = ctx.repl_mode
     client = get_client(repl_mode=repl)
     try:
-        client.call_tool("connection_operations", {
-            "operation": "Disconnect",
-            "connectionName": target,
-        })
+        client.call_tool(
+            "connection_operations",
+            {
+                "operation": "Disconnect",
+                "connectionName": target,
+            },
+        )
 
         store = remove_connection(store, target)
         save_connections(store)
@@ -173,6 +176,7 @@ def connections_list(ctx: PbiContext) -> None:
 
     if ctx.json_output:
         from dataclasses import asdict
+
         data = {
             "last_used": store.last_used,
             "connections": [asdict(c) for c in store.connections.values()],
@@ -205,14 +209,19 @@ def connections_last(ctx: PbiContext) -> None:
 
     if ctx.json_output:
         from dataclasses import asdict
+
         print_json(asdict(conn))
     else:
         from pbi_cli.core.output import print_key_value
-        print_key_value("Active Connection", {
-            "Name": conn.name,
-            "Data Source": conn.data_source,
-            "Catalog": conn.initial_catalog,
-        })
+
+        print_key_value(
+            "Active Connection",
+            {
+                "Name": conn.name,
+                "Data Source": conn.data_source,
+                "Catalog": conn.initial_catalog,
+            },
+        )
 
 
 def _auto_name(data_source: str) -> str:

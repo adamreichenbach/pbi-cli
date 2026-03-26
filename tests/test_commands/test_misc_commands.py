@@ -15,9 +15,7 @@ def test_column_list(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "column", "list", "--table", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "column", "list", "--table", "Sales"])
     assert result.exit_code == 0
 
 
@@ -62,9 +60,7 @@ def test_partition_list(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "partition", "list", "--table", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "partition", "list", "--table", "Sales"])
     assert result.exit_code == 0
 
 
@@ -82,9 +78,7 @@ def test_hierarchy_list(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "hierarchy", "list", "--table", "Date"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "hierarchy", "list", "--table", "Date"])
     assert result.exit_code == 0
 
 

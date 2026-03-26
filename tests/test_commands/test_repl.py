@@ -62,6 +62,7 @@ def test_repl_execute_line_empty() -> None:
 def test_repl_execute_line_exit() -> None:
     repl = PbiRepl()
     import pytest
+
     with pytest.raises(EOFError):
         repl._execute_line("exit")
 
@@ -69,6 +70,7 @@ def test_repl_execute_line_exit() -> None:
 def test_repl_execute_line_quit() -> None:
     repl = PbiRepl()
     import pytest
+
     with pytest.raises(EOFError):
         repl._execute_line("quit")
 

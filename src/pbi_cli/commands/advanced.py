@@ -15,6 +15,7 @@ def advanced() -> None:
 
 # --- Culture ---
 
+
 @advanced.group()
 def culture() -> None:
     """Manage model cultures (locales)."""
@@ -44,6 +45,7 @@ def culture_delete(ctx: PbiContext, name: str) -> None:
 
 
 # --- Translation ---
+
 
 @advanced.group()
 def translation() -> None:
@@ -82,13 +84,18 @@ def create(
             "translatedDescription": translated_description,
         },
     )
-    run_tool(ctx, "object_translation_operations", {
-        "operation": "Create",
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "object_translation_operations",
+        {
+            "operation": "Create",
+            "definitions": [definition],
+        },
+    )
 
 
 # --- Function ---
+
 
 @advanced.group()
 def function() -> None:
@@ -108,13 +115,18 @@ def function_list(ctx: PbiContext) -> None:
 @pass_context
 def function_create(ctx: PbiContext, name: str, expression: str) -> None:
     """Create a function."""
-    run_tool(ctx, "function_operations", {
-        "operation": "Create",
-        "definitions": [{"name": name, "expression": expression}],
-    })
+    run_tool(
+        ctx,
+        "function_operations",
+        {
+            "operation": "Create",
+            "definitions": [{"name": name, "expression": expression}],
+        },
+    )
 
 
 # --- Query Group ---
+
 
 @advanced.group(name="query-group")
 def query_group() -> None:

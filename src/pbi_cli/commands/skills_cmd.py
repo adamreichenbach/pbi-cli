@@ -68,15 +68,12 @@ def skills_install(ctx: object, skill_name: str | None, force: bool) -> None:
         return
 
     to_install = (
-        {skill_name: bundled[skill_name]}
-        if skill_name and skill_name in bundled
-        else bundled
+        {skill_name: bundled[skill_name]} if skill_name and skill_name in bundled else bundled
     )
 
     if skill_name and skill_name not in bundled:
         raise click.ClickException(
-            f"Unknown skill '{skill_name}'. "
-            f"Available: {', '.join(sorted(bundled))}"
+            f"Unknown skill '{skill_name}'. Available: {', '.join(sorted(bundled))}"
         )
 
     installed_count = 0

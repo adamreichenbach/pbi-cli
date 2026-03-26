@@ -30,11 +30,15 @@ def hierarchy_list(ctx: PbiContext, table: str | None) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str, table: str) -> None:
     """Get hierarchy details."""
-    run_tool(ctx, "user_hierarchy_operations", {
-        "operation": "Get",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "user_hierarchy_operations",
+        {
+            "operation": "Get",
+            "name": name,
+            "tableName": table,
+        },
+    )
 
 
 @hierarchy.command()
@@ -57,8 +61,12 @@ def create(ctx: PbiContext, name: str, table: str, description: str | None) -> N
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a hierarchy."""
-    run_tool(ctx, "user_hierarchy_operations", {
-        "operation": "Delete",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "user_hierarchy_operations",
+        {
+            "operation": "Delete",
+            "name": name,
+            "tableName": table,
+        },
+    )

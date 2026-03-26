@@ -53,8 +53,12 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def refresh(ctx: PbiContext, name: str, table: str) -> None:
     """Refresh a partition."""
-    run_tool(ctx, "partition_operations", {
-        "operation": "Refresh",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "partition_operations",
+        {
+            "operation": "Refresh",
+            "name": name,
+            "tableName": table,
+        },
+    )

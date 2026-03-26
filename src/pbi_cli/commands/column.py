@@ -89,12 +89,16 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
     """Rename a column."""
-    run_tool(ctx, "column_operations", {
-        "operation": "Rename",
-        "name": old_name,
-        "newName": new_name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "column_operations",
+        {
+            "operation": "Rename",
+            "name": old_name,
+            "newName": new_name,
+            "tableName": table,
+        },
+    )
 
 
 @column.command(name="export-tmdl")
@@ -103,8 +107,12 @@ def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
 @pass_context
 def export_tmdl(ctx: PbiContext, name: str, table: str) -> None:
     """Export a column as TMDL."""
-    run_tool(ctx, "column_operations", {
-        "operation": "ExportTMDL",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "column_operations",
+        {
+            "operation": "ExportTMDL",
+            "name": name,
+            "tableName": table,
+        },
+    )

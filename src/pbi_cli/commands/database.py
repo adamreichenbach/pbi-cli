@@ -25,10 +25,14 @@ def database_list(ctx: PbiContext) -> None:
 @pass_context
 def import_tmdl(ctx: PbiContext, folder_path: str) -> None:
     """Import a model from a TMDL folder."""
-    run_tool(ctx, "database_operations", {
-        "operation": "ImportFromTmdlFolder",
-        "tmdlFolderPath": folder_path,
-    })
+    run_tool(
+        ctx,
+        "database_operations",
+        {
+            "operation": "ImportFromTmdlFolder",
+            "tmdlFolderPath": folder_path,
+        },
+    )
 
 
 @database.command(name="export-tmdl")
@@ -36,10 +40,14 @@ def import_tmdl(ctx: PbiContext, folder_path: str) -> None:
 @pass_context
 def export_tmdl(ctx: PbiContext, folder_path: str) -> None:
     """Export the model to a TMDL folder."""
-    run_tool(ctx, "database_operations", {
-        "operation": "ExportToTmdlFolder",
-        "tmdlFolderPath": folder_path,
-    })
+    run_tool(
+        ctx,
+        "database_operations",
+        {
+            "operation": "ExportToTmdlFolder",
+            "tmdlFolderPath": folder_path,
+        },
+    )
 
 
 @database.command(name="export-tmsl")
@@ -62,7 +70,11 @@ def deploy(ctx: PbiContext, workspace: str, new_name: str | None, tenant: str | 
     if tenant:
         deploy_request["targetTenantName"] = tenant
 
-    run_tool(ctx, "database_operations", {
-        "operation": "DeployToFabric",
-        "deployToFabricRequest": deploy_request,
-    })
+    run_tool(
+        ctx,
+        "database_operations",
+        {
+            "operation": "DeployToFabric",
+            "deployToFabricRequest": deploy_request,
+        },
+    )

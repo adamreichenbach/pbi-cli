@@ -26,7 +26,10 @@ pass_context = click.make_pass_decorator(PbiContext, ensure=True)
 
 @click.group()
 @click.option(
-    "--json", "json_output", is_flag=True, default=False,
+    "--json",
+    "json_output",
+    is_flag=True,
+    default=False,
     help="Output raw JSON for agent consumption.",
 )
 @click.option(

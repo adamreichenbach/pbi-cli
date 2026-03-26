@@ -37,7 +37,8 @@ def get(ctx: PbiContext, name: str) -> None:
 @click.option(
     "--cross-filter",
     type=click.Choice(["OneDirection", "BothDirections", "Automatic"]),
-    default="OneDirection", help="Cross-filtering behavior.",
+    default="OneDirection",
+    help="Cross-filtering behavior.",
 )
 @click.option("--active/--inactive", default=True, help="Whether the relationship is active.")
 @pass_context

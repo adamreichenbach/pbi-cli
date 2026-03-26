@@ -31,9 +31,7 @@ def test_resolve_binary_env_var_missing_file(monkeypatch: pytest.MonkeyPatch) ->
         resolve_binary()
 
 
-def test_resolve_binary_not_found(
-    tmp_config: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_resolve_binary_not_found(tmp_config: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PBI_MCP_BINARY", raising=False)
     with patch("pbi_cli.core.binary_manager.find_vscode_extension_binary", return_value=None):
         with pytest.raises(FileNotFoundError, match="not found"):
@@ -46,8 +44,10 @@ def test_find_managed_binary(tmp_config: Path) -> None:
     fake_bin = bin_dir / "powerbi-modeling-mcp.exe"
     fake_bin.write_text("fake", encoding="utf-8")
 
-    with patch("pbi_cli.core.binary_manager.PBI_CLI_HOME", tmp_config), \
-         patch("pbi_cli.core.binary_manager.binary_name", return_value="powerbi-modeling-mcp.exe"):
+    with (
+        patch("pbi_cli.core.binary_manager.PBI_CLI_HOME", tmp_config),
+        patch("pbi_cli.core.binary_manager.binary_name", return_value="powerbi-modeling-mcp.exe"),
+    ):
         result = _find_managed_binary()
         assert result is not None
         assert result.name == "powerbi-modeling-mcp.exe"

@@ -16,26 +16,34 @@ from pbi_cli.utils.platform import (
 
 
 def test_detect_platform_windows() -> None:
-    with patch("pbi_cli.utils.platform.platform.system", return_value="Windows"), \
-         patch("pbi_cli.utils.platform.platform.machine", return_value="AMD64"):
+    with (
+        patch("pbi_cli.utils.platform.platform.system", return_value="Windows"),
+        patch("pbi_cli.utils.platform.platform.machine", return_value="AMD64"),
+    ):
         assert detect_platform() == "win32-x64"
 
 
 def test_detect_platform_macos_arm() -> None:
-    with patch("pbi_cli.utils.platform.platform.system", return_value="Darwin"), \
-         patch("pbi_cli.utils.platform.platform.machine", return_value="arm64"):
+    with (
+        patch("pbi_cli.utils.platform.platform.system", return_value="Darwin"),
+        patch("pbi_cli.utils.platform.platform.machine", return_value="arm64"),
+    ):
         assert detect_platform() == "darwin-arm64"
 
 
 def test_detect_platform_linux_x64() -> None:
-    with patch("pbi_cli.utils.platform.platform.system", return_value="Linux"), \
-         patch("pbi_cli.utils.platform.platform.machine", return_value="x86_64"):
+    with (
+        patch("pbi_cli.utils.platform.platform.system", return_value="Linux"),
+        patch("pbi_cli.utils.platform.platform.machine", return_value="x86_64"),
+    ):
         assert detect_platform() == "linux-x64"
 
 
 def test_detect_platform_unsupported() -> None:
-    with patch("pbi_cli.utils.platform.platform.system", return_value="FreeBSD"), \
-         patch("pbi_cli.utils.platform.platform.machine", return_value="sparc"):
+    with (
+        patch("pbi_cli.utils.platform.platform.system", return_value="FreeBSD"),
+        patch("pbi_cli.utils.platform.platform.machine", return_value="sparc"),
+    ):
         with pytest.raises(ValueError, match="Unsupported platform"):
             detect_platform()
 
@@ -84,8 +92,10 @@ def test_find_vscode_extension_binary_found(tmp_path: Path) -> None:
     fake_bin = server_dir / "powerbi-modeling-mcp.exe"
     fake_bin.write_text("fake", encoding="utf-8")
 
-    with patch("pbi_cli.utils.platform.Path.home", return_value=tmp_path), \
-         patch("pbi_cli.utils.platform.binary_name", return_value="powerbi-modeling-mcp.exe"):
+    with (
+        patch("pbi_cli.utils.platform.Path.home", return_value=tmp_path),
+        patch("pbi_cli.utils.platform.binary_name", return_value="powerbi-modeling-mcp.exe"),
+    ):
         result = find_vscode_extension_binary()
         assert result is not None
         assert result.name == "powerbi-modeling-mcp.exe"

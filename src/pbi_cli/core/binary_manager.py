@@ -180,7 +180,7 @@ def download_and_extract(version: str | None = None) -> Path:
                 raise RuntimeError("No server/ directory found in VSIX package")
 
             for file_name in server_files:
-                rel_path = file_name[len(server_prefix):]
+                rel_path = file_name[len(server_prefix) :]
                 if not rel_path:
                     continue
                 target_path = dest_dir / rel_path

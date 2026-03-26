@@ -25,9 +25,7 @@ def test_measure_list_with_table_filter(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "measure", "list", "--table", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "measure", "list", "--table", "Sales"])
     assert result.exit_code == 0
 
 
@@ -36,9 +34,7 @@ def test_measure_get(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "measure", "get", "Total Sales", "--table", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "measure", "get", "Total Sales", "--table", "Sales"])
     assert result.exit_code == 0
     assert "Total Sales" in result.output
 
@@ -48,11 +44,19 @@ def test_measure_create(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "measure", "create", "Revenue",
-        "-e", "SUM(Sales[Revenue])",
-        "-t", "Sales",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "measure",
+            "create",
+            "Revenue",
+            "-e",
+            "SUM(Sales[Revenue])",
+            "-t",
+            "Sales",
+        ],
+    )
     assert result.exit_code == 0
 
 
@@ -61,11 +65,19 @@ def test_measure_update(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "measure", "update", "Revenue",
-        "-t", "Sales",
-        "-e", "SUM(Sales[Amount])",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "measure",
+            "update",
+            "Revenue",
+            "-t",
+            "Sales",
+            "-e",
+            "SUM(Sales[Amount])",
+        ],
+    )
     assert result.exit_code == 0
 
 
@@ -74,9 +86,17 @@ def test_measure_delete(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "measure", "delete", "Revenue", "-t", "Sales",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "measure",
+            "delete",
+            "Revenue",
+            "-t",
+            "Sales",
+        ],
+    )
     assert result.exit_code == 0
 
 
@@ -85,9 +105,18 @@ def test_measure_rename(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "measure", "rename", "OldName", "NewName", "-t", "Sales",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "measure",
+            "rename",
+            "OldName",
+            "NewName",
+            "-t",
+            "Sales",
+        ],
+    )
     assert result.exit_code == 0
 
 
@@ -96,9 +125,17 @@ def test_measure_move(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "measure", "move", "Revenue",
-        "-t", "Sales",
-        "--to-table", "Finance",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "measure",
+            "move",
+            "Revenue",
+            "-t",
+            "Sales",
+            "--to-table",
+            "Finance",
+        ],
+    )
     assert result.exit_code == 0

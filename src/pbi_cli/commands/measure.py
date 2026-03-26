@@ -32,11 +32,15 @@ def measure_list(ctx: PbiContext, table: str | None) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str, table: str) -> None:
     """Get details of a specific measure."""
-    run_tool(ctx, "measure_operations", {
-        "operation": "Get",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Get",
+            "name": name,
+            "tableName": table,
+        },
+    )
 
 
 @measure.command()
@@ -71,10 +75,14 @@ def create(
             "isHidden": hidden if hidden else None,
         },
     )
-    run_tool(ctx, "measure_operations", {
-        "operation": "Create",
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Create",
+            "definitions": [definition],
+        },
+    )
 
 
 @measure.command()
@@ -107,10 +115,14 @@ def update(
             "displayFolder": folder,
         },
     )
-    run_tool(ctx, "measure_operations", {
-        "operation": "Update",
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Update",
+            "definitions": [definition],
+        },
+    )
 
 
 @measure.command()
@@ -119,11 +131,15 @@ def update(
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a measure."""
-    run_tool(ctx, "measure_operations", {
-        "operation": "Delete",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Delete",
+            "name": name,
+            "tableName": table,
+        },
+    )
 
 
 @measure.command()
@@ -133,12 +149,16 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
     """Rename a measure."""
-    run_tool(ctx, "measure_operations", {
-        "operation": "Rename",
-        "name": old_name,
-        "newName": new_name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Rename",
+            "name": old_name,
+            "newName": new_name,
+            "tableName": table,
+        },
+    )
 
 
 @measure.command()
@@ -148,12 +168,16 @@ def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
 @pass_context
 def move(ctx: PbiContext, name: str, table: str, to_table: str) -> None:
     """Move a measure to a different table."""
-    run_tool(ctx, "measure_operations", {
-        "operation": "Move",
-        "name": name,
-        "tableName": table,
-        "destinationTableName": to_table,
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "Move",
+            "name": name,
+            "tableName": table,
+            "destinationTableName": to_table,
+        },
+    )
 
 
 @measure.command(name="export-tmdl")
@@ -162,8 +186,12 @@ def move(ctx: PbiContext, name: str, table: str, to_table: str) -> None:
 @pass_context
 def export_tmdl(ctx: PbiContext, name: str, table: str) -> None:
     """Export a measure as TMDL."""
-    run_tool(ctx, "measure_operations", {
-        "operation": "ExportTMDL",
-        "name": name,
-        "tableName": table,
-    })
+    run_tool(
+        ctx,
+        "measure_operations",
+        {
+            "operation": "ExportTMDL",
+            "name": name,
+            "tableName": table,
+        },
+    )

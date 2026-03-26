@@ -36,9 +36,7 @@ def test_connect_fabric(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["connect-fabric", "-w", "My Workspace", "-m", "My Model"]
-    )
+    result = cli_runner.invoke(cli, ["connect-fabric", "-w", "My Workspace", "-m", "My Model"])
     assert result.exit_code == 0
     assert patch_get_client.calls[0][1]["operation"] == "ConnectFabric"
 

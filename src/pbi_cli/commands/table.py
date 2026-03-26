@@ -33,8 +33,10 @@ def get(ctx: PbiContext, name: str) -> None:
 @table.command()
 @click.argument("name")
 @click.option(
-    "--mode", type=click.Choice(["Import", "DirectQuery", "Dual"]),
-    default="Import", help="Table mode.",
+    "--mode",
+    type=click.Choice(["Import", "DirectQuery", "Dual"]),
+    default="Import",
+    help="Table mode.",
 )
 @click.option("--m-expression", default=None, help="M/Power Query expression (use - for stdin).")
 @click.option("--dax-expression", default=None, help="DAX expression for calculated tables.")
@@ -69,10 +71,14 @@ def create(
             "isHidden": hidden if hidden else None,
         },
     )
-    run_tool(ctx, "table_operations", {
-        "operation": "Create",
-        "definitions": [definition],
-    })
+    run_tool(
+        ctx,
+        "table_operations",
+        {
+            "operation": "Create",
+            "definitions": [definition],
+        },
+    )
 
 
 @table.command()
@@ -86,18 +92,24 @@ def delete(ctx: PbiContext, name: str) -> None:
 @table.command()
 @click.argument("name")
 @click.option(
-    "--type", "refresh_type",
+    "--type",
+    "refresh_type",
     type=click.Choice(["Full", "Automatic", "Calculate", "DataOnly"]),
-    default="Automatic", help="Refresh type.",
+    default="Automatic",
+    help="Refresh type.",
 )
 @pass_context
 def refresh(ctx: PbiContext, name: str, refresh_type: str) -> None:
     """Refresh a table."""
-    run_tool(ctx, "table_operations", {
-        "operation": "Refresh",
-        "name": name,
-        "refreshType": refresh_type,
-    })
+    run_tool(
+        ctx,
+        "table_operations",
+        {
+            "operation": "Refresh",
+            "name": name,
+            "refreshType": refresh_type,
+        },
+    )
 
 
 @table.command()
@@ -122,11 +134,15 @@ def export_tmdl(ctx: PbiContext, name: str) -> None:
 @pass_context
 def rename(ctx: PbiContext, old_name: str, new_name: str) -> None:
     """Rename a table."""
-    run_tool(ctx, "table_operations", {
-        "operation": "Rename",
-        "name": old_name,
-        "newName": new_name,
-    })
+    run_tool(
+        ctx,
+        "table_operations",
+        {
+            "operation": "Rename",
+            "name": old_name,
+            "newName": new_name,
+        },
+    )
 
 
 @table.command(name="mark-date")
@@ -135,8 +151,12 @@ def rename(ctx: PbiContext, old_name: str, new_name: str) -> None:
 @pass_context
 def mark_date_table(ctx: PbiContext, name: str, date_column: str) -> None:
     """Mark a table as a date table."""
-    run_tool(ctx, "table_operations", {
-        "operation": "MarkAsDateTable",
-        "name": name,
-        "dateColumn": date_column,
-    })
+    run_tool(
+        ctx,
+        "table_operations",
+        {
+            "operation": "MarkAsDateTable",
+            "name": name,
+            "dateColumn": date_column,
+        },
+    )

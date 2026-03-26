@@ -29,9 +29,7 @@ def test_dax_execute_from_file(
     query_file = tmp_path / "query.dax"
     query_file.write_text("EVALUATE Sales", encoding="utf-8")
 
-    result = cli_runner.invoke(
-        cli, ["--json", "dax", "execute", "--file", str(query_file)]
-    )
+    result = cli_runner.invoke(cli, ["--json", "dax", "execute", "--file", str(query_file)])
     assert result.exit_code == 0
 
 
@@ -49,9 +47,7 @@ def test_dax_validate(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "dax", "validate", "EVALUATE Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "dax", "validate", "EVALUATE Sales"])
     assert result.exit_code == 0
     assert "isValid" in result.output
 

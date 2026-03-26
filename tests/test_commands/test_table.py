@@ -34,9 +34,17 @@ def test_table_create(
     patch_get_client: MockPbiMcpClient,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, [
-        "--json", "table", "create", "NewTable", "--mode", "Import",
-    ])
+    result = cli_runner.invoke(
+        cli,
+        [
+            "--json",
+            "table",
+            "create",
+            "NewTable",
+            "--mode",
+            "Import",
+        ],
+    )
     assert result.exit_code == 0
 
 
