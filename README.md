@@ -3,7 +3,6 @@
 **Give Claude Code the Power BI skills it needs.**
 Install once, then just ask Claude to work with your semantic models.
 
-<a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/v/pbi-cli-tool?style=flat-square&color=f2c811&label=PyPI" alt="PyPI"></a>
 <a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
 <a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
 <a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
