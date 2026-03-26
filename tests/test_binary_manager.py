@@ -33,7 +33,10 @@ def test_resolve_binary_env_var_missing_file(monkeypatch: pytest.MonkeyPatch) ->
 
 def test_resolve_binary_not_found(tmp_config: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PBI_MCP_BINARY", raising=False)
-    with patch("pbi_cli.core.binary_manager.find_vscode_extension_binary", return_value=None):
+    with (
+        patch("pbi_cli.core.binary_manager.find_vscode_extension_binary", return_value=None),
+        patch("pbi_cli.core.binary_manager.PBI_CLI_HOME", tmp_config),
+    ):
         with pytest.raises(FileNotFoundError, match="not found"):
             resolve_binary()
 
@@ -86,7 +89,10 @@ def test_binary_source_vscode() -> None:
 
 def test_get_binary_info_not_found(tmp_config: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PBI_MCP_BINARY", raising=False)
-    with patch("pbi_cli.core.binary_manager.find_vscode_extension_binary", return_value=None):
+    with (
+        patch("pbi_cli.core.binary_manager.find_vscode_extension_binary", return_value=None),
+        patch("pbi_cli.core.binary_manager.PBI_CLI_HOME", tmp_config),
+    ):
         info = get_binary_info()
         assert info["binary_path"] == "not found"
         assert info["version"] == "none"
