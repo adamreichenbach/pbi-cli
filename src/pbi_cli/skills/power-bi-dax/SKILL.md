@@ -11,7 +11,7 @@ Execute and validate DAX queries against connected Power BI models.
 ## Prerequisites
 
 ```bash
-pip install pbi-cli
+pip install pbi-cli-tool
 pbi setup
 pbi connect --data-source localhost:54321
 ```

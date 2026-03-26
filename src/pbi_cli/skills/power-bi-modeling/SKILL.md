@@ -6,12 +6,12 @@ tools: pbi-cli
 
 # Power BI Modeling Skill
 
-Use pbi-cli to manage semantic model structure. Requires `pip install pbi-cli` and `pbi setup`.
+Use pbi-cli to manage semantic model structure. Requires `pip install pbi-cli-tool` and `pbi setup`.
 
 ## Prerequisites
 
 ```bash
-pip install pbi-cli
+pip install pbi-cli-tool
 pbi setup
 pbi connect --data-source localhost:54321
 ```

@@ -11,7 +11,7 @@ Manage model lifecycle with TMDL export/import and Fabric workspace deployment.
 ## Prerequisites
 
 ```bash
-pip install pbi-cli
+pip install pbi-cli-tool
 pbi setup
 ```
 

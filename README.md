@@ -5,7 +5,7 @@
 pbi-cli wraps Microsoft's Power BI MCP server so you can manage semantic models from the terminal. MCP tool schemas consume ~4,000+ tokens in an AI agent's context window; a `pbi` command uses ~30. One install, no separate MCP server configuration required.
 
 ```
-pip install pbi-cli
+pip install pbi-cli-tool
 pbi setup
 pbi connect --data-source localhost:54321
 pbi measure list
@@ -16,14 +16,14 @@ pbi measure list
 | Approach | Context cost | Setup |
 |----------|-------------|-------|
 | Raw MCP server | ~4,000 tokens per tool schema | Manual config per project |
-| **pbi-cli** | **~30 tokens per command** | **`pip install pbi-cli`** |
+| **pbi-cli** | **~30 tokens per command** | **`pip install pbi-cli-tool`** |
 
 Designed for Claude Code and other AI agents, but works great for humans too. Use `--json` for machine-readable output or enjoy Rich-formatted tables by default.
 
 ## Installation
 
 ```bash
-pip install pbi-cli
+pip install pbi-cli-tool
 ```
 
 ### Prerequisites
