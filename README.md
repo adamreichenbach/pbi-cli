@@ -41,11 +41,13 @@ Install and set up pbi-cli from https://github.com/MinaSaad1/pbi-cli.git
 **Or install manually (two commands):**
 
 ```bash
-pipx install pbi-cli-tool           # 1. Install (handles PATH automatically)
-pbi connect -d localhost:54321      # 2. Connect (auto-downloads binary + installs skills)
+pipx install pbi-cli-tool    # 1. Install (handles PATH automatically)
+pbi connect                  # 2. Auto-detects Power BI Desktop, downloads binary, installs skills
 ```
 
-That's it. The first `connect` automatically downloads the MCP binary and installs Claude Code skills. Open Claude Code and start asking.
+That's it. Open Power BI Desktop with a `.pbix` file, run `pbi connect`, and everything is set up automatically. Open Claude Code and start asking.
+
+You can also specify the port manually: `pbi connect -d localhost:54321`
 
 > **Requires:** Python 3.10+ and Power BI Desktop (local) or a Fabric workspace (cloud).
 

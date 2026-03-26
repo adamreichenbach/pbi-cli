@@ -23,7 +23,12 @@ from pbi_cli.main import PbiContext, pass_context
 
 
 @click.command()
-@click.option("--data-source", "-d", required=True, help="Data source (e.g., localhost:54321).")
+@click.option(
+    "--data-source",
+    "-d",
+    default=None,
+    help="Data source (e.g., localhost:54321). Auto-detected if omitted.",
+)
 @click.option("--catalog", "-C", default="", help="Initial catalog / dataset name.")
 @click.option(
     "--name", "-n", default=None, help="Name for this connection (auto-generated if omitted)."
@@ -33,10 +38,20 @@ from pbi_cli.main import PbiContext, pass_context
 )
 @pass_context
 def connect(
-    ctx: PbiContext, data_source: str, catalog: str, name: str | None, connection_string: str
+    ctx: PbiContext,
+    data_source: str | None,
+    catalog: str,
+    name: str | None,
+    connection_string: str,
 ) -> None:
-    """Connect to a Power BI instance via data source."""
+    """Connect to a Power BI instance via data source.
+
+    If --data-source is omitted, auto-detects a running Power BI Desktop instance.
+    """
     _ensure_ready()
+
+    if data_source is None:
+        data_source = _auto_discover_data_source()
 
     conn_name = name or _auto_name(data_source)
 
@@ -231,6 +246,27 @@ def connections_last(ctx: PbiContext) -> None:
                 "Catalog": conn.initial_catalog,
             },
         )
+
+
+def _auto_discover_data_source() -> str:
+    """Auto-detect a running Power BI Desktop instance.
+
+    Raises click.ClickException if no instance is found.
+    """
+    from pbi_cli.core.output import print_info
+    from pbi_cli.utils.platform import discover_pbi_port
+
+    port = discover_pbi_port()
+    if port is None:
+        raise click.ClickException(
+            "No running Power BI Desktop instance found.\n"
+            "  1. Open Power BI Desktop and load a .pbix file\n"
+            "  2. Run 'pbi connect' again, or specify manually: pbi connect -d localhost:<port>"
+        )
+
+    data_source = f"localhost:{port}"
+    print_info(f"Auto-detected Power BI Desktop on {data_source}")
+    return data_source
 
 
 def _ensure_ready() -> None:

@@ -57,6 +57,46 @@ def ensure_executable(path: Path) -> None:
         path.chmod(current | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 
+def discover_pbi_port() -> int | None:
+    """Find the port of a running Power BI Desktop instance.
+
+    Power BI Desktop writes its XMLA port to a file at:
+    %LOCALAPPDATA%/Microsoft/Power BI Desktop/AnalysisServicesWorkspaces/
+        AnalysisServicesWorkspace_*/Data/msmdsrv.port.txt
+
+    Returns the port number, or None if Power BI Desktop is not running.
+    """
+    if platform.system() != "Windows":
+        return None
+
+    import os
+
+    local_app_data = os.environ.get("LOCALAPPDATA", "")
+    if not local_app_data:
+        return None
+
+    workspaces_dir = (
+        Path(local_app_data) / "Microsoft" / "Power BI Desktop" / "AnalysisServicesWorkspaces"
+    )
+    if not workspaces_dir.exists():
+        return None
+
+    # Find all port files, pick the most recently modified (latest instance)
+    port_files = sorted(
+        workspaces_dir.glob("*/Data/msmdsrv.port.txt"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    if not port_files:
+        return None
+
+    try:
+        port_text = port_files[0].read_text(encoding="utf-8").strip()
+        return int(port_text)
+    except (ValueError, OSError):
+        return None
+
+
 def find_vscode_extension_binary() -> Path | None:
     """Look for the binary in the VS Code extension install directory.
 
