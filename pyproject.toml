@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbi-cli-tool"
-version = "0.2.0"
+version = "1.0.0"
 description = "CLI for Power BI semantic models - wraps the Power BI MCP server for token-efficient AI agent usage"
 readme = "README.md"
 license = {text = "MIT"}
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["power-bi", "cli", "mcp", "semantic-model", "dax", "claude-code"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
