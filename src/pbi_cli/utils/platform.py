@@ -73,18 +73,12 @@ def _workspace_candidates() -> list[Path]:
     local_app_data = os.environ.get("LOCALAPPDATA", "")
     if local_app_data:
         dirs.append(
-            Path(local_app_data)
-            / "Microsoft"
-            / "Power BI Desktop"
-            / "AnalysisServicesWorkspaces"
+            Path(local_app_data) / "Microsoft" / "Power BI Desktop" / "AnalysisServicesWorkspaces"
         )
 
     user_profile = Path.home()
     dirs.append(
-        user_profile
-        / "Microsoft"
-        / "Power BI Desktop Store App"
-        / "AnalysisServicesWorkspaces"
+        user_profile / "Microsoft" / "Power BI Desktop Store App" / "AnalysisServicesWorkspaces"
     )
 
     return dirs
@@ -103,9 +97,7 @@ def discover_pbi_port() -> int | None:
     for workspaces_dir in _workspace_candidates():
         if not workspaces_dir.exists():
             continue
-        port_files.extend(
-            workspaces_dir.glob("*/Data/msmdsrv.port.txt")
-        )
+        port_files.extend(workspaces_dir.glob("*/Data/msmdsrv.port.txt"))
 
     if not port_files:
         return None

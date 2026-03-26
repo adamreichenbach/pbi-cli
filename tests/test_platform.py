@@ -195,12 +195,7 @@ def test_discover_pbi_port_empty_workspace_dir(
 
 def test_discover_pbi_port_store_version(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Reads port from Microsoft Store installation path (UTF-16 LE)."""
-    store_ws = (
-        tmp_path
-        / "Microsoft"
-        / "Power BI Desktop Store App"
-        / "AnalysisServicesWorkspaces"
-    )
+    store_ws = tmp_path / "Microsoft" / "Power BI Desktop Store App" / "AnalysisServicesWorkspaces"
     data_dir = store_ws / "AnalysisServicesWorkspace_xyz" / "Data"
     data_dir.mkdir(parents=True)
     # Store version writes UTF-16 LE without BOM
@@ -230,12 +225,7 @@ def test_discover_pbi_port_store_preferred_over_stale_msi(
 
     # Newer Store workspace
     home = tmp_path / "home"
-    store_ws = (
-        home
-        / "Microsoft"
-        / "Power BI Desktop Store App"
-        / "AnalysisServicesWorkspaces"
-    )
+    store_ws = home / "Microsoft" / "Power BI Desktop Store App" / "AnalysisServicesWorkspaces"
     store_data = store_ws / "AnalysisServicesWorkspace_new" / "Data"
     store_data.mkdir(parents=True)
     (store_data / "msmdsrv.port.txt").write_text("22222", encoding="utf-8")
