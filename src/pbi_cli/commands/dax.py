@@ -6,7 +6,7 @@ import sys
 
 import click
 
-from pbi_cli.commands._helpers import resolve_connection_name
+from pbi_cli.commands._helpers import _auto_reconnect, resolve_connection_name
 from pbi_cli.core.mcp_client import get_client
 from pbi_cli.core.output import format_mcp_result, print_error
 from pbi_cli.main import PbiContext, pass_context
@@ -60,21 +60,26 @@ def execute(
         "getExecutionMetrics": metrics or metrics_only,
         "executionMetricsOnly": metrics_only,
     }
-    conn_name = resolve_connection_name(ctx)
-    if conn_name:
-        request["connectionName"] = conn_name
     if max_rows is not None:
         request["maxRows"] = max_rows
 
     client = get_client()
     try:
+        if not ctx.repl_mode:
+            conn_name = _auto_reconnect(client, ctx)
+        else:
+            conn_name = resolve_connection_name(ctx)
+        if conn_name:
+            request["connectionName"] = conn_name
+
         result = client.call_tool("dax_query_operations", request)
         format_mcp_result(result, ctx.json_output)
     except Exception as e:
         print_error(f"DAX execution failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not ctx.repl_mode:
+            client.stop()
 
 
 @dax.command()
@@ -96,19 +101,24 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
         "query": resolved_query,
         "timeoutSeconds": timeout,
     }
-    conn_name = resolve_connection_name(ctx)
-    if conn_name:
-        request["connectionName"] = conn_name
 
     client = get_client()
     try:
+        if not ctx.repl_mode:
+            conn_name = _auto_reconnect(client, ctx)
+        else:
+            conn_name = resolve_connection_name(ctx)
+        if conn_name:
+            request["connectionName"] = conn_name
+
         result = client.call_tool("dax_query_operations", request)
         format_mcp_result(result, ctx.json_output)
     except Exception as e:
         print_error(f"DAX validation failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not ctx.repl_mode:
+            client.stop()
 
 
 @dax.command(name="clear-cache")
@@ -116,19 +126,24 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
 def clear_cache(ctx: PbiContext) -> None:
     """Clear the DAX query cache."""
     request: dict[str, object] = {"operation": "ClearCache"}
-    conn_name = resolve_connection_name(ctx)
-    if conn_name:
-        request["connectionName"] = conn_name
 
     client = get_client()
     try:
+        if not ctx.repl_mode:
+            conn_name = _auto_reconnect(client, ctx)
+        else:
+            conn_name = resolve_connection_name(ctx)
+        if conn_name:
+            request["connectionName"] = conn_name
+
         result = client.call_tool("dax_query_operations", request)
         format_mcp_result(result, ctx.json_output)
     except Exception as e:
         print_error(f"Cache clear failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not ctx.repl_mode:
+            client.stop()
 
 
 def _resolve_query(query: str, query_file: str | None) -> str:

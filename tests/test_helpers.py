@@ -41,10 +41,23 @@ def test_run_tool_adds_connection(monkeypatch: pytest.MonkeyPatch) -> None:
     mock = MockPbiMcpClient()
     monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
 
+    # Mock connection store with the named connection
+    from pbi_cli.core.connection_store import ConnectionInfo, ConnectionStore
+
+    store = ConnectionStore(
+        last_used="my-conn",
+        connections={"my-conn": ConnectionInfo(name="my-conn", data_source="localhost:12345")},
+    )
+    monkeypatch.setattr(
+        "pbi_cli.core.connection_store.load_connections",
+        lambda: store,
+    )
+
     ctx = PbiContext(json_output=True, connection="my-conn")
     run_tool(ctx, "measure_operations", {"operation": "List"})
 
-    assert mock.calls[0][1]["connectionName"] == "my-conn"
+    # First call is auto-reconnect (Connect), second is the actual tool call
+    assert mock.calls[1][1]["connectionName"] == "my-conn"
 
 
 def test_run_tool_no_connection(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -67,6 +80,12 @@ def test_run_tool_no_connection(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_run_tool_stops_client_in_oneshot(monkeypatch: pytest.MonkeyPatch) -> None:
     mock = MockPbiMcpClient()
     monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
+    from pbi_cli.core.connection_store import ConnectionStore
+
+    monkeypatch.setattr(
+        "pbi_cli.core.connection_store.load_connections",
+        lambda: ConnectionStore(),
+    )
 
     ctx = PbiContext(json_output=True, repl_mode=False)
     run_tool(ctx, "measure_operations", {"operation": "List"})
@@ -93,6 +112,12 @@ def test_run_tool_raises_mcp_tool_error_on_failure(
 
     mock = FailingClient()
     monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
+    from pbi_cli.core.connection_store import ConnectionStore
+
+    monkeypatch.setattr(
+        "pbi_cli.core.connection_store.load_connections",
+        lambda: ConnectionStore(),
+    )
 
     ctx = PbiContext(json_output=True)
     with pytest.raises(McpToolError):
