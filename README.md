@@ -50,32 +50,27 @@ graph LR
 Install and set up pbi-cli from https://github.com/MinaSaad1/pbi-cli.git
 ```
 
-**Or install manually:**
+**Or install manually (two commands):**
 
 ```bash
-pip install pbi-cli-tool        # 1. Install
-pbi setup                       # 2. Download the MCP binary
-pbi skills install              # 3. Give Claude the Power BI skills
-pbi connect -d localhost:54321  # 4. Connect to your model
+pipx install pbi-cli-tool           # 1. Install (handles PATH automatically)
+pbi connect -d localhost:54321      # 2. Connect (auto-downloads binary + installs skills)
 ```
 
-That's it. Open Claude Code and start asking.
+That's it. The first `connect` automatically downloads the MCP binary and installs Claude Code skills. Open Claude Code and start asking.
 
 > **Requires:** Python 3.10+ and Power BI Desktop (local) or a Fabric workspace (cloud).
 
 <details>
-<summary><b>Windows: "pbi is not recognized" after install?</b></summary>
+<summary><b>Using pip instead of pipx?</b></summary>
 
-On Windows, `pip install` often installs to a user Scripts directory that isn't on your PATH. Two ways to fix this:
-
-**Option A: Use `pipx` (recommended for CLI tools)**
 ```bash
-pip install pipx
-pipx install pbi-cli-tool
+pip install pbi-cli-tool
 ```
-`pipx` handles PATH automatically.
 
-**Option B: Add the Scripts directory to PATH manually**
+On Windows, `pip install` often places the `pbi` command in a directory that isn't on your PATH.
+
+**Fix: Add the Scripts directory to PATH**
 
 Find the directory:
 ```bash
@@ -87,7 +82,7 @@ Add the printed path to your system PATH:
 setx PATH "%PATH%;C:\Users\YourName\AppData\Roaming\Python\PythonXXX\Scripts"
 ```
 
-Then **restart your terminal**.
+Then **restart your terminal**. We recommend `pipx` instead to avoid this entirely.
 
 </details>
 

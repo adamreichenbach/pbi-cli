@@ -36,11 +36,12 @@ def connect(
     ctx: PbiContext, data_source: str, catalog: str, name: str | None, connection_string: str
 ) -> None:
     """Connect to a Power BI instance via data source."""
+    _ensure_ready()
+
     conn_name = name or _auto_name(data_source)
 
     request: dict[str, object] = {
         "operation": "Connect",
-        "connectionName": conn_name,
         "dataSource": data_source,
     }
     if catalog:
@@ -53,8 +54,12 @@ def connect(
     try:
         result = client.call_tool("connection_operations", request)
 
+        # Use server-returned connectionName if available, otherwise our local name
+        server_name = _extract_connection_name(result)
+        effective_name = server_name or conn_name
+
         info = ConnectionInfo(
-            name=conn_name,
+            name=effective_name,
             data_source=data_source,
             initial_catalog=catalog,
             connection_string=connection_string,
@@ -64,9 +69,9 @@ def connect(
         save_connections(store)
 
         if ctx.json_output:
-            print_json({"connection": conn_name, "status": "connected", "result": result})
+            print_json({"connection": effective_name, "status": "connected", "result": result})
         else:
-            print_success(f"Connected: {conn_name} ({data_source})")
+            print_success(f"Connected: {effective_name} ({data_source})")
     except Exception as e:
         print_error(f"Connection failed: {e}")
         raise SystemExit(1)
@@ -85,11 +90,12 @@ def connect_fabric(
     ctx: PbiContext, workspace: str, model: str, name: str | None, tenant: str
 ) -> None:
     """Connect to a Fabric workspace semantic model."""
+    _ensure_ready()
+
     conn_name = name or f"{workspace}/{model}"
 
     request: dict[str, object] = {
         "operation": "ConnectFabric",
-        "connectionName": conn_name,
         "workspaceName": workspace,
         "semanticModelName": model,
         "tenantName": tenant,
@@ -100,8 +106,11 @@ def connect_fabric(
     try:
         result = client.call_tool("connection_operations", request)
 
+        server_name = _extract_connection_name(result)
+        effective_name = server_name or conn_name
+
         info = ConnectionInfo(
-            name=conn_name,
+            name=effective_name,
             data_source=f"powerbi://api.powerbi.com/v1.0/{tenant}/{workspace}",
             workspace_name=workspace,
             semantic_model_name=model,
@@ -112,7 +121,7 @@ def connect_fabric(
         save_connections(store)
 
         if ctx.json_output:
-            print_json({"connection": conn_name, "status": "connected", "result": result})
+            print_json({"connection": effective_name, "status": "connected", "result": result})
         else:
             print_success(f"Connected to Fabric: {workspace}/{model}")
     except Exception as e:
@@ -222,6 +231,50 @@ def connections_last(ctx: PbiContext) -> None:
                 "Catalog": conn.initial_catalog,
             },
         )
+
+
+def _ensure_ready() -> None:
+    """Auto-setup binary and skills if not already done.
+
+    Lets users go straight from install to connect in one step:
+        pipx install pbi-cli-tool
+        pbi connect -d localhost:54321
+    """
+    from pbi_cli.core.binary_manager import resolve_binary
+
+    try:
+        resolve_binary()
+    except FileNotFoundError:
+        from pbi_cli.core.binary_manager import download_and_extract
+        from pbi_cli.core.output import print_info
+
+        print_info("MCP binary not found. Running first-time setup...")
+        download_and_extract()
+
+    from pbi_cli.commands.skills_cmd import SKILLS_TARGET_DIR, _get_bundled_skills
+
+    bundled = _get_bundled_skills()
+    any_missing = any(not (SKILLS_TARGET_DIR / name / "SKILL.md").exists() for name in bundled)
+    if bundled and any_missing:
+        from pbi_cli.core.output import print_info
+
+        print_info("Installing Claude Code skills...")
+        for name, source in sorted(bundled.items()):
+            target_dir = SKILLS_TARGET_DIR / name
+            if (target_dir / "SKILL.md").exists():
+                continue
+            target_dir.mkdir(parents=True, exist_ok=True)
+            source_file = source / "SKILL.md"
+            target_file = target_dir / "SKILL.md"
+            target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
+        print_info("Skills installed.")
+
+
+def _extract_connection_name(result: object) -> str | None:
+    """Extract connectionName from MCP server response, if present."""
+    if isinstance(result, dict):
+        return result.get("connectionName") or result.get("ConnectionName")
+    return None
 
 
 def _auto_name(data_source: str) -> str:
