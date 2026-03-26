@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <strong>Manage Power BI semantic models from your terminal.</strong><br/>
-  One command instead of 4,000 tokens of MCP schema.
+  <strong>Give Claude Code the Power BI skills it needs.</strong><br/>
+  Install once, then just ask Claude to work with your semantic models.
 </p>
 
 <p align="center">
@@ -15,39 +15,24 @@
 </p>
 
 <p align="center">
-  <a href="#-quick-start">Quick Start</a> &bull;
-  <a href="#-commands">Commands</a> &bull;
+  <a href="#-get-started">Get Started</a> &bull;
+  <a href="#-skills">Skills</a> &bull;
+  <a href="#-all-commands">All Commands</a> &bull;
   <a href="#-repl-mode">REPL Mode</a> &bull;
-  <a href="#-ai-agent-skills">AI Skills</a> &bull;
-  <a href="#-for-ai-agents">For AI Agents</a> &bull;
   <a href="#-contributing">Contributing</a>
 </p>
 
 ---
 
-## The Problem
+## What is this?
 
-When an AI agent connects to a Power BI MCP server directly, **each tool schema costs ~4,000+ tokens** in the context window. With 20+ tools, that's most of the context gone before any work begins.
-
-pbi-cli wraps the same MCP server behind a CLI. A single command uses **~30 tokens**. Same capabilities, 100x more efficient.
-
-```
-                          Context Window Cost
-  ┌─────────────────────────────────────────────────────┐
-  │ Raw MCP schemas   ████████████████████████  ~4,000  │
-  │ pbi-cli command   █                           ~30   │
-  └────────────────────────────────���────────────────────┘
-```
-
----
-
-## How It Works
+pbi-cli gives **Claude Code** (and other AI agents) the ability to manage Power BI semantic models. It ships with 5 skills that Claude discovers automatically. You ask in plain English, Claude uses the right `pbi` commands.
 
 ```mermaid
 graph LR
-    A["<b>You / AI Agent</b><br/>pbi measure list"] -->|"~30 tokens"| B["<b>pbi-cli</b><br/>Click CLI"]
-    B -->|"stdio"| C["<b>MCP Server</b><br/>.NET binary"]
-    C -->|"XMLA"| D["<b>Power BI</b><br/>Desktop / Fabric"]
+    A["<b>You</b><br/>'Add a YTD measure<br/>to the Sales table'"] --> B["<b>Claude Code</b><br/>Uses Power BI skills"]
+    B --> C["<b>pbi-cli</b>"]
+    C --> D["<b>Power BI</b><br/>Desktop / Fabric"]
 
     style A fill:#1a1a2e,stroke:#f2c811,color:#fff
     style B fill:#16213e,stroke:#4cc9f0,color:#fff
@@ -55,285 +40,209 @@ graph LR
     style D fill:#1a1a2e,stroke:#f2c811,color:#fff
 ```
 
-**No separate MCP server configuration needed.** pbi-cli downloads and manages the official Microsoft binary for you.
-
 ---
 
-## Quick Start
-
-### 1. Install
+## Get Started
 
 ```bash
-pip install pbi-cli-tool
+pip install pbi-cli-tool        # 1. Install
+pbi setup                       # 2. Download the MCP binary
+pbi skills install              # 3. Give Claude the Power BI skills
+pbi connect -d localhost:54321  # 4. Connect to your model
 ```
 
-### 2. Download the MCP binary
-
-```bash
-pbi setup
-```
-
-### 3. Connect and go
-
-```bash
-# Local Power BI Desktop
-pbi connect --data-source localhost:54321
-
-# Or a Fabric workspace
-pbi connect-fabric --workspace "My Workspace" --model "Sales Model"
-```
-
-### 4. Start working
-
-```bash
-pbi measure list                    # See all measures
-pbi dax execute "EVALUATE Sales"    # Run a DAX query
-pbi database export-tmdl ./model/   # Export model to files
-```
+That's it. Open Claude Code and start asking.
 
 > **Requires:** Python 3.10+ and Power BI Desktop (local) or a Fabric workspace (cloud).
 
 ---
 
-## Commands
+## Skills
 
-pbi-cli covers every Power BI MCP server operation across **22 command groups**.
+After running `pbi skills install`, Claude Code discovers **5 Power BI skills**. Each skill teaches Claude a different area of Power BI development. You don't need to memorize commands. Just describe what you want.
 
-### Data & Queries
+```mermaid
+graph TD
+    YOU["You: 'Set up RLS for<br/>regional managers'"] --> CC["Claude Code"]
+    CC --> SK{"Picks the<br/>right skill"}
+    SK --> S1["Modeling"]
+    SK --> S2["DAX"]
+    SK --> S3["Deployment"]
+    SK --> S4["Security"]
+    SK --> S5["Documentation"]
 
-| Command | What it does |
-|---------|-------------|
-| [`pbi dax execute`](#) | Run DAX queries inline, from file, or piped from stdin |
-| [`pbi dax validate`](#) | Check DAX syntax without executing |
-| [`pbi dax clear-cache`](#) | Clear the formula engine cache for benchmarking |
+    style YOU fill:#1a1a2e,stroke:#f2c811,color:#fff
+    style CC fill:#16213e,stroke:#4cc9f0,color:#fff
+    style SK fill:#0f3460,stroke:#7b61ff,color:#fff
+    style S1 fill:#1a1a2e,stroke:#f2c811,color:#fff
+    style S2 fill:#1a1a2e,stroke:#4cc9f0,color:#fff
+    style S3 fill:#1a1a2e,stroke:#7b61ff,color:#fff
+    style S4 fill:#1a1a2e,stroke:#06d6a0,color:#fff
+    style S5 fill:#1a1a2e,stroke:#ff6b6b,color:#fff
+```
 
-### Model Structure
+### Modeling
 
-| Command | What it does |
-|---------|-------------|
-| [`pbi table`](#) | Create, list, rename, delete, refresh tables |
-| [`pbi column`](#) | Add data columns or calculated columns to tables |
-| [`pbi measure`](#) | Full CRUD for measures with DAX expressions and formatting |
-| [`pbi relationship`](#) | Create star-schema relationships between tables |
-| [`pbi hierarchy`](#) | Build drill-down hierarchies (Year > Quarter > Month) |
-| [`pbi calc-group`](#) | Calculation groups for reusable time intelligence |
+> *"Create a star schema with Sales, Products, and Calendar tables"*
 
-### Deployment & Lifecycle
-
-| Command | What it does |
-|---------|-------------|
-| [`pbi database export-tmdl`](#) | Export entire model as human-readable TMDL files |
-| [`pbi database import-tmdl`](#) | Deploy TMDL files into a connected model |
-| [`pbi database export-tmsl`](#) | Export as TMSL JSON (SSAS/AAS compatible) |
-| [`pbi model refresh`](#) | Refresh model data (Full, DataOnly, Calculate, Defragment) |
-| [`pbi transaction`](#) | Wrap multiple changes in atomic begin/commit/rollback |
-
-### Security & Governance
-
-| Command | What it does |
-|---------|-------------|
-| [`pbi security-role`](#) | Create and manage row-level security (RLS) roles |
-| [`pbi perspective`](#) | Control which tables/columns different users see |
-| [`pbi advanced culture`](#) | Multi-language support with cultures and translations |
-
-### Connections & Config
-
-| Command | What it does |
-|---------|-------------|
-| [`pbi connect`](#) | Connect to Power BI Desktop via localhost |
-| [`pbi connect-fabric`](#) | Connect to Fabric workspace models |
-| [`pbi connections list`](#) | View and manage saved named connections |
-| [`pbi setup`](#) | Download/update the MCP binary, check status |
+Claude creates the tables, sets up relationships, marks the date table, and adds formatted measures. Covers tables, columns, measures, relationships, hierarchies, and calculation groups.
 
 <details>
-<summary><b>See all remaining commands</b></summary>
+<summary>Example: what Claude runs behind the scenes</summary>
 
-| Command | What it does |
-|---------|-------------|
-| `pbi model get` | View model metadata (name, compatibility level, culture) |
-| `pbi model stats` | Table count, measure count, column count at a glance |
-| `pbi partition` | Manage table partitions and partition-level refresh |
-| `pbi expression` | Named expressions and model parameters |
-| `pbi calendar` | Calendar/date table management |
-| `pbi trace` | Diagnostic tracing (start, stop, fetch, export) |
-| `pbi advanced function` | Model functions |
-| `pbi advanced query-group` | Query groups |
-| `pbi repl` | Interactive REPL session |
-| `pbi skills` | Install AI agent skills for Claude Code |
-
+```bash
+pbi table create Sales --mode Import
+pbi table create Products --mode Import
+pbi table create Calendar --mode Import
+pbi relationship create --from-table Sales --from-column ProductKey --to-table Products --to-column ProductKey
+pbi relationship create --from-table Sales --from-column DateKey --to-table Calendar --to-column DateKey
+pbi table mark-date Calendar --date-column Date
+pbi measure create "Total Revenue" -e "SUM(Sales[Revenue])" -t Sales --format-string "$#,##0"
+```
 </details>
 
-Run `pbi <command> --help` for full options on any command.
+### DAX
+
+> *"What are the top 10 products by revenue this year?"*
+
+Claude writes and executes DAX queries, validates syntax, and creates measures with time intelligence patterns like YTD, previous year, and rolling averages.
+
+<details>
+<summary>Example: what Claude runs behind the scenes</summary>
+
+```bash
+pbi dax execute "
+EVALUATE
+TOPN(
+    10,
+    ADDCOLUMNS(VALUES(Products[Name]), \"Revenue\", CALCULATE(SUM(Sales[Amount]))),
+    [Revenue], DESC
+)
+"
+```
+</details>
+
+### Deployment
+
+> *"Export the model to Git and deploy it to the Staging workspace"*
+
+Claude exports your model as TMDL files for version control, then imports them into another environment. Handles transactions for safe multi-step changes.
+
+<details>
+<summary>Example: what Claude runs behind the scenes</summary>
+
+```bash
+pbi database export-tmdl ./model/
+# ... you commit to git ...
+pbi connect-fabric --workspace "Staging" --model "Sales Model"
+pbi database import-tmdl ./model/
+pbi model refresh --type Full
+```
+</details>
+
+### Security
+
+> *"Set up row-level security so regional managers only see their region"*
+
+Claude creates RLS roles with descriptions, sets up perspectives for different user groups, and exports role definitions for version control.
+
+<details>
+<summary>Example: what Claude runs behind the scenes</summary>
+
+```bash
+pbi security-role create "Regional Manager" --description "Users see only their region's data"
+pbi perspective create "Executive Dashboard"
+pbi perspective create "Regional Detail"
+pbi security-role export-tmdl "Regional Manager"
+```
+</details>
+
+### Documentation
+
+> *"Document everything in this model"*
+
+Claude catalogs every table, measure, column, and relationship. Generates data dictionaries, measure inventories, and can export the full model as TMDL for human-readable reference.
+
+<details>
+<summary>Example: what Claude runs behind the scenes</summary>
+
+```bash
+pbi --json model get
+pbi --json model stats
+pbi --json table list
+pbi --json measure list
+pbi --json relationship list
+pbi database export-tmdl ./model-docs/
+```
+</details>
+
+---
+
+## All Commands
+
+22 command groups covering every Power BI MCP server operation. You rarely need these directly when using Claude Code, but they're available for scripting, CI/CD, or manual use.
+
+| Category | Commands |
+|----------|----------|
+| **Queries** | `dax execute`, `dax validate`, `dax clear-cache` |
+| **Model** | `table`, `column`, `measure`, `relationship`, `hierarchy`, `calc-group` |
+| **Deploy** | `database export-tmdl`, `database import-tmdl`, `database export-tmsl`, `model refresh`, `transaction` |
+| **Security** | `security-role`, `perspective` |
+| **Connect** | `connect`, `connect-fabric`, `disconnect`, `connections list` |
+| **Other** | `partition`, `expression`, `calendar`, `trace`, `advanced`, `model get`, `model stats` |
+| **Tools** | `setup`, `repl`, `skills install`, `skills list` |
+
+Use `--json` for machine-readable output (for scripts and AI agents):
+
+```bash
+pbi --json measure list
+pbi --json dax execute "EVALUATE Sales"
+```
+
+Run `pbi <command> --help` for full options.
 
 ---
 
 ## REPL Mode
 
-Each `pbi` command starts and stops the MCP server process (~2-3 seconds). The **REPL** keeps it running:
+For interactive work, the REPL keeps the MCP server running between commands (skipping the ~2-3s startup each time):
 
 ```
 $ pbi repl
-pbi-cli interactive mode. Type 'exit' or Ctrl+D to quit.
 
 pbi> connect --data-source localhost:54321
 Connected: localhost-54321
 
 pbi(localhost-54321)> measure list
-┌──────────────┬────────────────────────┬────────┐
-│ Name         │ Expression             │ Table  │
-├──────────────┼────────────────────────┼────────┤
-│ Total Sales  │ SUM(Sales[Amount])     │ Sales  │
-│ Order Count  │ COUNTROWS(Sales)       │ Sales  │
-└──────────────┴────────────────────────┴────────┘
-
 pbi(localhost-54321)> dax execute "EVALUATE TOPN(5, Sales)"
-...
-
 pbi(localhost-54321)> exit
-Goodbye.
 ```
 
-```mermaid
-graph TD
-    A["pbi repl"] -->|"Start once"| B["MCP Server Process"]
-    B --> C["command 1"]
-    B --> D["command 2"]
-    B --> E["command N"]
-    B -->|"Stop on exit"| F["Cleanup"]
-
-    style A fill:#16213e,stroke:#4cc9f0,color:#fff
-    style B fill:#0f3460,stroke:#f2c811,color:#fff
-    style C fill:#1a1a2e,stroke:#06d6a0,color:#fff
-    style D fill:#1a1a2e,stroke:#06d6a0,color:#fff
-    style E fill:#1a1a2e,stroke:#06d6a0,color:#fff
-    style F fill:#1a1a2e,stroke:#7b61ff,color:#fff
-```
-
-**REPL features:**
-- Persistent MCP connection (no restart between commands)
-- Tab completion for all commands and subcommands
-- Command history across sessions (`~/.pbi-cli/repl_history`)
-- Dynamic prompt showing your active connection
+Tab completion, command history, and a dynamic prompt showing your active connection.
 
 ---
 
-## AI Agent Skills
+## How It Works
 
-pbi-cli ships with **5 Claude Code skills** that teach AI agents how to work with Power BI models. Install them once and Claude Code automatically discovers them.
-
-```bash
-pbi skills install     # Install all 5 skills
-pbi skills list        # Check what's installed
-```
-
-```mermaid
-graph TD
-    subgraph Skills["Bundled Skills"]
-        S1["<b>Modeling</b><br/>Tables, columns, measures<br/>relationships, hierarchies"]
-        S2["<b>DAX</b><br/>Queries, aggregations<br/>time intelligence, ranking"]
-        S3["<b>Deployment</b><br/>TMDL export/import<br/>Git workflows, Fabric"]
-        S4["<b>Security</b><br/>RLS roles, perspectives<br/>access patterns"]
-        S5["<b>Documentation</b><br/>Auto-document models<br/>data dictionaries"]
-    end
-
-    Skills -->|"pbi skills install"| CC["~/.claude/skills/"]
-    CC --> AI["Claude Code auto-discovers them"]
-
-    style S1 fill:#16213e,stroke:#f2c811,color:#fff
-    style S2 fill:#16213e,stroke:#4cc9f0,color:#fff
-    style S3 fill:#16213e,stroke:#7b61ff,color:#fff
-    style S4 fill:#16213e,stroke:#06d6a0,color:#fff
-    style S5 fill:#16213e,stroke:#ff6b6b,color:#fff
-    style CC fill:#0f3460,stroke:#f2c811,color:#fff
-    style AI fill:#1a1a2e,stroke:#f2c811,color:#fff
-```
-
-| Skill | What the AI agent learns |
-|-------|------------------------|
-| **Modeling** | Create star schemas, add measures with format strings, build hierarchies and calculation groups |
-| **DAX** | Execute queries, write CALCULATE/SUMMARIZECOLUMNS patterns, time intelligence, performance tips |
-| **Deployment** | Export/import TMDL for version control, promote dev to production, atomic transactions |
-| **Security** | Set up row-level security roles, create perspectives, region/department/manager access patterns |
-| **Documentation** | Auto-catalog all model objects, generate data dictionaries, measure inventories, manage translations |
-
----
-
-## For AI Agents
-
-Add `--json` before any subcommand for machine-readable output:
-
-```bash
-pbi --json measure list              # JSON array of all measures
-pbi --json dax execute "EVALUATE X"  # Query results as JSON
-pbi --json model stats               # Model statistics as JSON
-```
-
-**JSON goes to stdout. Status messages go to stderr.** This makes piping and parsing clean:
-
-```bash
-pbi --json measure list | jq '.[].name'
-```
-
-Use `-c` to target a specific named connection:
-
-```bash
-pbi -c dev measure list
-pbi -c prod dax execute "EVALUATE Sales"
-```
-
----
-
-## Architecture
+pbi-cli wraps Microsoft's official Power BI MCP server binary behind a CLI. The binary is downloaded automatically by `pbi setup` from the VS Code Marketplace.
 
 ```mermaid
 graph TB
-    subgraph CLI["pbi-cli (Python)"]
-        direction TB
-        MAIN["main.py<br/>Click CLI + routing"]
-        CMDS["22 command modules"]
-        MCP["mcp_client.py<br/>Sync wrapper over async MCP SDK"]
-        BIN["binary_manager.py<br/>Download + resolve binary"]
-        CFG["config.py + connection_store.py<br/>~/.pbi-cli/ persistence"]
-        REPL["repl.py<br/>prompt-toolkit REPL"]
+    subgraph CLI["pbi-cli"]
+        A["CLI commands"] --> B["MCP client"]
     end
-
-    subgraph Server["MCP Server (.NET)"]
-        MCPS["powerbi-modeling-mcp"]
-    end
-
-    subgraph Target["Power BI"]
-        PBI["Desktop / Fabric Workspace"]
-    end
-
-    MAIN --> CMDS
-    CMDS --> MCP
-    MCP -->|"stdio JSON-RPC"| MCPS
-    MCPS -->|"XMLA"| PBI
-    MAIN --> REPL
-    REPL --> MCP
-    BIN -->|"Downloads from<br/>VS Marketplace"| MCPS
-    MAIN --> CFG
+    B -->|"stdio"| C["Power BI MCP Server<br/>.NET binary"]
+    C -->|"XMLA"| D["Power BI Desktop<br/>or Fabric"]
 
     style CLI fill:#16213e,stroke:#4cc9f0,color:#fff
-    style Server fill:#0f3460,stroke:#7b61ff,color:#fff
-    style Target fill:#1a1a2e,stroke:#f2c811,color:#fff
+    style C fill:#0f3460,stroke:#7b61ff,color:#fff
+    style D fill:#1a1a2e,stroke:#f2c811,color:#fff
 ```
 
-### Binary Resolution
+**Why a CLI wrapper?** When an AI agent uses an MCP server directly, the tool schemas consume ~4,000+ tokens per tool in the context window. A `pbi` command costs ~30 tokens. Same capabilities, 100x less context.
 
-pbi-cli finds the MCP server binary in this order:
-
-```
-1. $PBI_MCP_BINARY           Environment variable (explicit override)
-          |
-          v
-2. ~/.pbi-cli/bin/{version}/  Managed by `pbi setup`
-          |
-          v
-3. ~/.vscode/extensions/      VS Code extension fallback
-```
-
-### Configuration
+<details>
+<summary><b>Configuration details</b></summary>
 
 All config lives in `~/.pbi-cli/`:
 
@@ -342,10 +251,15 @@ All config lives in `~/.pbi-cli/`:
   config.json          # Binary version, path, args
   connections.json     # Named connections
   repl_history         # REPL command history
-  bin/
-    {version}/
-      powerbi-modeling-mcp[.exe]
+  bin/{version}/       # MCP server binary
 ```
+
+Binary resolution order:
+1. `$PBI_MCP_BINARY` env var (explicit override)
+2. `~/.pbi-cli/bin/` (managed by `pbi setup`)
+3. VS Code extension fallback
+
+</details>
 
 ---
 
@@ -361,27 +275,6 @@ pip install -e ".[dev]"
 ruff check src/ tests/         # Lint
 mypy src/                      # Type check
 pytest -m "not e2e"            # Run 120 tests
-pytest -m "not e2e" --cov      # With coverage
-```
-
-### Project Structure
-
-```
-src/pbi_cli/
-  main.py                 # CLI entry point, context, command registration
-  commands/               # 22 command modules (one per group)
-    _helpers.py           # Shared run_tool() and build_definition()
-  core/
-    mcp_client.py         # Sync MCP client wrapper
-    binary_manager.py     # Binary download and resolution
-    config.py             # Configuration persistence
-    connection_store.py   # Named connection management
-    errors.py             # User-facing error hierarchy
-    output.py             # Dual output (JSON + Rich)
-  utils/
-    repl.py               # Interactive REPL
-    platform.py           # OS/arch detection
-  skills/                 # 5 bundled Claude Code skills
 ```
 
 ---
@@ -391,10 +284,9 @@ src/pbi_cli/
 Contributions are welcome! Please open an issue first to discuss what you'd like to change.
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-change`)
+2. Create a feature branch
 3. Make your changes with tests
-4. Run `ruff check` and `mypy` before submitting
-5. Open a pull request
+4. Open a pull request
 
 ---
 
@@ -404,5 +296,5 @@ Contributions are welcome! Please open an issue first to discuss what you'd like
 </p>
 
 <p align="center">
-  <sub>MIT License &bull; Built for Power BI developers and AI agents</sub>
+  <sub>MIT License</sub>
 </p>
