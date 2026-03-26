@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-03-26
+
+### Added
+- Support Microsoft Store version of Power BI Desktop for port auto-discovery
+
+### Fixed
+- UTF-16 LE encoding when reading Power BI port file
+- Updated all 5 skills, error messages, and docs to reflect new install flow
+
 ## [1.0.2] - 2026-03-26
 
 ### Fixed
