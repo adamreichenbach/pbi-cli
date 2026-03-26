@@ -25,14 +25,20 @@ from pbi_cli.main import PbiContext, pass_context
 @click.command()
 @click.option("--data-source", "-d", required=True, help="Data source (e.g., localhost:54321).")
 @click.option("--catalog", "-C", default="", help="Initial catalog / dataset name.")
-@click.option("--name", "-n", default=None, help="Name for this connection (auto-generated if omitted).")
-@click.option("--connection-string", default="", help="Full connection string (overrides data-source).")
+@click.option(
+    "--name", "-n", default=None, help="Name for this connection (auto-generated if omitted)."
+)
+@click.option(
+    "--connection-string", default="", help="Full connection string (overrides data-source)."
+)
 @pass_context
-def connect(ctx: PbiContext, data_source: str, catalog: str, name: str | None, connection_string: str) -> None:
+def connect(
+    ctx: PbiContext, data_source: str, catalog: str, name: str | None, connection_string: str
+) -> None:
     """Connect to a Power BI instance via data source."""
     conn_name = name or _auto_name(data_source)
 
-    request: dict = {
+    request: dict[str, object] = {
         "operation": "Connect",
         "connectionName": conn_name,
         "dataSource": data_source,
@@ -75,11 +81,13 @@ def connect(ctx: PbiContext, data_source: str, catalog: str, name: str | None, c
 @click.option("--name", "-n", default=None, help="Name for this connection.")
 @click.option("--tenant", default="myorg", help="Tenant name for B2B scenarios.")
 @pass_context
-def connect_fabric(ctx: PbiContext, workspace: str, model: str, name: str | None, tenant: str) -> None:
+def connect_fabric(
+    ctx: PbiContext, workspace: str, model: str, name: str | None, tenant: str
+) -> None:
     """Connect to a Fabric workspace semantic model."""
     conn_name = name or f"{workspace}/{model}"
 
-    request: dict = {
+    request: dict[str, object] = {
         "operation": "ConnectFabric",
         "connectionName": conn_name,
         "workspaceName": workspace,
@@ -116,7 +124,9 @@ def connect_fabric(ctx: PbiContext, workspace: str, model: str, name: str | None
 
 
 @click.command()
-@click.option("--name", "-n", default=None, help="Connection name to disconnect (defaults to active).")
+@click.option(
+    "--name", "-n", default=None, help="Connection name to disconnect (defaults to active)."
+)
 @pass_context
 def disconnect(ctx: PbiContext, name: str | None) -> None:
     """Disconnect from the active or named connection."""
@@ -130,7 +140,7 @@ def disconnect(ctx: PbiContext, name: str | None) -> None:
     repl = ctx.repl_mode
     client = get_client(repl_mode=repl)
     try:
-        result = client.call_tool("connection_operations", {
+        client.call_tool("connection_operations", {
             "operation": "Disconnect",
             "connectionName": target,
         })

@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import patch
 
+import pytest
 from click.testing import CliRunner
 
 from pbi_cli.main import cli
@@ -74,10 +74,9 @@ def test_repl_execute_line_quit() -> None:
 
 
 def test_repl_execute_line_strips_pbi_prefix(
-    monkeypatch: "pytest.MonkeyPatch",
+    monkeypatch: pytest.MonkeyPatch,
     tmp_connections: Path,
 ) -> None:
-    import pytest
     from tests.conftest import MockPbiMcpClient
 
     mock = MockPbiMcpClient()

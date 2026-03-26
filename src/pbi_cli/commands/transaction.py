@@ -25,7 +25,7 @@ def begin(ctx: PbiContext) -> None:
 @pass_context
 def commit(ctx: PbiContext, transaction_id: str) -> None:
     """Commit the active or specified transaction."""
-    request: dict = {"operation": "Commit"}
+    request: dict[str, object] = {"operation": "Commit"}
     if transaction_id:
         request["transactionId"] = transaction_id
     run_tool(ctx, "transaction_operations", request)
@@ -36,7 +36,7 @@ def commit(ctx: PbiContext, transaction_id: str) -> None:
 @pass_context
 def rollback(ctx: PbiContext, transaction_id: str) -> None:
     """Rollback the active or specified transaction."""
-    request: dict = {"operation": "Rollback"}
+    request: dict[str, object] = {"operation": "Rollback"}
     if transaction_id:
         request["transactionId"] = transaction_id
     run_tool(ctx, "transaction_operations", request)

@@ -39,7 +39,9 @@ def create(ctx: PbiContext, name: str, expression: str, description: str | None)
         required={"name": name, "expression": expression},
         optional={"description": description},
     )
-    run_tool(ctx, "named_expression_operations", {"operation": "Create", "definitions": [definition]})
+    run_tool(ctx, "named_expression_operations", {
+        "operation": "Create", "definitions": [definition],
+    })
 
 
 @expression.command()
@@ -61,4 +63,6 @@ def create_param(ctx: PbiContext, name: str, expression: str, description: str |
         required={"name": name, "expression": expression},
         optional={"description": description},
     )
-    run_tool(ctx, "named_expression_operations", {"operation": "CreateParameter", "definitions": [definition]})
+    run_tool(ctx, "named_expression_operations", {
+        "operation": "CreateParameter", "definitions": [definition],
+    })

@@ -27,7 +27,9 @@ def partition_list(ctx: PbiContext, table: str) -> None:
 @click.option("--expression", "-e", default=None, help="M/Power Query expression.")
 @click.option("--mode", type=click.Choice(["Import", "DirectQuery", "Dual"]), default=None)
 @pass_context
-def create(ctx: PbiContext, name: str, table: str, expression: str | None, mode: str | None) -> None:
+def create(
+    ctx: PbiContext, name: str, table: str, expression: str | None, mode: str | None
+) -> None:
     """Create a partition."""
     definition = build_definition(
         required={"name": name, "tableName": table},
@@ -51,4 +53,8 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def refresh(ctx: PbiContext, name: str, table: str) -> None:
     """Refresh a partition."""
-    run_tool(ctx, "partition_operations", {"operation": "Refresh", "name": name, "tableName": table})
+    run_tool(ctx, "partition_operations", {
+        "operation": "Refresh",
+        "name": name,
+        "tableName": table,
+    })

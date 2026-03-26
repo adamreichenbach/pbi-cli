@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import json
-
 from pbi_cli.core.mcp_client import (
     _extract_text,
     _parse_content,
     get_client,
     get_shared_client,
 )
-
 
 # ---------------------------------------------------------------------------
 # _parse_content tests

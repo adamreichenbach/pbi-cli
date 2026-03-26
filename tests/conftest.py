@@ -8,7 +8,6 @@ from typing import Any
 import pytest
 from click.testing import CliRunner
 
-
 # ---------------------------------------------------------------------------
 # Canned MCP responses used by the mock client
 # ---------------------------------------------------------------------------
@@ -114,7 +113,9 @@ def mock_client() -> MockPbiMcpClient:
 
 
 @pytest.fixture
-def patch_get_client(monkeypatch: pytest.MonkeyPatch, mock_client: MockPbiMcpClient) -> MockPbiMcpClient:
+def patch_get_client(
+    monkeypatch: pytest.MonkeyPatch, mock_client: MockPbiMcpClient
+) -> MockPbiMcpClient:
     """Monkeypatch get_client in _helpers and connection modules."""
     factory = lambda repl_mode=False: mock_client  # noqa: E731
 

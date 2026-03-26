@@ -20,7 +20,7 @@ def measure() -> None:
 @pass_context
 def measure_list(ctx: PbiContext, table: str | None) -> None:
     """List all measures."""
-    request: dict = {"operation": "List"}
+    request: dict[str, object] = {"operation": "List"}
     if table:
         request["tableName"] = table
     run_tool(ctx, "measure_operations", request)

@@ -33,7 +33,9 @@ def get(ctx: PbiContext, name: str, table: str) -> None:
 @column.command()
 @click.argument("name")
 @click.option("--table", "-t", required=True, help="Table name.")
-@click.option("--data-type", required=True, help="Data type (string, int64, double, datetime, etc.).")
+@click.option(
+    "--data-type", required=True, help="Data type (string, int64, double, datetime, etc.)."
+)
 @click.option("--source-column", default=None, help="Source column name (for Import mode).")
 @click.option("--expression", default=None, help="DAX expression (for calculated columns).")
 @click.option("--format-string", default=None, help="Format string.")
@@ -101,4 +103,8 @@ def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
 @pass_context
 def export_tmdl(ctx: PbiContext, name: str, table: str) -> None:
     """Export a column as TMDL."""
-    run_tool(ctx, "column_operations", {"operation": "ExportTMDL", "name": name, "tableName": table})
+    run_tool(ctx, "column_operations", {
+        "operation": "ExportTMDL",
+        "name": name,
+        "tableName": table,
+    })

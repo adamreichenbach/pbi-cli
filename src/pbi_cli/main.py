@@ -25,8 +25,13 @@ pass_context = click.make_pass_decorator(PbiContext, ensure=True)
 
 
 @click.group()
-@click.option("--json", "json_output", is_flag=True, default=False, help="Output raw JSON for agent consumption.")
-@click.option("--connection", "-c", default=None, help="Named connection to use (defaults to last-used).")
+@click.option(
+    "--json", "json_output", is_flag=True, default=False,
+    help="Output raw JSON for agent consumption.",
+)
+@click.option(
+    "--connection", "-c", default=None, help="Named connection to use (defaults to last-used)."
+)
 @click.version_option(version=__version__, prog_name="pbi-cli")
 @click.pass_context
 def cli(ctx: click.Context, json_output: bool, connection: str | None) -> None:

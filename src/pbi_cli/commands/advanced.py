@@ -82,7 +82,10 @@ def create(
             "translatedDescription": translated_description,
         },
     )
-    run_tool(ctx, "object_translation_operations", {"operation": "Create", "definitions": [definition]})
+    run_tool(ctx, "object_translation_operations", {
+        "operation": "Create",
+        "definitions": [definition],
+    })
 
 
 # --- Function ---

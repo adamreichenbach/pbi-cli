@@ -5,6 +5,10 @@ from __future__ import annotations
 import importlib.resources
 import shutil
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from importlib.abc import Traversable
 
 import click
 
@@ -13,10 +17,10 @@ from pbi_cli.main import pass_context
 SKILLS_TARGET_DIR = Path.home() / ".claude" / "skills"
 
 
-def _get_bundled_skills() -> dict[str, importlib.resources.abc.Traversable]:
+def _get_bundled_skills() -> dict[str, Traversable]:
     """Return a mapping of skill-name -> Traversable for each bundled skill."""
     skills_pkg = importlib.resources.files("pbi_cli.skills")
-    result: dict[str, importlib.resources.abc.Traversable] = {}
+    result: dict[str, Traversable] = {}
     for item in skills_pkg.iterdir():
         if item.is_dir() and (item / "SKILL.md").is_file():
             result[item.name] = item

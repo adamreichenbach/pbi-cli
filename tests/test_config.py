@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from pbi_cli.core.config import PbiConfig, load_config, save_config

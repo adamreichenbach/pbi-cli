@@ -31,7 +31,10 @@ def create(ctx: PbiContext, name: str, description: str | None, precedence: int 
         required={"name": name},
         optional={"description": description, "calculationGroupPrecedence": precedence},
     )
-    run_tool(ctx, "calculation_group_operations", {"operation": "CreateGroup", "definitions": [definition]})
+    run_tool(ctx, "calculation_group_operations", {
+        "operation": "CreateGroup",
+        "definitions": [definition],
+    })
 
 
 @calc_group.command()
@@ -47,7 +50,10 @@ def delete(ctx: PbiContext, name: str) -> None:
 @pass_context
 def list_items(ctx: PbiContext, group_name: str) -> None:
     """List calculation items in a group."""
-    run_tool(ctx, "calculation_group_operations", {"operation": "ListItems", "calculationGroupName": group_name})
+    run_tool(ctx, "calculation_group_operations", {
+        "operation": "ListItems",
+        "calculationGroupName": group_name,
+    })
 
 
 @calc_group.command(name="create-item")
@@ -56,7 +62,9 @@ def list_items(ctx: PbiContext, group_name: str) -> None:
 @click.option("--expression", "-e", required=True, help="DAX expression.")
 @click.option("--ordinal", type=int, default=None, help="Item ordinal.")
 @pass_context
-def create_item(ctx: PbiContext, item_name: str, group: str, expression: str, ordinal: int | None) -> None:
+def create_item(
+    ctx: PbiContext, item_name: str, group: str, expression: str, ordinal: int | None
+) -> None:
     """Create a calculation item in a group."""
     definition = build_definition(
         required={"name": item_name, "expression": expression},

@@ -34,7 +34,11 @@ def get(ctx: PbiContext, name: str) -> None:
 @click.option("--from-column", required=True, help="Source column.")
 @click.option("--to-table", required=True, help="Target (one-side) table.")
 @click.option("--to-column", required=True, help="Target column.")
-@click.option("--cross-filter", type=click.Choice(["OneDirection", "BothDirections", "Automatic"]), default="OneDirection", help="Cross-filtering behavior.")
+@click.option(
+    "--cross-filter",
+    type=click.Choice(["OneDirection", "BothDirections", "Automatic"]),
+    default="OneDirection", help="Cross-filtering behavior.",
+)
 @click.option("--active/--inactive", default=True, help="Whether the relationship is active.")
 @pass_context
 def create(

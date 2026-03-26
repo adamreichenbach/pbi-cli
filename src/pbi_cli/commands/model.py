@@ -28,7 +28,11 @@ def stats(ctx: PbiContext) -> None:
 
 
 @model.command()
-@click.option("--type", "refresh_type", type=click.Choice(["Automatic", "Full", "Calculate", "DataOnly", "Defragment"]), default="Automatic", help="Refresh type.")
+@click.option(
+    "--type", "refresh_type",
+    type=click.Choice(["Automatic", "Full", "Calculate", "DataOnly", "Defragment"]),
+    default="Automatic", help="Refresh type.",
+)
 @pass_context
 def refresh(ctx: PbiContext, refresh_type: str) -> None:
     """Refresh the model."""

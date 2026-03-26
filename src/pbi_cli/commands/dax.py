@@ -18,10 +18,14 @@ def dax() -> None:
 
 @dax.command()
 @click.argument("query", default="")
-@click.option("--file", "-f", "query_file", type=click.Path(exists=True), help="Read query from file.")
+@click.option(
+    "--file", "-f", "query_file", type=click.Path(exists=True), help="Read query from file."
+)
 @click.option("--max-rows", type=int, default=None, help="Maximum rows to return.")
 @click.option("--metrics", is_flag=True, default=False, help="Include execution metrics.")
-@click.option("--metrics-only", is_flag=True, default=False, help="Return metrics without row data.")
+@click.option(
+    "--metrics-only", is_flag=True, default=False, help="Return metrics without row data."
+)
 @click.option("--timeout", type=int, default=200, help="Query timeout in seconds.")
 @pass_context
 def execute(
@@ -48,7 +52,7 @@ def execute(
         print_error("No query provided. Pass as argument, --file, or stdin.")
         raise SystemExit(1)
 
-    request: dict = {
+    request: dict[str, object] = {
         "operation": "Execute",
         "query": resolved_query,
         "timeoutSeconds": timeout,
@@ -73,7 +77,9 @@ def execute(
 
 @dax.command()
 @click.argument("query", default="")
-@click.option("--file", "-f", "query_file", type=click.Path(exists=True), help="Read query from file.")
+@click.option(
+    "--file", "-f", "query_file", type=click.Path(exists=True), help="Read query from file."
+)
 @click.option("--timeout", type=int, default=10, help="Validation timeout in seconds.")
 @pass_context
 def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) -> None:
@@ -83,7 +89,7 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
         print_error("No query provided.")
         raise SystemExit(1)
 
-    request: dict = {
+    request: dict[str, object] = {
         "operation": "Validate",
         "query": resolved_query,
         "timeoutSeconds": timeout,
@@ -106,7 +112,7 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
 @pass_context
 def clear_cache(ctx: PbiContext) -> None:
     """Clear the DAX query cache."""
-    request: dict = {"operation": "ClearCache"}
+    request: dict[str, object] = {"operation": "ClearCache"}
     if ctx.connection:
         request["connectionName"] = ctx.connection
 

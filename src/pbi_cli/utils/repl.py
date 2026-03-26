@@ -45,7 +45,7 @@ class PbiRepl:
         words: list[str] = []
         for name, cmd in cli.commands.items():
             words.append(name)
-            if isinstance(cmd, click.MultiCommand):
+            if isinstance(cmd, click.Group):
                 sub_names = cmd.list_commands(click.Context(cmd))
                 for sub in sub_names:
                     words.append(f"{name} {sub}")

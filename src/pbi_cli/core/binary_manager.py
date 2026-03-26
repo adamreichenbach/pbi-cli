@@ -126,7 +126,7 @@ def query_latest_version() -> str:
     if not versions:
         raise RuntimeError(f"No versions found for {EXTENSION_ID}")
 
-    return versions[0]["version"]
+    return str(versions[0]["version"])
 
 
 def download_and_extract(version: str | None = None) -> Path:

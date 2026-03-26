@@ -43,7 +43,9 @@ def load_connections() -> ConnectionStore:
         raw = json.loads(CONNECTIONS_FILE.read_text(encoding="utf-8"))
         conns = {}
         for name, data in raw.get("connections", {}).items():
-            conns[name] = ConnectionInfo(name=name, **{k: v for k, v in data.items() if k != "name"})
+            conns[name] = ConnectionInfo(
+                name=name, **{k: v for k, v in data.items() if k != "name"}
+            )
         return ConnectionStore(
             last_used=raw.get("last_used", ""),
             connections=conns,
@@ -79,7 +81,9 @@ def remove_connection(store: ConnectionStore, name: str) -> ConnectionStore:
     return ConnectionStore(last_used=new_last, connections=new_conns)
 
 
-def get_active_connection(store: ConnectionStore, override: str | None = None) -> ConnectionInfo | None:
+def get_active_connection(
+    store: ConnectionStore, override: str | None = None
+) -> ConnectionInfo | None:
     """Get the active connection: explicit override, or last-used."""
     name = override or store.last_used
     if not name:

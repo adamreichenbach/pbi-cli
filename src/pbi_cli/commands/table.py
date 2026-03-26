@@ -32,7 +32,10 @@ def get(ctx: PbiContext, name: str) -> None:
 
 @table.command()
 @click.argument("name")
-@click.option("--mode", type=click.Choice(["Import", "DirectQuery", "Dual"]), default="Import", help="Table mode.")
+@click.option(
+    "--mode", type=click.Choice(["Import", "DirectQuery", "Dual"]),
+    default="Import", help="Table mode.",
+)
 @click.option("--m-expression", default=None, help="M/Power Query expression (use - for stdin).")
 @click.option("--dax-expression", default=None, help="DAX expression for calculated tables.")
 @click.option("--sql-query", default=None, help="SQL query for DirectQuery.")
@@ -82,7 +85,11 @@ def delete(ctx: PbiContext, name: str) -> None:
 
 @table.command()
 @click.argument("name")
-@click.option("--type", "refresh_type", type=click.Choice(["Full", "Automatic", "Calculate", "DataOnly"]), default="Automatic", help="Refresh type.")
+@click.option(
+    "--type", "refresh_type",
+    type=click.Choice(["Full", "Automatic", "Calculate", "DataOnly"]),
+    default="Automatic", help="Refresh type.",
+)
 @pass_context
 def refresh(ctx: PbiContext, name: str, refresh_type: str) -> None:
     """Refresh a table."""

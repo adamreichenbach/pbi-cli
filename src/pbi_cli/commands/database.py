@@ -56,7 +56,7 @@ def export_tmsl(ctx: PbiContext) -> None:
 @pass_context
 def deploy(ctx: PbiContext, workspace: str, new_name: str | None, tenant: str | None) -> None:
     """Deploy the model to a Fabric workspace."""
-    deploy_request: dict = {"targetWorkspaceName": workspace}
+    deploy_request: dict[str, object] = {"targetWorkspaceName": workspace}
     if new_name:
         deploy_request["newDatabaseName"] = new_name
     if tenant:
