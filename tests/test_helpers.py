@@ -56,8 +56,9 @@ def test_run_tool_adds_connection(monkeypatch: pytest.MonkeyPatch) -> None:
     ctx = PbiContext(json_output=True, connection="my-conn")
     run_tool(ctx, "measure_operations", {"operation": "List"})
 
-    # First call is auto-reconnect (Connect), second is the actual tool call
-    assert mock.calls[1][1]["connectionName"] == "my-conn"
+    # First call is auto-reconnect (Connect), second is the actual tool call.
+    # The connectionName comes from the server response ("test-conn"), not our saved name.
+    assert mock.calls[1][1]["connectionName"] == "test-conn"
 
 
 def test_run_tool_no_connection(monkeypatch: pytest.MonkeyPatch) -> None:

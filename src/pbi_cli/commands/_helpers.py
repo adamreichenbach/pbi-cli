@@ -55,8 +55,14 @@ def _auto_reconnect(client: PbiMcpClient, ctx: PbiContext) -> str | None:
         if conn.connection_string:
             request["connectionString"] = conn.connection_string
 
-    client.call_tool("connection_operations", request)
-    return conn.name
+    result = client.call_tool("connection_operations", request)
+
+    # Use server-assigned connection name (e.g. "PBIDesktop-demo-57947")
+    # instead of our locally saved name (e.g. "localhost-57947")
+    server_name = None
+    if isinstance(result, dict):
+        server_name = result.get("connectionName") or result.get("ConnectionName")
+    return server_name or conn.name
 
 
 def run_tool(
