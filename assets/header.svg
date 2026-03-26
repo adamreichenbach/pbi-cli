@@ -1,76 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="950" height="180" viewBox="0 0 950 180">
-  <defs>
-    <!-- Brick patterns create the individual block texture within letter shapes -->
-    <pattern id="mainBrick" width="14" height="14" patternUnits="userSpaceOnUse">
-      <rect width="12" height="12" rx="1.5" fill="#F2C811" stroke="#C49B0E" stroke-width="1"/>
-    </pattern>
-    <pattern id="shadowBrick" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="translate(4,4)">
-      <rect width="12" height="12" rx="1.5" fill="#7A6508" stroke="#5A4D06" stroke-width="1"/>
-    </pattern>
-
-    <!-- P: 8 cols x 10 rows, 2-block strokes -->
-    <symbol id="lP" overflow="visible">
-      <rect x="0" y="0" width="110" height="26" rx="2"/>
-      <rect x="0" y="28" width="26" height="26" rx="2"/>
-      <rect x="84" y="28" width="26" height="26" rx="2"/>
-      <rect x="0" y="56" width="110" height="26" rx="2"/>
-      <rect x="0" y="84" width="26" height="54" rx="2"/>
-    </symbol>
-    <!-- B: 8 cols x 10 rows -->
-    <symbol id="lB" overflow="visible">
-      <rect x="0" y="0" width="110" height="26" rx="2"/>
-      <rect x="0" y="28" width="26" height="26" rx="2"/>
-      <rect x="84" y="28" width="26" height="26" rx="2"/>
-      <rect x="0" y="56" width="110" height="26" rx="2"/>
-      <rect x="0" y="84" width="26" height="26" rx="2"/>
-      <rect x="84" y="84" width="26" height="26" rx="2"/>
-      <rect x="0" y="112" width="110" height="26" rx="2"/>
-    </symbol>
-    <!-- I: 6 cols x 10 rows -->
-    <symbol id="lI" overflow="visible">
-      <rect x="0" y="0" width="82" height="26" rx="2"/>
-      <rect x="28" y="28" width="26" height="82" rx="2"/>
-      <rect x="0" y="112" width="82" height="26" rx="2"/>
-    </symbol>
-    <!-- Hyphen: 4 cols, bar at vertical center -->
-    <symbol id="lH" overflow="visible">
-      <rect x="0" y="56" width="54" height="26" rx="2"/>
-    </symbol>
-    <!-- C: 8 cols x 10 rows -->
-    <symbol id="lC" overflow="visible">
-      <rect x="0" y="0" width="110" height="26" rx="2"/>
-      <rect x="0" y="28" width="26" height="82" rx="2"/>
-      <rect x="0" y="112" width="110" height="26" rx="2"/>
-    </symbol>
-    <!-- L: 8 cols x 10 rows -->
-    <symbol id="lL" overflow="visible">
-      <rect x="0" y="0" width="26" height="110" rx="2"/>
-      <rect x="0" y="112" width="110" height="26" rx="2"/>
-    </symbol>
-  </defs>
-
-  <!-- Background -->
-  <rect width="950" height="180" fill="#1a1a1a"/>
-
-  <!-- 3D Shadow layer (offset +4,+4) -->
-  <g fill="url(#shadowBrick)" stroke="#3D2E04" stroke-width="2">
-    <use href="#lP" x="60" y="18"/>
-    <use href="#lB" x="200" y="18"/>
-    <use href="#lI" x="340" y="18"/>
-    <use href="#lH" x="452" y="18"/>
-    <use href="#lC" x="536" y="18"/>
-    <use href="#lL" x="676" y="18"/>
-    <use href="#lI" x="816" y="18"/>
-  </g>
-
-  <!-- Main block layer -->
-  <g fill="url(#mainBrick)" stroke="#8B6508" stroke-width="2">
-    <use href="#lP" x="56" y="14"/>
-    <use href="#lB" x="196" y="14"/>
-    <use href="#lI" x="336" y="14"/>
-    <use href="#lH" x="448" y="14"/>
-    <use href="#lC" x="532" y="14"/>
-    <use href="#lL" x="672" y="14"/>
-    <use href="#lI" x="812" y="14"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="650" height="135" viewBox="0 0 650 135">
+  <rect width="100%" height="100%" fill="#0d1117" rx="8"/>
+  <text font-family="'Courier New', Courier, monospace" font-size="14.5" fill="#7A6508" xml:space="preserve">
+    <tspan x="21" y="29">██████╗  ██████╗  ██╗         ██████╗ ██╗      ██╗</tspan>
+    <tspan x="21" y="47">██╔══██╗ ██╔══██╗ ██║        ██╔════╝ ██║      ██║</tspan>
+    <tspan x="21" y="65">██████╔╝ ██████╔╝ ██║  ███╗  ██║      ██║      ██║</tspan>
+    <tspan x="21" y="83">██╔═══╝  ██╔══██╗ ██║  ╚══╝  ██║      ██║      ██║</tspan>
+    <tspan x="21" y="101">██║      ██████╔╝ ██║        ╚██████╗ ███████╗ ██║</tspan>
+    <tspan x="21" y="119">╚═╝      ╚═════╝  ╚═╝         ╚═════╝ ╚══════╝ ╚═╝</tspan>
+  </text>
+  <text font-family="'Courier New', Courier, monospace" font-size="14.5" fill="#F2C811" xml:space="preserve">
+    <tspan x="20" y="28">██████╗  ██████╗  ██╗         ██████╗ ██╗      ██╗</tspan>
+    <tspan x="20" y="46">██╔══██╗ ██╔══██╗ ██║        ██╔════╝ ██║      ██║</tspan>
+    <tspan x="20" y="64">██████╔╝ ██████╔╝ ██║  ███╗  ██║      ██║      ██║</tspan>
+    <tspan x="20" y="82">██╔═══╝  ██╔══██╗ ██║  ╚══╝  ██║      ██║      ██║</tspan>
+    <tspan x="20" y="100">██║      ██████╔╝ ██║        ╚██████╗ ███████╗ ██║</tspan>
+    <tspan x="20" y="118">╚═╝      ╚═════╝  ╚═╝         ╚═════╝ ╚══════╝ ╚═╝</tspan>
+  </text>
 </svg>
