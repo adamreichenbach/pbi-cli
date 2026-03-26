@@ -16,16 +16,10 @@ Install once, then just ask Claude to work with your semantic models.
 
 pbi-cli gives **Claude Code** (and other AI agents) the ability to manage Power BI semantic models. It ships with 5 skills that Claude discovers automatically. You ask in plain English, Claude uses the right `pbi` commands.
 
-```mermaid
-graph LR
-    A["<b>You</b><br/>'Add a YTD measure<br/>to the Sales table'"] --> B["<b>Claude Code</b><br/>Uses Power BI skills"]
-    B --> C["<b>pbi-cli</b>"]
-    C --> D["<b>Power BI</b><br/>Desktop / Fabric"]
-
-    style A fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style B fill:#16213e,stroke:#4cc9f0,color:#fff
-    style C fill:#0f3460,stroke:#7b61ff,color:#fff
-    style D fill:#1a1a2e,stroke:#f2c811,color:#fff
+```
+You                        Claude Code              pbi-cli              Power BI
+ "Add a YTD measure   --->  Uses Power BI    --->   CLI commands   --->  Desktop / Fabric
+  to the Sales table"       skills
 ```
 
 ---
@@ -82,24 +76,17 @@ Then **restart your terminal**. We recommend `pipx` instead to avoid this entire
 
 After running `pbi skills install`, Claude Code discovers **5 Power BI skills**. Each skill teaches Claude a different area of Power BI development. You don't need to memorize commands. Just describe what you want.
 
-```mermaid
-graph TD
-    YOU["You: 'Set up RLS for<br/>regional managers'"] --> CC["Claude Code"]
-    CC --> SK{"Picks the<br/>right skill"}
-    SK --> S1["Modeling"]
-    SK --> S2["DAX"]
-    SK --> S3["Deployment"]
-    SK --> S4["Security"]
-    SK --> S5["Documentation"]
-
-    style YOU fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style CC fill:#16213e,stroke:#4cc9f0,color:#fff
-    style SK fill:#0f3460,stroke:#7b61ff,color:#fff
-    style S1 fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style S2 fill:#1a1a2e,stroke:#4cc9f0,color:#fff
-    style S3 fill:#1a1a2e,stroke:#7b61ff,color:#fff
-    style S4 fill:#1a1a2e,stroke:#06d6a0,color:#fff
-    style S5 fill:#1a1a2e,stroke:#ff6b6b,color:#fff
+```
+You: "Set up RLS for regional managers"
+  |
+  v
+Claude Code --> Picks the right skill
+                  |
+                  +-- Modeling
+                  +-- DAX
+                  +-- Deployment
+                  +-- Security
+                  +-- Documentation
 ```
 
 ### Modeling
@@ -247,17 +234,12 @@ Tab completion, command history, and a dynamic prompt showing your active connec
 
 pbi-cli wraps Microsoft's official Power BI MCP server binary behind a CLI. The binary is downloaded automatically by `pbi setup` from the VS Code Marketplace.
 
-```mermaid
-graph TB
-    subgraph CLI["pbi-cli"]
-        A["CLI commands"] --> B["MCP client"]
-    end
-    B -->|"stdio"| C["Power BI MCP Server<br/>.NET binary"]
-    C -->|"XMLA"| D["Power BI Desktop<br/>or Fabric"]
-
-    style CLI fill:#16213e,stroke:#4cc9f0,color:#fff
-    style C fill:#0f3460,stroke:#7b61ff,color:#fff
-    style D fill:#1a1a2e,stroke:#f2c811,color:#fff
+```
++------------------+         +----------------------+         +------------------+
+|     pbi-cli      |         |  Power BI MCP Server |         |    Power BI      |
+|  CLI commands -->-| stdio  |    (.NET binary)     |  XMLA   |  Desktop/Fabric  |
+|  MCP client      |-------->|                      |-------->|                  |
++------------------+         +----------------------+         +------------------+
 ```
 
 **Why a CLI wrapper?** When an AI agent uses an MCP server directly, the tool schemas consume ~4,000+ tokens per tool in the context window. A `pbi` command costs ~30 tokens. Same capabilities, 100x less context.
