@@ -41,7 +41,7 @@ def resolve_binary() -> Path:
 
     Priority:
     1. PBI_MCP_BINARY environment variable
-    2. ~/.pbi-cli/bin/{version}/ (managed by pbi setup)
+    2. ~/.pbi-cli/bin/{version}/ (auto-downloaded on first connect)
     3. VS Code extension fallback
 
     Raises FileNotFoundError if no binary is found.
@@ -69,7 +69,7 @@ def resolve_binary() -> Path:
         return vscode_bin
 
     raise FileNotFoundError(
-        "Power BI MCP binary not found. Run 'pbi setup' to download it, "
+        "Power BI MCP binary not found. Run 'pbi connect' or 'pbi setup' to download it, "
         "or set PBI_MCP_BINARY environment variable."
     )
 
@@ -241,7 +241,7 @@ def _binary_source(path: Path) -> str:
     if "PBI_MCP_BINARY" in os.environ:
         return "environment variable (PBI_MCP_BINARY)"
     if ".pbi-cli" in path_str:
-        return "managed (pbi setup)"
+        return "managed (auto-downloaded)"
     if ".vscode" in path_str:
         return "VS Code extension (fallback)"
     return "unknown"

@@ -20,7 +20,7 @@ def test_pbi_cli_error_is_click_exception() -> None:
 
 def test_binary_not_found_default_message() -> None:
     err = BinaryNotFoundError()
-    assert "pbi setup" in err.format_message()
+    assert "pbi connect" in err.format_message()
 
 
 def test_connection_required_default_message() -> None:

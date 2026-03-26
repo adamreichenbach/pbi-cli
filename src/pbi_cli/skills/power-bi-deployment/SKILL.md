@@ -11,21 +11,24 @@ Manage model lifecycle with TMDL export/import and Fabric workspace deployment.
 ## Prerequisites
 
 ```bash
-pip install pbi-cli-tool
-pbi setup
+pipx install pbi-cli-tool
+pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
 ```
 
 ## Connecting to Targets
 
 ```bash
-# Local Power BI Desktop
-pbi connect --data-source localhost:54321
+# Local Power BI Desktop (auto-detects port)
+pbi connect
+
+# Local with explicit port
+pbi connect -d localhost:54321
 
 # Fabric workspace (cloud)
 pbi connect-fabric --workspace "Production" --model "Sales Model"
 
 # Named connections for switching
-pbi connect --data-source localhost:54321 --name dev
+pbi connect --name dev
 pbi connect-fabric --workspace "Production" --model "Sales" --name prod
 pbi connections list
 ```

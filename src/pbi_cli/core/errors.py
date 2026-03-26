@@ -21,7 +21,9 @@ class BinaryNotFoundError(PbiCliError):
 
     def __init__(
         self,
-        message: str = "Power BI MCP binary not found. Run 'pbi setup' first.",
+        message: str = (
+            "Power BI MCP binary not found. Run 'pbi connect' or 'pbi setup' to download it."
+        ),
     ) -> None:
         super().__init__(message)
 

@@ -232,7 +232,7 @@ Tab completion, command history, and a dynamic prompt showing your active connec
 
 ## How It Works
 
-pbi-cli wraps Microsoft's official Power BI MCP server binary behind a CLI. The binary is downloaded automatically by `pbi setup` from the VS Code Marketplace.
+pbi-cli wraps Microsoft's official Power BI MCP server binary behind a CLI. The binary is downloaded automatically on first `pbi connect` from the VS Code Marketplace.
 
 ```
 +------------------+         +----------------------+         +------------------+
@@ -259,7 +259,7 @@ All config lives in `~/.pbi-cli/`:
 
 Binary resolution order:
 1. `$PBI_MCP_BINARY` env var (explicit override)
-2. `~/.pbi-cli/bin/` (managed by `pbi setup`)
+2. `~/.pbi-cli/bin/` (auto-downloaded on first connect)
 3. VS Code extension fallback
 
 </details>

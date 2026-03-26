@@ -11,9 +11,8 @@ Generate comprehensive documentation for Power BI semantic models.
 ## Prerequisites
 
 ```bash
-pip install pbi-cli-tool
-pbi setup
-pbi connect --data-source localhost:54321
+pipx install pbi-cli-tool
+pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
 ```
 
 ## Quick Model Overview

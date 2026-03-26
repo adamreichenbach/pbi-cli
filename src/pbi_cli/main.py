@@ -43,7 +43,7 @@ def cli(ctx: click.Context, json_output: bool, connection: str | None) -> None:
     Wraps the Power BI MCP server for token-efficient usage with
     Claude Code and other AI agents.
 
-    Run 'pbi setup' first to download the Power BI MCP binary.
+    Run 'pbi connect' to auto-detect Power BI Desktop and download the MCP binary.
     """
     ctx.ensure_object(PbiContext)
     ctx.obj = PbiContext(json_output=json_output, connection=connection)
