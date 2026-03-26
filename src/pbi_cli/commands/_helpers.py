@@ -10,6 +10,16 @@ from pbi_cli.core.output import format_mcp_result, print_error
 from pbi_cli.main import PbiContext
 
 
+def resolve_connection_name(ctx: PbiContext) -> str | None:
+    """Return the connection name from --connection flag or last-used store."""
+    if ctx.connection:
+        return ctx.connection
+    from pbi_cli.core.connection_store import load_connections
+
+    store = load_connections()
+    return store.last_used or None
+
+
 def run_tool(
     ctx: PbiContext,
     tool_name: str,
@@ -22,8 +32,9 @@ def run_tool(
 
     In REPL mode the shared client is reused and never stopped.
     """
-    if ctx.connection:
-        request.setdefault("connectionName", ctx.connection)
+    conn_name = resolve_connection_name(ctx)
+    if conn_name:
+        request.setdefault("connectionName", conn_name)
 
     client = get_client(repl_mode=ctx.repl_mode)
     try:

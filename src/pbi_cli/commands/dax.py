@@ -6,6 +6,7 @@ import sys
 
 import click
 
+from pbi_cli.commands._helpers import resolve_connection_name
 from pbi_cli.core.mcp_client import get_client
 from pbi_cli.core.output import format_mcp_result, print_error
 from pbi_cli.main import PbiContext, pass_context
@@ -59,8 +60,9 @@ def execute(
         "getExecutionMetrics": metrics or metrics_only,
         "executionMetricsOnly": metrics_only,
     }
-    if ctx.connection:
-        request["connectionName"] = ctx.connection
+    conn_name = resolve_connection_name(ctx)
+    if conn_name:
+        request["connectionName"] = conn_name
     if max_rows is not None:
         request["maxRows"] = max_rows
 
@@ -94,8 +96,9 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
         "query": resolved_query,
         "timeoutSeconds": timeout,
     }
-    if ctx.connection:
-        request["connectionName"] = ctx.connection
+    conn_name = resolve_connection_name(ctx)
+    if conn_name:
+        request["connectionName"] = conn_name
 
     client = get_client()
     try:
@@ -113,8 +116,9 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
 def clear_cache(ctx: PbiContext) -> None:
     """Clear the DAX query cache."""
     request: dict[str, object] = {"operation": "ClearCache"}
-    if ctx.connection:
-        request["connectionName"] = ctx.connection
+    conn_name = resolve_connection_name(ctx)
+    if conn_name:
+        request["connectionName"] = conn_name
 
     client = get_client()
     try:

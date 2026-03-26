@@ -50,6 +50,13 @@ def test_run_tool_adds_connection(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_run_tool_no_connection(monkeypatch: pytest.MonkeyPatch) -> None:
     mock = MockPbiMcpClient()
     monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
+    # Ensure no last-used connection is found
+    from pbi_cli.core.connection_store import ConnectionStore
+
+    monkeypatch.setattr(
+        "pbi_cli.core.connection_store.load_connections",
+        lambda: ConnectionStore(),
+    )
 
     ctx = PbiContext(json_output=True)
     run_tool(ctx, "measure_operations", {"operation": "List"})
