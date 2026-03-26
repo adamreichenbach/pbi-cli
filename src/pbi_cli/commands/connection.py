@@ -12,9 +12,8 @@ from pbi_cli.core.connection_store import (
     remove_connection,
     save_connections,
 )
-from pbi_cli.core.mcp_client import PbiMcpClient, get_client
+from pbi_cli.core.mcp_client import get_client
 from pbi_cli.core.output import (
-    format_mcp_result,
     print_error,
     print_json,
     print_success,
@@ -43,7 +42,8 @@ def connect(ctx: PbiContext, data_source: str, catalog: str, name: str | None, c
     if connection_string:
         request["connectionString"] = connection_string
 
-    client = get_client()
+    repl = ctx.repl_mode
+    client = get_client(repl_mode=repl)
     try:
         result = client.call_tool("connection_operations", request)
 
@@ -65,7 +65,8 @@ def connect(ctx: PbiContext, data_source: str, catalog: str, name: str | None, c
         print_error(f"Connection failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not repl:
+            client.stop()
 
 
 @click.command(name="connect-fabric")
@@ -86,7 +87,8 @@ def connect_fabric(ctx: PbiContext, workspace: str, model: str, name: str | None
         "tenantName": tenant,
     }
 
-    client = get_client()
+    repl = ctx.repl_mode
+    client = get_client(repl_mode=repl)
     try:
         result = client.call_tool("connection_operations", request)
 
@@ -109,7 +111,8 @@ def connect_fabric(ctx: PbiContext, workspace: str, model: str, name: str | None
         print_error(f"Fabric connection failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not repl:
+            client.stop()
 
 
 @click.command()
@@ -124,7 +127,8 @@ def disconnect(ctx: PbiContext, name: str | None) -> None:
         print_error("No active connection to disconnect.")
         raise SystemExit(1)
 
-    client = get_client()
+    repl = ctx.repl_mode
+    client = get_client(repl_mode=repl)
     try:
         result = client.call_tool("connection_operations", {
             "operation": "Disconnect",
@@ -142,7 +146,8 @@ def disconnect(ctx: PbiContext, name: str | None) -> None:
         print_error(f"Disconnect failed: {e}")
         raise SystemExit(1)
     finally:
-        client.stop()
+        if not repl:
+            client.stop()
 
 
 @click.group()

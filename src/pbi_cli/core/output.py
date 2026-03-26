@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import json
-import sys
 from typing import Any
 
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
-
 
 console = Console()
 error_console = Console(stderr=True)

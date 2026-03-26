@@ -12,19 +12,17 @@ import shutil
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Any
 
 import httpx
 
-from pbi_cli.core.config import PBI_CLI_HOME, PbiConfig, ensure_home_dir, load_config, save_config
-from pbi_cli.core.output import print_error, print_info, print_success, print_warning
+from pbi_cli.core.config import PBI_CLI_HOME, ensure_home_dir, load_config, save_config
+from pbi_cli.core.output import print_info, print_success
 from pbi_cli.utils.platform import (
     binary_name,
     detect_platform,
     ensure_executable,
     find_vscode_extension_binary,
 )
-
 
 EXTENSION_ID = "analysis-services.powerbi-modeling-mcp"
 PUBLISHER = "analysis-services"

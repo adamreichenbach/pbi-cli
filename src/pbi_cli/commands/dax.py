@@ -7,7 +7,7 @@ import sys
 import click
 
 from pbi_cli.core.mcp_client import get_client
-from pbi_cli.core.output import format_mcp_result, print_error, print_json
+from pbi_cli.core.output import format_mcp_result, print_error
 from pbi_cli.main import PbiContext, pass_context
 
 

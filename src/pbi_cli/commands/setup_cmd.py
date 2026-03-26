@@ -8,7 +8,6 @@ from pbi_cli.core.binary_manager import (
     check_for_updates,
     download_and_extract,
     get_binary_info,
-    resolve_binary,
 )
 from pbi_cli.core.output import print_error, print_info, print_json, print_key_value, print_success
 from pbi_cli.main import PbiContext, pass_context

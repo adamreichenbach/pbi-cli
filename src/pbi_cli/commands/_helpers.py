@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import click
-
+from pbi_cli.core.errors import McpToolError
 from pbi_cli.core.mcp_client import get_client
 from pbi_cli.core.output import format_mcp_result, print_error
 from pbi_cli.main import PbiContext
@@ -20,20 +19,23 @@ def run_tool(
 
     Adds connectionName from context if available. Formats output based
     on --json flag. Returns the result or exits on error.
+
+    In REPL mode the shared client is reused and never stopped.
     """
     if ctx.connection:
         request.setdefault("connectionName", ctx.connection)
 
-    client = get_client()
+    client = get_client(repl_mode=ctx.repl_mode)
     try:
         result = client.call_tool(tool_name, request)
         format_mcp_result(result, ctx.json_output)
         return result
     except Exception as e:
         print_error(str(e))
-        raise SystemExit(1)
+        raise McpToolError(tool_name, str(e))
     finally:
-        client.stop()
+        if not ctx.repl_mode:
+            client.stop()
 
 
 def build_definition(

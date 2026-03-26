@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass
-from pathlib import Path
 
 from pbi_cli.core.config import PBI_CLI_HOME, ensure_home_dir
-
 
 CONNECTIONS_FILE = PBI_CLI_HOME / "connections.json"
 

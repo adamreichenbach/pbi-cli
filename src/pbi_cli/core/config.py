@@ -9,7 +9,6 @@ import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-
 PBI_CLI_HOME = Path.home() / ".pbi-cli"
 CONFIG_FILE = PBI_CLI_HOME / "config.json"
 

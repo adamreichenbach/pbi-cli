@@ -9,8 +9,6 @@ from __future__ import annotations
 
 import asyncio
 import atexit
-import sys
-from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
