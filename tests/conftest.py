@@ -125,6 +125,9 @@ def patch_get_client(
     # Also patch dax.py which calls get_client directly
     monkeypatch.setattr("pbi_cli.commands.dax.get_client", factory)
 
+    # Skip auto-setup (binary download + skills install) in tests
+    monkeypatch.setattr("pbi_cli.commands.connection._ensure_ready", lambda: None)
+
     return mock_client
 
 
