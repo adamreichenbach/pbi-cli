@@ -55,6 +55,34 @@ That's it. Open Claude Code and start asking.
 
 > **Requires:** Python 3.10+ and Power BI Desktop (local) or a Fabric workspace (cloud).
 
+<details>
+<summary><b>Windows: "pbi is not recognized" after install?</b></summary>
+
+On Windows, `pip install` often installs to a user Scripts directory that isn't on your PATH. Two ways to fix this:
+
+**Option A: Use `pipx` (recommended for CLI tools)**
+```bash
+pip install pipx
+pipx install pbi-cli-tool
+```
+`pipx` handles PATH automatically.
+
+**Option B: Add the Scripts directory to PATH manually**
+
+Find the directory:
+```bash
+python -c "import site; print(site.getusersitepackages().replace('site-packages','Scripts'))"
+```
+
+Add the printed path to your system PATH:
+```cmd
+setx PATH "%PATH%;C:\Users\YourName\AppData\Roaming\Python\PythonXXX\Scripts"
+```
+
+Then **restart your terminal**.
+
+</details>
+
 ---
 
 ## Skills
