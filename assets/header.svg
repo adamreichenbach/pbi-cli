@@ -1,91 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520">
+<svg xmlns="http://www.w3.org/2000/svg" width="950" height="180" viewBox="0 0 950 180">
   <defs>
-    <!-- Letter P: 7 cols, 7 rows, 2-block strokes -->
-    <symbol id="P" overflow="visible">
-      <rect x="0" y="0" width="200" height="26" rx="3"/>
-      <rect x="0" y="29" width="55" height="26" rx="3"/>
-      <rect x="145" y="29" width="55" height="26" rx="3"/>
-      <rect x="0" y="58" width="55" height="26" rx="3"/>
-      <rect x="145" y="58" width="55" height="26" rx="3"/>
-      <rect x="0" y="87" width="200" height="26" rx="3"/>
-      <rect x="0" y="116" width="55" height="26" rx="3"/>
-      <rect x="0" y="145" width="55" height="26" rx="3"/>
-      <rect x="0" y="174" width="55" height="26" rx="3"/>
+    <!-- Brick patterns create the individual block texture within letter shapes -->
+    <pattern id="mainBrick" width="14" height="14" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" rx="1.5" fill="#F2C811" stroke="#C49B0E" stroke-width="1"/>
+    </pattern>
+    <pattern id="shadowBrick" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="translate(4,4)">
+      <rect width="12" height="12" rx="1.5" fill="#7A6508" stroke="#5A4D06" stroke-width="1"/>
+    </pattern>
+
+    <!-- P: 8 cols x 10 rows, 2-block strokes -->
+    <symbol id="lP" overflow="visible">
+      <rect x="0" y="0" width="110" height="26" rx="2"/>
+      <rect x="0" y="28" width="26" height="26" rx="2"/>
+      <rect x="84" y="28" width="26" height="26" rx="2"/>
+      <rect x="0" y="56" width="110" height="26" rx="2"/>
+      <rect x="0" y="84" width="26" height="54" rx="2"/>
     </symbol>
-    <!-- Letter B: 7 cols, 7 rows -->
-    <symbol id="B" overflow="visible">
-      <rect x="0" y="0" width="200" height="26" rx="3"/>
-      <rect x="0" y="29" width="55" height="26" rx="3"/>
-      <rect x="145" y="29" width="55" height="26" rx="3"/>
-      <rect x="0" y="58" width="55" height="26" rx="3"/>
-      <rect x="145" y="58" width="55" height="26" rx="3"/>
-      <rect x="0" y="87" width="200" height="26" rx="3"/>
-      <rect x="0" y="116" width="55" height="26" rx="3"/>
-      <rect x="145" y="116" width="55" height="26" rx="3"/>
-      <rect x="0" y="145" width="55" height="26" rx="3"/>
-      <rect x="145" y="145" width="55" height="26" rx="3"/>
-      <rect x="0" y="174" width="200" height="26" rx="3"/>
+    <!-- B: 8 cols x 10 rows -->
+    <symbol id="lB" overflow="visible">
+      <rect x="0" y="0" width="110" height="26" rx="2"/>
+      <rect x="0" y="28" width="26" height="26" rx="2"/>
+      <rect x="84" y="28" width="26" height="26" rx="2"/>
+      <rect x="0" y="56" width="110" height="26" rx="2"/>
+      <rect x="0" y="84" width="26" height="26" rx="2"/>
+      <rect x="84" y="84" width="26" height="26" rx="2"/>
+      <rect x="0" y="112" width="110" height="26" rx="2"/>
     </symbol>
-    <!-- Letter I: 4 cols, 7 rows -->
-    <symbol id="I" overflow="visible">
-      <rect x="0" y="0" width="113" height="26" rx="3"/>
-      <rect x="29" y="29" width="55" height="26" rx="3"/>
-      <rect x="29" y="58" width="55" height="26" rx="3"/>
-      <rect x="29" y="87" width="55" height="26" rx="3"/>
-      <rect x="29" y="116" width="55" height="26" rx="3"/>
-      <rect x="29" y="145" width="55" height="26" rx="3"/>
-      <rect x="0" y="174" width="113" height="26" rx="3"/>
+    <!-- I: 6 cols x 10 rows -->
+    <symbol id="lI" overflow="visible">
+      <rect x="0" y="0" width="82" height="26" rx="2"/>
+      <rect x="28" y="28" width="26" height="82" rx="2"/>
+      <rect x="0" y="112" width="82" height="26" rx="2"/>
     </symbol>
-    <!-- Letter C: 7 cols, 7 rows -->
-    <symbol id="C" overflow="visible">
-      <rect x="0" y="0" width="200" height="26" rx="3"/>
-      <rect x="0" y="29" width="55" height="26" rx="3"/>
-      <rect x="0" y="58" width="55" height="26" rx="3"/>
-      <rect x="0" y="87" width="55" height="26" rx="3"/>
-      <rect x="0" y="116" width="55" height="26" rx="3"/>
-      <rect x="0" y="145" width="55" height="26" rx="3"/>
-      <rect x="0" y="174" width="200" height="26" rx="3"/>
+    <!-- Hyphen: 4 cols, bar at vertical center -->
+    <symbol id="lH" overflow="visible">
+      <rect x="0" y="56" width="54" height="26" rx="2"/>
     </symbol>
-    <!-- Letter L: 7 cols, 7 rows -->
-    <symbol id="L" overflow="visible">
-      <rect x="0" y="0" width="55" height="26" rx="3"/>
-      <rect x="0" y="29" width="55" height="26" rx="3"/>
-      <rect x="0" y="58" width="55" height="26" rx="3"/>
-      <rect x="0" y="87" width="55" height="26" rx="3"/>
-      <rect x="0" y="116" width="55" height="26" rx="3"/>
-      <rect x="0" y="145" width="55" height="26" rx="3"/>
-      <rect x="0" y="174" width="200" height="26" rx="3"/>
+    <!-- C: 8 cols x 10 rows -->
+    <symbol id="lC" overflow="visible">
+      <rect x="0" y="0" width="110" height="26" rx="2"/>
+      <rect x="0" y="28" width="26" height="82" rx="2"/>
+      <rect x="0" y="112" width="110" height="26" rx="2"/>
+    </symbol>
+    <!-- L: 8 cols x 10 rows -->
+    <symbol id="lL" overflow="visible">
+      <rect x="0" y="0" width="26" height="110" rx="2"/>
+      <rect x="0" y="112" width="110" height="26" rx="2"/>
     </symbol>
   </defs>
 
   <!-- Background -->
-  <rect width="800" height="520" fill="#1a1a1a"/>
+  <rect width="950" height="180" fill="#1a1a1a"/>
 
-  <!-- 3D Shadow layer (offset +5,+5) -->
-  <g fill="#7A6508" stroke="#5C4C06" stroke-width="1.5">
-    <use href="#P" x="88" y="23"/>
-    <use href="#B" x="349" y="23"/>
-    <use href="#I" x="610" y="23"/>
-    <use href="#C" x="88" y="275"/>
-    <use href="#L" x="349" y="275"/>
-    <use href="#I" x="610" y="275"/>
+  <!-- 3D Shadow layer (offset +4,+4) -->
+  <g fill="url(#shadowBrick)" stroke="#3D2E04" stroke-width="2">
+    <use href="#lP" x="60" y="18"/>
+    <use href="#lB" x="200" y="18"/>
+    <use href="#lI" x="340" y="18"/>
+    <use href="#lH" x="452" y="18"/>
+    <use href="#lC" x="536" y="18"/>
+    <use href="#lL" x="676" y="18"/>
+    <use href="#lI" x="816" y="18"/>
   </g>
 
   <!-- Main block layer -->
-  <g fill="#F2C811" stroke="#B8960D" stroke-width="1.5">
-    <use href="#P" x="83" y="18"/>
-    <use href="#B" x="344" y="18"/>
-    <use href="#I" x="605" y="18"/>
-    <use href="#C" x="83" y="270"/>
-    <use href="#L" x="344" y="270"/>
-    <use href="#I" x="605" y="270"/>
+  <g fill="url(#mainBrick)" stroke="#8B6508" stroke-width="2">
+    <use href="#lP" x="56" y="14"/>
+    <use href="#lB" x="196" y="14"/>
+    <use href="#lI" x="336" y="14"/>
+    <use href="#lH" x="448" y="14"/>
+    <use href="#lC" x="532" y="14"/>
+    <use href="#lL" x="672" y="14"/>
+    <use href="#lI" x="812" y="14"/>
   </g>
-
-  <!-- Subtitle -->
-  <text x="400" y="500" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#8899aa" letter-spacing="2">
-    Power BI semantic models from your terminal
-  </text>
-
-  <!-- Accent bar -->
-  <rect x="0" y="512" width="800" height="8" fill="#F2C811" opacity="0.6" rx="0"/>
 </svg>
