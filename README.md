@@ -44,6 +44,14 @@ graph LR
 
 ## Get Started
 
+**Fastest way:** Just give Claude the repo URL and let it handle everything:
+
+```
+Install and set up pbi-cli from https://github.com/MinaSaad1/pbi-cli.git
+```
+
+**Or install manually:**
+
 ```bash
 pip install pbi-cli-tool        # 1. Install
 pbi setup                       # 2. Download the MCP binary
