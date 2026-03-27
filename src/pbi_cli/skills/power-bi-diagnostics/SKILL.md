@@ -1,6 +1,6 @@
 ---
 name: Power BI Diagnostics
-description: Troubleshoot Power BI model performance, trace query execution, manage caches, and verify the pbi-cli environment. Use when the user mentions slow queries, performance issues, tracing, profiling, or setup problems.
+description: Troubleshoot Power BI model performance, trace query execution, manage caches, and verify the pbi-cli environment using pbi-cli. Invoke this skill whenever the user says "pbi not working", "setup issues", "connection failed", "slow query", "performance", "profiling", "tracing", "health check", "model audit", "pbi setup", or encounters any pbi-cli error. This is the first skill to check when something goes wrong with pbi-cli.
 tools: pbi-cli
 ---
 
@@ -27,6 +27,25 @@ pbi --json setup --info
 
 # Check CLI version
 pbi --version
+```
+
+## Quick Troubleshooting
+
+If pbi-cli isn't working, run these checks in order:
+
+```bash
+# 1. Is pbi-cli installed correctly?
+pbi --version
+pbi setup --info
+
+# 2. Is Power BI Desktop running with a model open?
+pbi connect
+
+# 3. Is the connection still alive?
+pbi connections last
+
+# 4. Can you query the model?
+pbi dax execute "EVALUATE ROW(\"test\", 1)"
 ```
 
 ## Model Health Check

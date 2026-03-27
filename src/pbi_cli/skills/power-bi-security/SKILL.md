@@ -1,6 +1,6 @@
 ---
 name: Power BI Security
-description: Configure row-level security (RLS) roles, manage object-level security, and set up perspectives for Power BI semantic models. Use when the user mentions Power BI security, RLS, access control, or data restrictions.
+description: Configure row-level security (RLS) roles, object-level security, and perspectives for Power BI semantic models using pbi-cli. Invoke this skill whenever the user mentions "security", "RLS", "row-level security", "access control", "data restrictions", "who can see", "filter by user", "perspectives", "limit visibility", or wants to restrict data access by role.
 tools: pbi-cli
 ---
 

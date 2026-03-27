@@ -1,6 +1,6 @@
 ---
 name: Power BI Partitions & Expressions
-description: Manage Power BI table partitions, named expressions (M/Power Query sources), and calendar table configuration. Use when the user mentions partitions, data sources, M expressions, Power Query, incremental refresh, or calendar/date tables.
+description: Manage Power BI table partitions, named expressions (M/Power Query data sources), and calendar table configuration using pbi-cli. Invoke this skill whenever the user mentions "partitions", "data sources", "M expressions", "Power Query", "incremental refresh", "named expressions", "connection parameters", or wants to configure how tables load data. For broader modeling tasks (measures, relationships, hierarchies), see power-bi-modeling instead.
 tools: pbi-cli
 ---
 

@@ -194,6 +194,7 @@ def _ensure_ready() -> None:
         pbi connect -d localhost:54321
     """
     from pbi_cli.commands.skills_cmd import SKILLS_TARGET_DIR, _get_bundled_skills
+    from pbi_cli.core.claude_integration import ensure_claude_md_snippet
 
     bundled = _get_bundled_skills()
     any_missing = any(not (SKILLS_TARGET_DIR / name / "SKILL.md").exists() for name in bundled)
@@ -208,3 +209,5 @@ def _ensure_ready() -> None:
             target_file = target_dir / "SKILL.md"
             target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
         print_info("Skills installed.")
+
+    ensure_claude_md_snippet()

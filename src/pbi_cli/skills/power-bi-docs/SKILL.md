@@ -1,6 +1,6 @@
 ---
 name: Power BI Documentation
-description: Auto-document Power BI semantic models by extracting metadata, generating comprehensive documentation, and cataloging all model objects. Use when the user wants to document a Power BI model, create a data dictionary, or audit model contents.
+description: Auto-document Power BI semantic models by extracting metadata, generating documentation, and cataloging all model objects using pbi-cli. Invoke this skill whenever the user says "document this model", "what's in this model", "list everything", "data dictionary", "model inventory", "audit contents", "catalog", "describe the model", or wants to understand what objects exist in a semantic model.
 tools: pbi-cli
 ---
 

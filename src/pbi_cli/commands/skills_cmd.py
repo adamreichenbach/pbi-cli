@@ -115,3 +115,9 @@ def skills_uninstall(ctx: object, skill_name: str | None) -> None:
         click.echo(f"  {name}: removed", err=True)
 
     click.echo(f"\n{removed_count} skill(s) removed.", err=True)
+
+    # Remove CLAUDE.md snippet when uninstalling all skills
+    if skill_name is None:
+        from pbi_cli.core.claude_integration import remove_claude_md_snippet
+
+        remove_claude_md_snippet()

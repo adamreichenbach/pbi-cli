@@ -1,6 +1,6 @@
 ---
 name: Power BI Modeling
-description: Create and manage Power BI semantic model objects including tables, columns, measures, relationships, hierarchies, and calculation groups. Use when the user mentions Power BI modeling, semantic models, or wants to create or modify model objects.
+description: Create and manage Power BI semantic model structure using pbi-cli -- tables, columns, measures, relationships, hierarchies, calculation groups, and date/calendar tables. Invoke this skill whenever the user says "create table", "add measure", "add column", "create relationship", "date table", "calendar table", "star schema", "mark as date table", "add hierarchy", "calculation group", or any model-building task. Also invoke when creating multiple measures at once -- the skill contains critical guidance on multi-line DAX expression handling.
 tools: pbi-cli
 ---
 
@@ -54,6 +54,16 @@ pbi measure rename "Old" "New" -t Sales                             # Rename
 pbi measure move "Revenue" -t Sales --to-table Finance              # Move to another table
 ```
 
+**Multi-line DAX in measure expressions:** The `-e` flag passes DAX as a shell argument, which collapses newlines. For simple expressions like `SUM(Sales[Amount])` or `DIVIDE([A] - [B], [B])` this works fine. For complex expressions using VAR/RETURN, pipe from stdin instead:
+
+```bash
+echo 'VAR TotalSales = SUM(Sales[Amount])
+VAR TotalCost = SUM(Sales[Cost])
+RETURN TotalSales - TotalCost' | pbi measure create "Profit" -e - -t Sales
+```
+
+See the **power-bi-dax** skill for the full explanation and more workarounds.
+
 ## Relationships
 
 ```bash
@@ -87,6 +97,22 @@ pbi calc-group create-item "YTD" \
   --group "Time Intelligence" \
   --expression "CALCULATE(SELECTEDMEASURE(), DATESYTD(Calendar[Date]))"  # Add item
 pbi calc-group delete "Time Intelligence"          # Delete group
+```
+
+## Creating a Date/Calendar Table
+
+Date tables are essential for time intelligence functions (TOTALYTD, SAMEPERIODLASTYEAR, DATEADD, etc.).
+
+```bash
+# Create a calculated date table with DAX (covers full calendar years)
+pbi table create Calendar \
+  --dax-expression "ADDCOLUMNS(CALENDAR(DATE(2023,1,1), DATE(2024,12,31)), \"Year\", YEAR([Date]), \"MonthNumber\", MONTH([Date]), \"MonthName\", FORMAT([Date], \"MMMM\"), \"Quarter\", \"Q\" & FORMAT([Date], \"Q\"))"
+
+# Mark it as a date table (required for time intelligence)
+pbi table mark-date Calendar --date-column Date
+
+# Verify it's recognized as a date table
+pbi calendar list
 ```
 
 ## Workflow: Create a Star Schema

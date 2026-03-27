@@ -1,6 +1,6 @@
 ---
 name: Power BI Deployment
-description: Import and export TMDL and TMSL formats, manage model lifecycle with transactions, and version-control Power BI semantic models. Use when the user mentions deploying, publishing, migrating, or version-controlling Power BI models.
+description: Import and export TMDL/TMSL formats, manage model lifecycle with transactions, and version-control Power BI semantic models using pbi-cli. Invoke this skill whenever the user mentions "deploy", "export", "import", "TMDL", "TMSL", "version control", "git", "backup", "migrate", "transaction", "commit changes", "rollback", or wants to save/restore model state.
 tools: pbi-cli
 ---
 
