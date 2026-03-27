@@ -30,9 +30,6 @@
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/before-after.svg" alt="Why pbi-cli" width="850"/>
 </p>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/token-cost.svg" alt="Token cost comparison" width="850"/>
-</p>
 
 ---
 
