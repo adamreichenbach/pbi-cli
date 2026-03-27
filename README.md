@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/banner.svg" alt="pbi-cli — Vibe Modelling" width="850"/>
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/banner.svg" alt="pbi-cli — Vibe Modeling" width="850"/>
 </p>
 
 <p align="center">
@@ -11,6 +11,8 @@
   <a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
   <a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
   <a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
+  <a href="https://www.linkedin.com/in/minasaad1/"><img src="https://img.shields.io/badge/LinkedIn-Mina%20Saad-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://mina-saad.com"><img src="https://img.shields.io/badge/Website-mina--saad.com-58a6ff?style=flat-square&logo=googlechrome&logoColor=white" alt="Website"></a>
 </p>
 
 <p align="center">
@@ -29,7 +31,6 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/before-after.svg" alt="Why pbi-cli" width="850"/>
 </p>
-
 
 ---
 
