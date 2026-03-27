@@ -27,11 +27,13 @@ def calendar_list(ctx: PbiContext) -> None:
     for table in session.model.Tables:
         cat = _safe_str(table.DataCategory)
         if cat.lower() in ("time", "date"):
-            results.append({
-                "name": str(table.Name),
-                "dataCategory": cat,
-                "columns": table.Columns.Count,
-            })
+            results.append(
+                {
+                    "name": str(table.Name),
+                    "dataCategory": cat,
+                    "columns": table.Columns.Count,
+                }
+            )
     from pbi_cli.core.output import format_result
 
     format_result(results, ctx.json_output)

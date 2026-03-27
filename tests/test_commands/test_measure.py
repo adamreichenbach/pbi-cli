@@ -34,9 +34,7 @@ def test_measure_get(
     patch_session: Any,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "measure", "get", "Total Sales", "--table", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "measure", "get", "Total Sales", "--table", "Sales"])
     assert result.exit_code == 0
     assert "Total Sales" in result.output
 
@@ -59,9 +57,7 @@ def test_measure_delete(
     patch_session: Any,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(
-        cli, ["--json", "measure", "delete", "Total Sales", "-t", "Sales"]
-    )
+    result = cli_runner.invoke(cli, ["--json", "measure", "delete", "Total Sales", "-t", "Sales"])
     assert result.exit_code == 0
     assert "deleted" in result.output
 

@@ -67,11 +67,13 @@ def connect(
         save_connections(store)
 
         if ctx.json_output:
-            print_json({
-                "connection": effective_name,
-                "status": "connected",
-                "dataSource": data_source,
-            })
+            print_json(
+                {
+                    "connection": effective_name,
+                    "status": "connected",
+                    "dataSource": data_source,
+                }
+            )
         else:
             print_success(f"Connected: {effective_name} ({data_source})")
     except Exception as e:

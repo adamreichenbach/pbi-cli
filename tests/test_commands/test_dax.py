@@ -44,9 +44,7 @@ def test_dax_execute_from_file(
     query_file.write_text("EVALUATE Sales", encoding="utf-8")
 
     with patch("pbi_cli.core.adomd_backend.execute_dax", side_effect=_mock_execute_dax):
-        result = cli_runner.invoke(
-            cli, ["--json", "dax", "execute", "--file", str(query_file)]
-        )
+        result = cli_runner.invoke(cli, ["--json", "dax", "execute", "--file", str(query_file)])
     assert result.exit_code == 0
 
 

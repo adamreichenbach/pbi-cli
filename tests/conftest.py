@@ -35,12 +35,18 @@ class MockCollection:
             self._items.append(item)
             return item
         # Parameterless Add() -- create a simple object and return it
-        obj = type("TraceObj", (), {
-            "Name": "", "AutoRestart": False, "ID": "trace-1",
-            "Update": lambda self: None,
-            "Start": lambda self: None,
-            "Stop": lambda self: None,
-        })()
+        obj = type(
+            "TraceObj",
+            (),
+            {
+                "Name": "",
+                "AutoRestart": False,
+                "ID": "trace-1",
+                "Update": lambda self: None,
+                "Start": lambda self: None,
+                "Stop": lambda self: None,
+            },
+        )()
         self._items.append(obj)
         return obj
 

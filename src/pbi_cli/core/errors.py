@@ -21,9 +21,7 @@ class DotNetNotFoundError(PbiCliError):
 
     def __init__(
         self,
-        message: str = (
-            "pythonnet is required. Install it with: pip install pythonnet"
-        ),
+        message: str = ("pythonnet is required. Install it with: pip install pythonnet"),
     ) -> None:
         super().__init__(message)
 
