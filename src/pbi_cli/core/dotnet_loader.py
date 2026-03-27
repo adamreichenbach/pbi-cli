@@ -59,7 +59,9 @@ def _ensure_initialized() -> None:
 def get_server_class() -> Any:
     """Return the ``Microsoft.AnalysisServices.Tabular.Server`` class."""
     _ensure_initialized()
-    from Microsoft.AnalysisServices.Tabular import Server  # type: ignore[import-untyped]
+    from Microsoft.AnalysisServices.Tabular import (  # type: ignore[import-not-found,unused-ignore]
+        Server,
+    )
 
     return Server
 
@@ -67,8 +69,8 @@ def get_server_class() -> Any:
 def get_adomd_connection_class() -> Any:
     """Return the ``AdomdConnection`` class."""
     _ensure_initialized()
-    from Microsoft.AnalysisServices.AdomdClient import (
-        AdomdConnection,  # type: ignore[import-untyped]
+    from Microsoft.AnalysisServices.AdomdClient import (  # type: ignore[import-not-found,unused-ignore]
+        AdomdConnection,
     )
 
     return AdomdConnection
@@ -77,7 +79,9 @@ def get_adomd_connection_class() -> Any:
 def get_adomd_command_class() -> Any:
     """Return the ``AdomdCommand`` class."""
     _ensure_initialized()
-    from Microsoft.AnalysisServices.AdomdClient import AdomdCommand  # type: ignore[import-untyped]
+    from Microsoft.AnalysisServices.AdomdClient import (
+        AdomdCommand,  # type: ignore[import-not-found,unused-ignore]
+    )
 
     return AdomdCommand
 
@@ -85,7 +89,9 @@ def get_adomd_command_class() -> Any:
 def get_tmdl_serializer() -> Any:
     """Return the ``TmdlSerializer`` class."""
     _ensure_initialized()
-    from Microsoft.AnalysisServices.Tabular import TmdlSerializer  # type: ignore[import-untyped]
+    from Microsoft.AnalysisServices.Tabular import (  # type: ignore[import-not-found,unused-ignore]
+        TmdlSerializer,
+    )
 
     return TmdlSerializer
 
@@ -98,14 +104,12 @@ def get_tom_classes(*names: str) -> tuple[Any, ...]:
         Measure, Table = get_tom_classes("Measure", "Table")
     """
     _ensure_initialized()
-    import Microsoft.AnalysisServices.Tabular as TOM  # type: ignore[import-untyped]
+    import Microsoft.AnalysisServices.Tabular as TOM  # type: ignore[import-not-found,unused-ignore]
 
     results: list[Any] = []
     for name in names:
         cls = getattr(TOM, name, None)
         if cls is None:
-            raise AttributeError(
-                f"Class '{name}' not found in Microsoft.AnalysisServices.Tabular"
-            )
+            raise AttributeError(f"Class '{name}' not found in Microsoft.AnalysisServices.Tabular")
         results.append(cls)
     return tuple(results)
