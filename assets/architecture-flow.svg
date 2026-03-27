@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="150" viewBox="0 0 850 150">
+  <rect width="100%" height="100%" fill="#0d1117" rx="8"/>
+
+  <!-- Title -->
+  <text x="425" y="28" font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#F2C811" text-anchor="middle" font-weight="bold">Architecture</text>
+
+  <!-- Box 1: Claude Code -->
+  <rect x="15" y="50" width="130" height="75" rx="8" fill="#161b22" stroke="#d97757" stroke-width="2"/>
+  <text x="80" y="84" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#d97757" text-anchor="middle" font-weight="bold">Claude Code</text>
+  <text x="80" y="104" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">AI Agent</text>
+
+  <!-- Arrow 1 > 2 -->
+  <line x1="149" y1="88" x2="185" y2="88" stroke="#F2C811" stroke-width="2" stroke-dasharray="4,3" stroke-opacity="0.5"/>
+  <polygon points="189,88 182,83 182,93" fill="#F2C811" fill-opacity="0.5"/>
+  <text x="169" y="78" font-family="'Segoe UI', Arial, sans-serif" font-size="8" fill="#8b949e" text-anchor="middle">CLI</text>
+
+  <!-- Box 2: pbi-cli -->
+  <rect x="193" y="50" width="130" height="75" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+  <text x="258" y="84" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="bold">pbi-cli</text>
+  <text x="258" y="104" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">Python + Click</text>
+
+  <!-- Arrow 2 > 3 (wider gap for "in-process" label) -->
+  <line x1="327" y1="88" x2="393" y2="88" stroke="#F2C811" stroke-width="2" stroke-dasharray="4,3" stroke-opacity="0.5"/>
+  <polygon points="397,88 390,83 390,93" fill="#F2C811" fill-opacity="0.5"/>
+  <text x="362" y="78" font-family="'Segoe UI', Arial, sans-serif" font-size="9" fill="#8b949e" text-anchor="middle">in-process</text>
+
+  <!-- Box 3: pythonnet -->
+  <rect x="401" y="50" width="120" height="75" rx="8" fill="#161b22" stroke="#7b61ff" stroke-width="2"/>
+  <text x="461" y="84" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#7b61ff" text-anchor="middle" font-weight="bold">pythonnet</text>
+  <text x="461" y="104" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">CLR Bridge</text>
+
+  <!-- Arrow 3 > 4 -->
+  <line x1="525" y1="88" x2="561" y2="88" stroke="#F2C811" stroke-width="2" stroke-dasharray="4,3" stroke-opacity="0.5"/>
+  <polygon points="565,88 558,83 558,93" fill="#F2C811" fill-opacity="0.5"/>
+  <text x="545" y="78" font-family="'Segoe UI', Arial, sans-serif" font-size="8" fill="#8b949e" text-anchor="middle">.NET calls</text>
+
+  <!-- Box 4: .NET TOM -->
+  <rect x="569" y="50" width="130" height="75" rx="8" fill="#161b22" stroke="#F2C811" stroke-width="2"/>
+  <text x="634" y="84" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#F2C811" text-anchor="middle" font-weight="bold">.NET TOM</text>
+  <text x="634" y="104" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">ADOMD.NET</text>
+
+  <!-- Arrow 4 > 5 -->
+  <line x1="703" y1="88" x2="727" y2="88" stroke="#F2C811" stroke-width="2" stroke-dasharray="4,3" stroke-opacity="0.5"/>
+  <polygon points="731,88 724,83 724,93" fill="#F2C811" fill-opacity="0.5"/>
+  <text x="717" y="78" font-family="'Segoe UI', Arial, sans-serif" font-size="8" fill="#8b949e" text-anchor="middle">XMLA</text>
+
+  <!-- Box 5: Power BI -->
+  <rect x="735" y="50" width="100" height="75" rx="8" fill="#161b22" stroke="#F2C811" stroke-width="2"/>
+  <text x="785" y="84" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#F2C811" text-anchor="middle" font-weight="bold">Power BI</text>
+  <text x="785" y="104" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">msmdsrv.exe</text>
+</svg>

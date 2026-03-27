@@ -1,54 +1,62 @@
-<img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/header.svg" alt="pbi-cli" width="800"/>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/banner.svg" alt="pbi-cli — Vibe Modelling" width="850"/>
+</p>
 
-**Give Claude Code the Power BI skills it needs.**
-Install once, then just ask Claude to work with your semantic models.
+<p align="center">
+  <b>Give Claude Code the Power BI skills it needs.</b><br/>
+  Install once, then just ask Claude to work with your semantic models.
+</p>
 
-<a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
-<a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
-<a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
+<p align="center">
+  <a href="https://pypi.org/project/pbi-cli-tool/"><img src="https://img.shields.io/pypi/pyversions/pbi-cli-tool?style=flat-square&color=3776ab&label=Python" alt="Python"></a>
+  <a href="https://github.com/MinaSaad1/pbi-cli/actions"><img src="https://img.shields.io/github/actions/workflow/status/MinaSaad1/pbi-cli/ci.yml?branch=master&style=flat-square&label=CI" alt="CI"></a>
+  <a href="https://github.com/MinaSaad1/pbi-cli/blob/master/LICENSE"><img src="https://img.shields.io/github/license/MinaSaad1/pbi-cli?style=flat-square&color=06d6a0" alt="License"></a>
+</p>
 
-[Get Started](#get-started) &bull; [Skills](#skills) &bull; [All Commands](#all-commands) &bull; [REPL Mode](#repl-mode) &bull; [Contributing](#contributing)
+<p align="center">
+  <a href="#why-pbi-cli">Why pbi-cli</a> &bull;
+  <a href="#get-started">Get Started</a> &bull;
+  <a href="#just-ask-claude">Just Ask Claude</a> &bull;
+  <a href="#skills">Skills</a> &bull;
+  <a href="#all-commands">All Commands</a> &bull;
+  <a href="#contributing">Contributing</a>
+</p>
 
 ---
 
-## What is this?
+## Why pbi-cli?
 
-pbi-cli gives **Claude Code** (and other AI agents) the ability to manage Power BI semantic models. It ships with 7 skills that Claude discovers automatically. You ask in plain English, Claude uses the right `pbi` commands.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/before-after.svg" alt="Why pbi-cli" width="850"/>
+</p>
 
-```mermaid
-graph LR
-    A["<b>You</b><br/>'Add a YTD measure<br/>to the Sales table'"] --> B["<b>Claude Code</b><br/>Uses Power BI skills"]
-    B --> C["<b>pbi-cli</b>"]
-    C --> D["<b>Power BI</b><br/>Desktop"]
-
-    style A fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style B fill:#16213e,stroke:#4cc9f0,color:#fff
-    style C fill:#0f3460,stroke:#7b61ff,color:#fff
-    style D fill:#1a1a2e,stroke:#f2c811,color:#fff
-```
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/token-cost.svg" alt="Token cost comparison" width="850"/>
+</p>
 
 ---
 
 ## Get Started
-
-**Fastest way:** Just give Claude the repo URL and let it handle everything:
-
-```
-Install and set up pbi-cli from https://github.com/MinaSaad1/pbi-cli.git
-```
-
-**Or install manually (two commands):**
 
 ```bash
 pipx install pbi-cli-tool    # 1. Install (handles PATH automatically)
 pbi connect                  # 2. Auto-detects Power BI Desktop and installs skills
 ```
 
-That's it. Open Power BI Desktop with a `.pbix` file, run `pbi connect`, and everything is set up automatically. Open Claude Code and start asking.
-
-You can also specify the port manually: `pbi connect -d localhost:54321`
+Open Power BI Desktop with a `.pbix` file, run `pbi connect`, and start asking Claude.
 
 > **Requires:** Windows with Python 3.10+ and Power BI Desktop running.
+
+<details>
+<summary><b>Alternative: give Claude the repo URL</b></summary>
+
+```
+Install and set up pbi-cli from https://github.com/MinaSaad1/pbi-cli.git
+```
+
+Claude will clone, install, connect, and set up skills automatically.
+
+</details>
 
 <details>
 <summary><b>Using pip instead of pipx?</b></summary>
@@ -61,194 +69,105 @@ On Windows, `pip install` often places the `pbi` command in a directory that isn
 
 **Fix: Add the Scripts directory to PATH**
 
-Find the directory:
 ```bash
 python -c "import site; print(site.getusersitepackages().replace('site-packages','Scripts'))"
 ```
 
-Add the printed path to your system PATH:
-```cmd
-setx PATH "%PATH%;C:\Users\YourName\AppData\Roaming\Python\PythonXXX\Scripts"
-```
-
-Then **restart your terminal**. We recommend `pipx` instead to avoid this entirely.
+Add the printed path to your system PATH, then restart your terminal. We recommend `pipx` to avoid this entirely.
 
 </details>
 
 ---
 
+## Just Ask Claude
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/chat-demo.svg" alt="Just Ask Claude" width="850"/>
+</p>
+
+### Create measures in bulk
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/bulk-operations.svg" alt="Bulk operations" width="850"/>
+</p>
+
+### Debug broken DAX
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/dax-debugging.svg" alt="DAX debugging" width="850"/>
+</p>
+
+### Snapshot and restore your model
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/backup-restore.svg" alt="Backup and restore" width="850"/>
+</p>
+
+### Audit your model for issues
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/model-health-check.svg" alt="Model health check" width="850"/>
+</p>
+
+### Test row-level security
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/rls-testing.svg" alt="RLS testing" width="850"/>
+</p>
+
+---
+
 ## Skills
 
-After running `pbi connect`, Claude Code discovers **7 Power BI skills**. Each skill teaches Claude a different area of Power BI development. You don't need to memorize commands. Just describe what you want.
+After running `pbi connect`, Claude Code discovers **7 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
 
-```mermaid
-graph TD
-    YOU["You: 'Set up RLS for<br/>regional managers'"] --> CC["Claude Code"]
-    CC --> SK{"Picks the<br/>right skill"}
-    SK --> S1["Modeling"]
-    SK --> S2["DAX"]
-    SK --> S3["Deployment"]
-    SK --> S4["Security"]
-    SK --> S5["Documentation"]
-    SK --> S6["Diagnostics"]
-    SK --> S7["Partitions"]
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="7 Skills" width="850"/>
+</p>
 
-    style YOU fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style CC fill:#16213e,stroke:#4cc9f0,color:#fff
-    style SK fill:#0f3460,stroke:#7b61ff,color:#fff
-    style S1 fill:#1a1a2e,stroke:#f2c811,color:#fff
-    style S2 fill:#1a1a2e,stroke:#4cc9f0,color:#fff
-    style S3 fill:#1a1a2e,stroke:#7b61ff,color:#fff
-    style S4 fill:#1a1a2e,stroke:#06d6a0,color:#fff
-    style S5 fill:#1a1a2e,stroke:#ff6b6b,color:#fff
-    style S6 fill:#1a1a2e,stroke:#ffd166,color:#fff
-    style S7 fill:#1a1a2e,stroke:#a0c4ff,color:#fff
-```
+| Skill | What you say | What Claude does |
+|-------|-------------|-----------------|
+| **DAX** | *"What are the top 10 products by revenue?"* | Writes and executes DAX queries, validates syntax |
+| **Modeling** | *"Create a star schema with Sales and Calendar"* | Creates tables, relationships, measures, hierarchies |
+| **Deployment** | *"Save a snapshot before I make changes"* | Exports/imports TMDL, manages transactions |
+| **Security** | *"Set up RLS for regional managers"* | Creates roles, filters, perspectives |
+| **Docs** | *"Document everything in this model"* | Generates data dictionaries, measure inventories |
+| **Partitions** | *"Show me the M query for the Sales table"* | Manages partitions, expressions, calendar config |
+| **Diagnostics** | *"Why is this query so slow?"* | Traces queries, checks model health, benchmarks |
 
-### Modeling
+---
 
-> *"Create a star schema with Sales, Products, and Calendar tables"*
+## Architecture
 
-Claude creates the tables, sets up relationships, marks the date table, and adds formatted measures. Covers tables, columns, measures, relationships, hierarchies, and calculation groups.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/architecture-flow.svg" alt="Architecture" width="850"/>
+</p>
+
+Direct in-process .NET interop from Python to Power BI Desktop. No MCP server, no external binaries, sub-second execution.
 
 <details>
-<summary>Example: what Claude runs behind the scenes</summary>
+<summary><b>Configuration details</b></summary>
 
-```bash
-pbi table create Sales --mode Import
-pbi table create Products --mode Import
-pbi table create Calendar --mode Import
-pbi relationship create --from-table Sales --from-column ProductKey --to-table Products --to-column ProductKey
-pbi relationship create --from-table Sales --from-column DateKey --to-table Calendar --to-column DateKey
-pbi table mark-date Calendar --date-column Date
-pbi measure create "Total Revenue" -e "SUM(Sales[Revenue])" -t Sales --format-string "$#,##0"
+All config lives in `~/.pbi-cli/`:
+
 ```
-</details>
-
-### DAX
-
-> *"What are the top 10 products by revenue this year?"*
-
-Claude writes and executes DAX queries, validates syntax, and creates measures with time intelligence patterns like YTD, previous year, and rolling averages.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi dax execute "
-EVALUATE
-TOPN(
-    10,
-    ADDCOLUMNS(VALUES(Products[Name]), \"Revenue\", CALCULATE(SUM(Sales[Amount]))),
-    [Revenue], DESC
-)
-"
+~/.pbi-cli/
+  config.json          # Default connection preference
+  connections.json     # Named connections
+  repl_history         # REPL command history
 ```
-</details>
 
-### Deployment
+Bundled DLLs ship inside the Python package (`pbi_cli/dlls/`).
 
-> *"Export the model to Git for version control"*
-
-Claude exports your model as TMDL files for version control and imports them back. Handles transactions for safe multi-step changes.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi database export-tmdl ./model/
-# ... you commit to git ...
-pbi database import-tmdl ./model/
-```
-</details>
-
-### Security
-
-> *"Set up row-level security so regional managers only see their region"*
-
-Claude creates RLS roles with descriptions, sets up perspectives for different user groups, and exports the model for version control.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi security-role create "Regional Manager" --description "Users see only their region's data"
-pbi perspective create "Executive Dashboard"
-pbi perspective create "Regional Detail"
-pbi database export-tmdl ./model-backup/
-```
-</details>
-
-### Documentation
-
-> *"Document everything in this model"*
-
-Claude catalogs every table, measure, column, and relationship. Generates data dictionaries, measure inventories, and can export the full model as TMDL for human-readable reference.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi --json model get
-pbi --json model stats
-pbi --json table list
-pbi --json measure list
-pbi --json relationship list
-pbi database export-tmdl ./model-docs/
-```
-</details>
-
-### Diagnostics
-
-> *"Why is this DAX query so slow?"*
-
-Claude traces query execution, clears caches for clean benchmarks, checks model health, and verifies the environment.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi dax clear-cache
-pbi trace start
-pbi dax execute "EVALUATE SUMMARIZECOLUMNS(...)" --timeout 300
-pbi trace stop
-pbi trace export ./trace.json
-```
-</details>
-
-### Partitions & Expressions
-
-> *"Set up partitions for incremental refresh on the Sales table"*
-
-Claude manages table partitions, shared M/Power Query expressions, and calendar table configuration.
-
-<details>
-<summary>Example: what Claude runs behind the scenes</summary>
-
-```bash
-pbi partition list --table Sales
-pbi partition create "Sales_2024" --table Sales --expression "..." --mode Import
-pbi expression create "ServerURL" --expression '"https://api.example.com"'
-pbi calendar mark Calendar --date-column Date
-```
 </details>
 
 ---
 
 ## All Commands
 
-22 command groups covering the full Power BI Tabular Object Model. You rarely need these directly when using Claude Code, but they're available for scripting, CI/CD, or manual use.
-
-| Category | Commands |
-|----------|----------|
-| **Queries** | `dax execute`, `dax validate`, `dax clear-cache` |
-| **Model** | `table`, `column`, `measure`, `relationship`, `hierarchy`, `calc-group` |
-| **Deploy** | `database export-tmdl`, `database import-tmdl`, `database export-tmsl`, `transaction` |
-| **Security** | `security-role`, `perspective` |
-| **Connect** | `connect`, `disconnect`, `connections list`, `connections last` |
-| **Data** | `partition`, `expression`, `calendar`, `advanced culture` |
-| **Diagnostics** | `trace start`, `trace stop`, `trace fetch`, `trace export`, `model stats` |
-| **Tools** | `setup`, `repl`, `skills install`, `skills list` |
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/feature-grid.svg" alt="22 Command Groups" width="850"/>
+</p>
 
 Use `--json` for machine-readable output (for scripts and AI agents):
 
@@ -263,7 +182,7 @@ Run `pbi <command> --help` for full options.
 
 ## REPL Mode
 
-For interactive work, the REPL keeps a persistent connection alive between commands:
+For interactive work, the REPL keeps a persistent connection:
 
 ```
 $ pbi repl
@@ -277,49 +196,6 @@ pbi(localhost-54321)> exit
 ```
 
 Tab completion, command history, and a dynamic prompt showing your active connection.
-
----
-
-## How It Works
-
-pbi-cli connects directly to Power BI Desktop's Analysis Services engine via pythonnet and the .NET Tabular Object Model (TOM). No external binaries or MCP servers needed. Everything runs in-process for sub-second command execution.
-
-```mermaid
-graph TB
-    subgraph CLI["pbi-cli (Python)"]
-        A["Click CLI"] --> B["tom_backend / adomd_backend"]
-        B --> C["pythonnet"]
-    end
-    C -->|"in-process .NET"| D["Bundled TOM DLLs"]
-    D -->|"XMLA"| E["Power BI Desktop<br/>msmdsrv.exe"]
-
-    style CLI fill:#16213e,stroke:#4cc9f0,color:#fff
-    style D fill:#0f3460,stroke:#7b61ff,color:#fff
-    style E fill:#1a1a2e,stroke:#f2c811,color:#fff
-```
-
-**Why a CLI?** When an AI agent uses an MCP server directly, the tool schemas consume ~4,000+ tokens per tool in the context window. A `pbi` command costs ~30 tokens. Same capabilities, 100x less context.
-
-<details>
-<summary><b>Configuration details</b></summary>
-
-All config lives in `~/.pbi-cli/`:
-
-```
-~/.pbi-cli/
-  config.json          # Default connection preference
-  connections.json     # Named connections
-  repl_history         # REPL command history
-```
-
-Bundled DLLs ship inside the Python package (`pbi_cli/dlls/`):
-- Microsoft.AnalysisServices.Tabular.dll
-- Microsoft.AnalysisServices.AdomdClient.dll
-- Microsoft.AnalysisServices.Core.dll
-- Microsoft.AnalysisServices.Tabular.Json.dll
-- Microsoft.AnalysisServices.dll
-
-</details>
 
 ---
 
