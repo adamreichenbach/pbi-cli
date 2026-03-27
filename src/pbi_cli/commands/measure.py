@@ -6,7 +6,7 @@ import sys
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -20,10 +20,11 @@ def measure() -> None:
 @pass_context
 def measure_list(ctx: PbiContext, table: str | None) -> None:
     """List all measures."""
-    request: dict[str, object] = {"operation": "List"}
-    if table:
-        request["tableName"] = table
-    run_tool(ctx, "measure_operations", request)
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_list as _measure_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _measure_list, model=session.model, table_name=table)
 
 
 @measure.command()
@@ -32,15 +33,11 @@ def measure_list(ctx: PbiContext, table: str | None) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str, table: str) -> None:
     """Get details of a specific measure."""
-    run_tool(
-        ctx,
-        "measure_operations",
-        {
-            "operation": "Get",
-            "name": name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_get
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, measure_get, model=session.model, table_name=table, measure_name=name)
 
 
 @measure.command()
@@ -66,22 +63,21 @@ def create(
     if expression == "-":
         expression = sys.stdin.read().strip()
 
-    definition = build_definition(
-        required={"name": name, "expression": expression, "tableName": table},
-        optional={
-            "formatString": format_string,
-            "description": description,
-            "displayFolder": folder,
-            "isHidden": hidden if hidden else None,
-        },
-    )
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_create
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "measure_operations",
-        {
-            "operation": "Create",
-            "definitions": [definition],
-        },
+        measure_create,
+        model=session.model,
+        table_name=table,
+        name=name,
+        expression=expression,
+        format_string=format_string,
+        description=description,
+        display_folder=folder,
+        is_hidden=hidden,
     )
 
 
@@ -106,22 +102,20 @@ def update(
     if expression == "-":
         expression = sys.stdin.read().strip()
 
-    definition = build_definition(
-        required={"name": name, "tableName": table},
-        optional={
-            "expression": expression,
-            "formatString": format_string,
-            "description": description,
-            "displayFolder": folder,
-        },
-    )
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_update
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "measure_operations",
-        {
-            "operation": "Update",
-            "definitions": [definition],
-        },
+        measure_update,
+        model=session.model,
+        table_name=table,
+        name=name,
+        expression=expression,
+        format_string=format_string,
+        description=description,
+        display_folder=folder,
     )
 
 
@@ -131,15 +125,11 @@ def update(
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a measure."""
-    run_tool(
-        ctx,
-        "measure_operations",
-        {
-            "operation": "Delete",
-            "name": name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, measure_delete, model=session.model, table_name=table, name=name)
 
 
 @measure.command()
@@ -149,15 +139,17 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
     """Rename a measure."""
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_rename
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "measure_operations",
-        {
-            "operation": "Rename",
-            "name": old_name,
-            "newName": new_name,
-            "tableName": table,
-        },
+        measure_rename,
+        model=session.model,
+        table_name=table,
+        old_name=old_name,
+        new_name=new_name,
     )
 
 
@@ -168,30 +160,15 @@ def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
 @pass_context
 def move(ctx: PbiContext, name: str, table: str, to_table: str) -> None:
     """Move a measure to a different table."""
-    run_tool(
-        ctx,
-        "measure_operations",
-        {
-            "operation": "Move",
-            "name": name,
-            "tableName": table,
-            "destinationTableName": to_table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import measure_move
 
-
-@measure.command(name="export-tmdl")
-@click.argument("name")
-@click.option("--table", "-t", required=True, help="Table containing the measure.")
-@pass_context
-def export_tmdl(ctx: PbiContext, name: str, table: str) -> None:
-    """Export a measure as TMDL."""
-    run_tool(
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "measure_operations",
-        {
-            "operation": "ExportTMDL",
-            "name": name,
-            "tableName": table,
-        },
+        measure_move,
+        model=session.model,
+        table_name=table,
+        name=name,
+        dest_table_name=to_table,
     )

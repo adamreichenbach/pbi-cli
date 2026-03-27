@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,7 +17,11 @@ def expression() -> None:
 @pass_context
 def expression_list(ctx: PbiContext) -> None:
     """List all named expressions."""
-    run_tool(ctx, "named_expression_operations", {"operation": "List"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import expression_list as _expression_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _expression_list, model=session.model)
 
 
 @expression.command()
@@ -25,27 +29,31 @@ def expression_list(ctx: PbiContext) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str) -> None:
     """Get a named expression."""
-    run_tool(ctx, "named_expression_operations", {"operation": "Get", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import expression_get
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, expression_get, model=session.model, name=name)
 
 
 @expression.command()
 @click.argument("name")
-@click.option("--expression", "-e", required=True, help="M expression.")
+@click.option("--expression", "-e", "expr", required=True, help="M expression.")
 @click.option("--description", default=None, help="Expression description.")
 @pass_context
-def create(ctx: PbiContext, name: str, expression: str, description: str | None) -> None:
+def create(ctx: PbiContext, name: str, expr: str, description: str | None) -> None:
     """Create a named expression."""
-    definition = build_definition(
-        required={"name": name, "expression": expression},
-        optional={"description": description},
-    )
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import expression_create
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "named_expression_operations",
-        {
-            "operation": "Create",
-            "definitions": [definition],
-        },
+        expression_create,
+        model=session.model,
+        name=name,
+        expression=expr,
+        description=description,
     )
 
 
@@ -54,25 +62,8 @@ def create(ctx: PbiContext, name: str, expression: str, description: str | None)
 @pass_context
 def delete(ctx: PbiContext, name: str) -> None:
     """Delete a named expression."""
-    run_tool(ctx, "named_expression_operations", {"operation": "Delete", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import expression_delete
 
-
-@expression.command(name="create-param")
-@click.argument("name")
-@click.option("--expression", "-e", required=True, help="Default value expression.")
-@click.option("--description", default=None, help="Parameter description.")
-@pass_context
-def create_param(ctx: PbiContext, name: str, expression: str, description: str | None) -> None:
-    """Create a model parameter."""
-    definition = build_definition(
-        required={"name": name, "expression": expression},
-        optional={"description": description},
-    )
-    run_tool(
-        ctx,
-        "named_expression_operations",
-        {
-            "operation": "CreateParameter",
-            "definitions": [definition],
-        },
-    )
+    session = get_session_for_command(ctx)
+    run_command(ctx, expression_delete, model=session.model, name=name)

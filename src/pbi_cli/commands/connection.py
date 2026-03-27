@@ -12,9 +12,9 @@ from pbi_cli.core.connection_store import (
     remove_connection,
     save_connections,
 )
-from pbi_cli.core.mcp_client import get_client
 from pbi_cli.core.output import (
     print_error,
+    print_info,
     print_json,
     print_success,
     print_table,
@@ -33,16 +33,12 @@ from pbi_cli.main import PbiContext, pass_context
 @click.option(
     "--name", "-n", default=None, help="Name for this connection (auto-generated if omitted)."
 )
-@click.option(
-    "--connection-string", default="", help="Full connection string (overrides data-source)."
-)
 @pass_context
 def connect(
     ctx: PbiContext,
     data_source: str | None,
     catalog: str,
     name: str | None,
-    connection_string: str,
 ) -> None:
     """Connect to a Power BI instance via data source.
 
@@ -53,98 +49,34 @@ def connect(
     if data_source is None:
         data_source = _auto_discover_data_source()
 
-    conn_name = name or _auto_name(data_source)
+    from pbi_cli.core.session import connect as session_connect
 
-    request: dict[str, object] = {
-        "operation": "Connect",
-        "dataSource": data_source,
-    }
-    if catalog:
-        request["initialCatalog"] = catalog
-    if connection_string:
-        request["connectionString"] = connection_string
-
-    repl = ctx.repl_mode
-    client = get_client(repl_mode=repl)
     try:
-        result = client.call_tool("connection_operations", request)
+        session = session_connect(data_source, catalog)
 
-        # Use server-returned connectionName if available, otherwise our local name
-        server_name = _extract_connection_name(result)
-        effective_name = server_name or conn_name
+        # Use provided name, or the session's auto-generated name
+        effective_name = name or session.connection_name
 
         info = ConnectionInfo(
             name=effective_name,
             data_source=data_source,
             initial_catalog=catalog,
-            connection_string=connection_string,
         )
         store = load_connections()
         store = add_connection(store, info)
         save_connections(store)
 
         if ctx.json_output:
-            print_json({"connection": effective_name, "status": "connected", "result": result})
+            print_json({
+                "connection": effective_name,
+                "status": "connected",
+                "dataSource": data_source,
+            })
         else:
             print_success(f"Connected: {effective_name} ({data_source})")
     except Exception as e:
         print_error(f"Connection failed: {e}")
         raise SystemExit(1)
-    finally:
-        if not repl:
-            client.stop()
-
-
-@click.command(name="connect-fabric")
-@click.option("--workspace", "-w", required=True, help="Fabric workspace name (exact match).")
-@click.option("--model", "-m", required=True, help="Semantic model name (exact match).")
-@click.option("--name", "-n", default=None, help="Name for this connection.")
-@click.option("--tenant", default="myorg", help="Tenant name for B2B scenarios.")
-@pass_context
-def connect_fabric(
-    ctx: PbiContext, workspace: str, model: str, name: str | None, tenant: str
-) -> None:
-    """Connect to a Fabric workspace semantic model."""
-    _ensure_ready()
-
-    conn_name = name or f"{workspace}/{model}"
-
-    request: dict[str, object] = {
-        "operation": "ConnectFabric",
-        "workspaceName": workspace,
-        "semanticModelName": model,
-        "tenantName": tenant,
-    }
-
-    repl = ctx.repl_mode
-    client = get_client(repl_mode=repl)
-    try:
-        result = client.call_tool("connection_operations", request)
-
-        server_name = _extract_connection_name(result)
-        effective_name = server_name or conn_name
-
-        info = ConnectionInfo(
-            name=effective_name,
-            data_source=f"powerbi://api.powerbi.com/v1.0/{tenant}/{workspace}",
-            workspace_name=workspace,
-            semantic_model_name=model,
-            tenant_name=tenant,
-        )
-        store = load_connections()
-        store = add_connection(store, info)
-        save_connections(store)
-
-        if ctx.json_output:
-            print_json({"connection": effective_name, "status": "connected", "result": result})
-        else:
-            print_success(f"Connected to Fabric: {workspace}/{model}")
-    except Exception as e:
-        print_error(f"Fabric connection failed: {e}")
-        raise SystemExit(1)
-    finally:
-        if not repl:
-            client.stop()
 
 
 @click.command()
@@ -154,6 +86,8 @@ def connect_fabric(
 @pass_context
 def disconnect(ctx: PbiContext, name: str | None) -> None:
     """Disconnect from the active or named connection."""
+    from pbi_cli.core.session import disconnect as session_disconnect
+
     store = load_connections()
     target = name or store.last_used
 
@@ -161,30 +95,15 @@ def disconnect(ctx: PbiContext, name: str | None) -> None:
         print_error("No active connection to disconnect.")
         raise SystemExit(1)
 
-    repl = ctx.repl_mode
-    client = get_client(repl_mode=repl)
-    try:
-        client.call_tool(
-            "connection_operations",
-            {
-                "operation": "Disconnect",
-                "connectionName": target,
-            },
-        )
+    session_disconnect()
 
-        store = remove_connection(store, target)
-        save_connections(store)
+    store = remove_connection(store, target)
+    save_connections(store)
 
-        if ctx.json_output:
-            print_json({"connection": target, "status": "disconnected"})
-        else:
-            print_success(f"Disconnected: {target}")
-    except Exception as e:
-        print_error(f"Disconnect failed: {e}")
-        raise SystemExit(1)
-    finally:
-        if not repl:
-            client.stop()
+    if ctx.json_output:
+        print_json({"connection": target, "status": "disconnected"})
+    else:
+        print_success(f"Disconnected: {target}")
 
 
 @click.group()
@@ -249,11 +168,7 @@ def connections_last(ctx: PbiContext) -> None:
 
 
 def _auto_discover_data_source() -> str:
-    """Auto-detect a running Power BI Desktop instance.
-
-    Raises click.ClickException if no instance is found.
-    """
-    from pbi_cli.core.output import print_info
+    """Auto-detect a running Power BI Desktop instance."""
     from pbi_cli.utils.platform import discover_pbi_port
 
     port = discover_pbi_port()
@@ -270,30 +185,17 @@ def _auto_discover_data_source() -> str:
 
 
 def _ensure_ready() -> None:
-    """Auto-setup binary and skills if not already done.
+    """Auto-install skills if not already done.
 
     Lets users go straight from install to connect in one step:
         pipx install pbi-cli-tool
         pbi connect -d localhost:54321
     """
-    from pbi_cli.core.binary_manager import resolve_binary
-
-    try:
-        resolve_binary()
-    except FileNotFoundError:
-        from pbi_cli.core.binary_manager import download_and_extract
-        from pbi_cli.core.output import print_info
-
-        print_info("MCP binary not found. Running first-time setup...")
-        download_and_extract()
-
     from pbi_cli.commands.skills_cmd import SKILLS_TARGET_DIR, _get_bundled_skills
 
     bundled = _get_bundled_skills()
     any_missing = any(not (SKILLS_TARGET_DIR / name / "SKILL.md").exists() for name in bundled)
     if bundled and any_missing:
-        from pbi_cli.core.output import print_info
-
         print_info("Installing Claude Code skills...")
         for name, source in sorted(bundled.items()):
             target_dir = SKILLS_TARGET_DIR / name
@@ -304,16 +206,3 @@ def _ensure_ready() -> None:
             target_file = target_dir / "SKILL.md"
             target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
         print_info("Skills installed.")
-
-
-def _extract_connection_name(result: object) -> str | None:
-    """Extract connectionName from MCP server response, if present."""
-    if isinstance(result, dict):
-        return result.get("connectionName") or result.get("ConnectionName")
-    return None
-
-
-def _auto_name(data_source: str) -> str:
-    """Generate a connection name from a data source string."""
-    cleaned = data_source.replace("://", "-").replace("/", "-").replace(":", "-")
-    return cleaned[:50]

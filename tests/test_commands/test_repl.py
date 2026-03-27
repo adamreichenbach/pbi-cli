@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 from click.testing import CliRunner
 
@@ -27,29 +25,24 @@ def test_repl_build_completer() -> None:
     assert "repl" in completer.words
 
 
-def test_repl_get_prompt_no_connection(tmp_connections: Path) -> None:
+def test_repl_get_prompt_no_connection() -> None:
     repl = PbiRepl()
     prompt = repl._get_prompt()
     assert prompt == "pbi> "
 
 
-def test_repl_get_prompt_with_connection(tmp_connections: Path) -> None:
-    from pbi_cli.core.connection_store import (
-        ConnectionInfo,
-        ConnectionStore,
-        add_connection,
-        save_connections,
-    )
+def test_repl_get_prompt_with_session(monkeypatch: pytest.MonkeyPatch) -> None:
+    from tests.conftest import build_mock_session
 
-    store = add_connection(
-        ConnectionStore(),
-        ConnectionInfo(name="test-conn", data_source="localhost"),
-    )
-    save_connections(store)
+    session = build_mock_session()
+    monkeypatch.setattr("pbi_cli.core.session._current_session", session)
 
     repl = PbiRepl()
     prompt = repl._get_prompt()
-    assert prompt == "pbi(test-conn)> "
+    assert "test-conn" in prompt
+
+    # Clean up
+    monkeypatch.setattr("pbi_cli.core.session._current_session", None)
 
 
 def test_repl_execute_line_empty() -> None:
@@ -61,33 +54,14 @@ def test_repl_execute_line_empty() -> None:
 
 def test_repl_execute_line_exit() -> None:
     repl = PbiRepl()
-    import pytest
-
     with pytest.raises(EOFError):
         repl._execute_line("exit")
 
 
 def test_repl_execute_line_quit() -> None:
     repl = PbiRepl()
-    import pytest
-
     with pytest.raises(EOFError):
         repl._execute_line("quit")
-
-
-def test_repl_execute_line_strips_pbi_prefix(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_connections: Path,
-) -> None:
-    from tests.conftest import MockPbiMcpClient
-
-    mock = MockPbiMcpClient()
-    factory = lambda repl_mode=False: mock  # noqa: E731
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", factory)
-
-    repl = PbiRepl(json_output=True)
-    # "pbi measure list" should work like "measure list"
-    repl._execute_line("pbi --json measure list")
 
 
 def test_repl_execute_line_help() -> None:

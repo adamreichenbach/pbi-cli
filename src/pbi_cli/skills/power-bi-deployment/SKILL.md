@@ -1,18 +1,18 @@
 ---
 name: Power BI Deployment
-description: Deploy Power BI semantic models to Fabric workspaces, import and export TMDL and TMSL formats, and manage model lifecycle. Use when the user mentions deploying, publishing, migrating, or version-controlling Power BI models.
+description: Import and export TMDL and TMSL formats, manage model lifecycle with transactions, and version-control Power BI semantic models. Use when the user mentions deploying, publishing, migrating, or version-controlling Power BI models.
 tools: pbi-cli
 ---
 
 # Power BI Deployment Skill
 
-Manage model lifecycle with TMDL export/import and Fabric workspace deployment.
+Manage model lifecycle with TMDL export/import, transactions, and version control.
 
 ## Prerequisites
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
+pbi connect    # Auto-detects Power BI Desktop and installs skills
 ```
 
 ## Connecting to Targets
@@ -24,13 +24,11 @@ pbi connect
 # Local with explicit port
 pbi connect -d localhost:54321
 
-# Fabric workspace (cloud)
-pbi connect-fabric --workspace "Production" --model "Sales Model"
-
 # Named connections for switching
-pbi connect --name dev
-pbi connect-fabric --workspace "Production" --model "Sales" --name prod
+pbi connect -d localhost:54321 --name dev
 pbi connections list
+pbi connections last
+pbi disconnect
 ```
 
 ## TMDL Export and Import
@@ -43,13 +41,6 @@ pbi database export-tmdl ./model-tmdl/
 
 # Import TMDL folder into connected model
 pbi database import-tmdl ./model-tmdl/
-
-# Export individual objects
-pbi model export-tmdl                              # Full model definition
-pbi table export-tmdl Sales                         # Single table
-pbi measure export-tmdl "Total Revenue" -t Sales    # Single measure
-pbi relationship export-tmdl RelName                # Single relationship
-pbi security-role export-tmdl "Readers"             # Security role
 ```
 
 ## TMSL Export
@@ -85,18 +76,14 @@ pbi transaction commit
 pbi transaction rollback
 ```
 
-## Model Refresh
+## Table Refresh
 
 ```bash
-# Refresh entire model
-pbi model refresh                        # Automatic (default)
-pbi model refresh --type Full            # Full refresh
-pbi model refresh --type Calculate       # Recalculate only
-pbi model refresh --type DataOnly        # Data only, no recalc
-pbi model refresh --type Defragment      # Defragment storage
-
 # Refresh individual tables
 pbi table refresh Sales --type Full
+pbi table refresh Sales --type Automatic
+pbi table refresh Sales --type Calculate
+pbi table refresh Sales --type DataOnly
 ```
 
 ## Workflow: Version Control with Git
@@ -110,24 +97,9 @@ cd model/
 git add .
 git commit -m "feat: add new revenue measures"
 
-# 3. Deploy to another environment
-pbi connect-fabric --workspace "Staging" --model "Sales Model"
+# 3. Later, import back into Power BI Desktop
+pbi connect
 pbi database import-tmdl ./model/
-```
-
-## Workflow: Promote Dev to Production
-
-```bash
-# 1. Connect to dev and export
-pbi connect --data-source localhost:54321 --name dev
-pbi database export-tmdl ./staging-model/
-
-# 2. Connect to production and import
-pbi connect-fabric --workspace "Production" --model "Sales" --name prod
-pbi database import-tmdl ./staging-model/
-
-# 3. Refresh production data
-pbi model refresh --type Full
 ```
 
 ## Workflow: Inspect Model Before Deploy
@@ -152,4 +124,4 @@ pbi --json relationship list
 - Test changes in dev before deploying to production
 - Use `--json` for scripted deployments
 - Store TMDL in git for version history
-- Use named connections (`--name`) to avoid accidental deployments to wrong environment
+- Use named connections (`--name`) to avoid accidental changes to wrong environment

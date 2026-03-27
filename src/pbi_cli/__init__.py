@@ -1,3 +1,3 @@
-"""pbi-cli: CLI for Power BI semantic models via MCP server."""
+"""pbi-cli: CLI for Power BI semantic models via direct .NET interop."""
 
-__version__ = "1.0.6"
+__version__ = "2.0.0"

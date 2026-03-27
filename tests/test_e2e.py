@@ -1,6 +1,6 @@
-"""End-to-end tests requiring the real Power BI MCP binary.
+"""End-to-end tests requiring a running Power BI Desktop instance.
 
-These tests are skipped in CI unless a binary is available.
+These tests are skipped in CI unless PBI Desktop is available.
 Run with: pytest -m e2e
 """
 
@@ -24,14 +24,6 @@ def _pbi(*args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
-@pytest.fixture(autouse=True)
-def _skip_if_no_binary() -> None:
-    """Skip all e2e tests if the binary is not available."""
-    result = _pbi("--json", "setup", "--info")
-    if "not found" in result.stdout:
-        pytest.skip("Power BI MCP binary not available")
-
-
 def test_version() -> None:
     result = _pbi("--version")
     assert result.returncode == 0
@@ -47,3 +39,4 @@ def test_help() -> None:
 def test_setup_info() -> None:
     result = _pbi("--json", "setup", "--info")
     assert result.returncode == 0
+    assert "version" in result.stdout

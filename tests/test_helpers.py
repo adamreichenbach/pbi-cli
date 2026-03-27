@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from pbi_cli.commands._helpers import build_definition, run_tool
-from pbi_cli.core.errors import McpToolError
+from pbi_cli.commands._helpers import build_definition, run_command
+from pbi_cli.core.errors import TomError
 from pbi_cli.main import PbiContext
-from tests.conftest import MockPbiMcpClient
 
 
 def test_build_definition_required_only() -> None:
@@ -37,89 +36,37 @@ def test_build_definition_preserves_falsy_non_none() -> None:
     assert result["label"] == ""
 
 
-def test_run_tool_adds_connection(monkeypatch: pytest.MonkeyPatch) -> None:
-    mock = MockPbiMcpClient()
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
-
-    # Mock connection store with the named connection
-    from pbi_cli.core.connection_store import ConnectionInfo, ConnectionStore
-
-    store = ConnectionStore(
-        last_used="my-conn",
-        connections={"my-conn": ConnectionInfo(name="my-conn", data_source="localhost:12345")},
-    )
-    monkeypatch.setattr(
-        "pbi_cli.core.connection_store.load_connections",
-        lambda: store,
-    )
-
-    ctx = PbiContext(json_output=True, connection="my-conn")
-    run_tool(ctx, "measure_operations", {"operation": "List"})
-
-    # First call is auto-reconnect (Connect), second is the actual tool call.
-    # The connectionName comes from the server response ("test-conn"), not our saved name.
-    assert mock.calls[1][1]["connectionName"] == "test-conn"
-
-
-def test_run_tool_no_connection(monkeypatch: pytest.MonkeyPatch) -> None:
-    mock = MockPbiMcpClient()
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
-    # Ensure no last-used connection is found
-    from pbi_cli.core.connection_store import ConnectionStore
-
-    monkeypatch.setattr(
-        "pbi_cli.core.connection_store.load_connections",
-        lambda: ConnectionStore(),
-    )
-
+def test_run_command_formats_result() -> None:
     ctx = PbiContext(json_output=True)
-    run_tool(ctx, "measure_operations", {"operation": "List"})
+    result = run_command(ctx, lambda: {"status": "ok"})
+    assert result == {"status": "ok"}
 
-    assert "connectionName" not in mock.calls[0][1]
 
-
-def test_run_tool_stops_client_in_oneshot(monkeypatch: pytest.MonkeyPatch) -> None:
-    mock = MockPbiMcpClient()
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
-    from pbi_cli.core.connection_store import ConnectionStore
-
-    monkeypatch.setattr(
-        "pbi_cli.core.connection_store.load_connections",
-        lambda: ConnectionStore(),
-    )
-
+def test_run_command_exits_on_error_oneshot() -> None:
     ctx = PbiContext(json_output=True, repl_mode=False)
-    run_tool(ctx, "measure_operations", {"operation": "List"})
 
-    assert mock.stopped is True
+    def failing_fn() -> None:
+        raise RuntimeError("boom")
+
+    with pytest.raises(SystemExit):
+        run_command(ctx, failing_fn)
 
 
-def test_run_tool_keeps_client_in_repl(monkeypatch: pytest.MonkeyPatch) -> None:
-    mock = MockPbiMcpClient()
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
-
+def test_run_command_raises_tom_error_in_repl() -> None:
     ctx = PbiContext(json_output=True, repl_mode=True)
-    run_tool(ctx, "measure_operations", {"operation": "List"})
 
-    assert mock.stopped is False
+    def failing_fn() -> None:
+        raise RuntimeError("boom")
+
+    with pytest.raises(TomError):
+        run_command(ctx, failing_fn)
 
 
-def test_run_tool_raises_mcp_tool_error_on_failure(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    class FailingClient(MockPbiMcpClient):
-        def call_tool(self, tool_name: str, request: dict) -> None:
-            raise RuntimeError("server crashed")
-
-    mock = FailingClient()
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", lambda repl_mode=False: mock)
-    from pbi_cli.core.connection_store import ConnectionStore
-
-    monkeypatch.setattr(
-        "pbi_cli.core.connection_store.load_connections",
-        lambda: ConnectionStore(),
-    )
-
+def test_run_command_passes_kwargs() -> None:
     ctx = PbiContext(json_output=True)
-    with pytest.raises(McpToolError):
-        run_tool(ctx, "measure_operations", {"operation": "List"})
+
+    def fn_with_args(name: str, count: int) -> dict:
+        return {"name": name, "count": count}
+
+    result = run_command(ctx, fn_with_args, name="test", count=42)
+    assert result == {"name": "test", "count": 42}

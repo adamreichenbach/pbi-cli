@@ -1,75 +1,102 @@
-"""pbi setup: download and manage the Power BI MCP binary."""
+"""pbi setup: verify environment and install skills."""
 
 from __future__ import annotations
 
 import click
 
-from pbi_cli.core.binary_manager import (
-    check_for_updates,
-    download_and_extract,
-    get_binary_info,
-)
-from pbi_cli.core.output import print_error, print_info, print_json, print_key_value, print_success
+from pbi_cli.core.output import print_error, print_info, print_json, print_success
 from pbi_cli.main import PbiContext, pass_context
 
 
 @click.command()
-@click.option("--version", "target_version", default=None, help="Specific version to install.")
-@click.option("--check", is_flag=True, default=False, help="Check for updates without installing.")
-@click.option("--info", is_flag=True, default=False, help="Show info about the current binary.")
+@click.option("--info", is_flag=True, default=False, help="Show environment info.")
 @pass_context
-def setup(ctx: PbiContext, target_version: str | None, check: bool, info: bool) -> None:
-    """Download and set up the Power BI MCP server binary.
+def setup(ctx: PbiContext, info: bool) -> None:
+    """Verify the pbi-cli environment is ready.
 
-    Run this once after installing pbi-cli to download the binary.
+    Checks that pythonnet and the bundled .NET DLLs are available.
+    Also installs Claude Code skills if applicable.
     """
     if info:
         _show_info(ctx.json_output)
         return
 
-    if check:
-        _check_updates(ctx.json_output)
-        return
-
-    _install(target_version, ctx.json_output)
+    _verify(ctx.json_output)
 
 
 def _show_info(json_output: bool) -> None:
-    """Show binary info."""
-    info = get_binary_info()
+    """Show environment info."""
+    from pbi_cli import __version__
+    from pbi_cli.core.dotnet_loader import _dll_dir
+
+    dll_path = _dll_dir()
+    dlls_found = list(dll_path.glob("*.dll")) if dll_path.exists() else []
+
+    result = {
+        "version": __version__,
+        "dll_path": str(dll_path),
+        "dlls_found": len(dlls_found),
+        "dll_names": [d.name for d in dlls_found],
+    }
+
+    # Check pythonnet
+    try:
+        import pythonnet  # noqa: F401
+
+        result["pythonnet"] = "installed"
+    except ImportError:
+        result["pythonnet"] = "missing"
+
     if json_output:
-        print_json(info)
+        print_json(result)
     else:
-        print_key_value("Power BI MCP Binary", info)
+        print_info(f"pbi-cli v{result['version']}")
+        print_info(f"DLL path: {result['dll_path']}")
+        print_info(f"DLLs found: {result['dlls_found']}")
+        print_info(f"pythonnet: {result['pythonnet']}")
 
 
-def _check_updates(json_output: bool) -> None:
-    """Check for available updates."""
+def _verify(json_output: bool) -> None:
+    """Verify the environment is ready."""
+    errors: list[str] = []
+
+    # Check pythonnet
     try:
-        installed, latest, update_available = check_for_updates()
-        result = {
-            "installed_version": installed,
-            "latest_version": latest,
-            "update_available": update_available,
-        }
+        import pythonnet  # noqa: F401
+    except ImportError:
+        errors.append("pythonnet not installed. Run: pip install pythonnet")
+
+    # Check DLLs
+    from pbi_cli.core.dotnet_loader import _dll_dir
+
+    dll_path = _dll_dir()
+    if not dll_path.exists():
+        errors.append(f"DLL directory not found: {dll_path}")
+    else:
+        required = [
+            "Microsoft.AnalysisServices.Tabular.dll",
+            "Microsoft.AnalysisServices.AdomdClient.dll",
+        ]
+        for name in required:
+            if not (dll_path / name).exists():
+                errors.append(f"Missing DLL: {name}")
+
+    if errors:
+        for err in errors:
+            print_error(err)
         if json_output:
-            print_json(result)
-        elif update_available:
-            print_info(f"Update available: {installed} -> {latest}")
-            print_info("Run 'pbi setup' to update.")
-        else:
-            print_success(f"Up to date: v{installed}")
-    except Exception as e:
-        print_error(f"Failed to check for updates: {e}")
+            print_json({"status": "error", "errors": errors})
         raise SystemExit(1)
 
-
-def _install(version: str | None, json_output: bool) -> None:
-    """Download and install the binary."""
+    # Install skills
     try:
-        bin_path = download_and_extract(version)
-        if json_output:
-            print_json({"binary_path": str(bin_path), "status": "installed"})
-    except Exception as e:
-        print_error(f"Setup failed: {e}")
-        raise SystemExit(1)
+        from pbi_cli.commands.connection import _ensure_ready
+
+        _ensure_ready()
+    except Exception:
+        pass
+
+    if json_output:
+        print_json({"status": "ready"})
+    else:
+        print_success("Environment is ready.")

@@ -12,7 +12,7 @@ Generate comprehensive documentation for Power BI semantic models.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
+pbi connect    # Auto-detects Power BI Desktop and installs skills
 ```
 
 ## Quick Model Overview
@@ -55,8 +55,14 @@ pbi --json calc-group list
 # Perspectives
 pbi --json perspective list
 
-# Named expressions
+# Named expressions (M queries)
 pbi --json expression list
+
+# Partitions
+pbi --json partition list --table Sales
+
+# Calendar/date tables
+pbi --json calendar list
 ```
 
 ## Export Full Model as TMDL
@@ -117,23 +123,23 @@ Create a complete measure inventory:
 # List all measures with expressions
 pbi --json measure list
 
-# Export individual measure definitions as TMDL
-pbi measure export-tmdl "Total Revenue" --table Sales
-pbi measure export-tmdl "YTD Revenue" --table Sales
+# Export full model as TMDL (includes all measure definitions)
+pbi database export-tmdl ./tmdl-export/
 ```
 
-## Translation and Culture Management
+## Culture Management
 
-For multi-language documentation:
+For multi-language models:
 
 ```bash
-# List cultures/translations
+# List cultures (locales)
 pbi --json advanced culture list
-pbi --json advanced translation list
 
-# Create culture for localization
+# Create a culture for localization
 pbi advanced culture create "fr-FR"
-pbi advanced translation create --culture "fr-FR" --object "Total Sales" --translation "Ventes Totales"
+
+# Delete a culture
+pbi advanced culture delete "fr-FR"
 ```
 
 ## Best Practices

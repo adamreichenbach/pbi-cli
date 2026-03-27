@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -18,7 +18,11 @@ def column() -> None:
 @pass_context
 def column_list(ctx: PbiContext, table: str) -> None:
     """List all columns in a table."""
-    run_tool(ctx, "column_operations", {"operation": "List", "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import column_list as _column_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _column_list, model=session.model, table_name=table)
 
 
 @column.command()
@@ -27,7 +31,11 @@ def column_list(ctx: PbiContext, table: str) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str, table: str) -> None:
     """Get details of a specific column."""
-    run_tool(ctx, "column_operations", {"operation": "Get", "name": name, "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import column_get
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, column_get, model=session.model, table_name=table, column_name=name)
 
 
 @column.command()
@@ -58,19 +66,25 @@ def create(
     is_key: bool,
 ) -> None:
     """Create a new column."""
-    definition = build_definition(
-        required={"name": name, "tableName": table, "dataType": data_type},
-        optional={
-            "sourceColumn": source_column,
-            "expression": expression,
-            "formatString": format_string,
-            "description": description,
-            "displayFolder": folder,
-            "isHidden": hidden if hidden else None,
-            "isKey": is_key if is_key else None,
-        },
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import column_create
+
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        column_create,
+        model=session.model,
+        table_name=table,
+        name=name,
+        data_type=data_type,
+        source_column=source_column,
+        expression=expression,
+        format_string=format_string,
+        description=description,
+        display_folder=folder,
+        is_hidden=hidden,
+        is_key=is_key,
     )
-    run_tool(ctx, "column_operations", {"operation": "Create", "definitions": [definition]})
 
 
 @column.command()
@@ -79,7 +93,11 @@ def create(
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a column."""
-    run_tool(ctx, "column_operations", {"operation": "Delete", "name": name, "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import column_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, column_delete, model=session.model, table_name=table, column_name=name)
 
 
 @column.command()
@@ -89,30 +107,15 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def rename(ctx: PbiContext, old_name: str, new_name: str, table: str) -> None:
     """Rename a column."""
-    run_tool(
-        ctx,
-        "column_operations",
-        {
-            "operation": "Rename",
-            "name": old_name,
-            "newName": new_name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import column_rename
 
-
-@column.command(name="export-tmdl")
-@click.argument("name")
-@click.option("--table", "-t", required=True, help="Table name.")
-@pass_context
-def export_tmdl(ctx: PbiContext, name: str, table: str) -> None:
-    """Export a column as TMDL."""
-    run_tool(
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "column_operations",
-        {
-            "operation": "ExportTMDL",
-            "name": name,
-            "tableName": table,
-        },
+        column_rename,
+        model=session.model,
+        table_name=table,
+        old_name=old_name,
+        new_name=new_name,
     )

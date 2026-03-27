@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -18,7 +18,11 @@ def partition() -> None:
 @pass_context
 def partition_list(ctx: PbiContext, table: str) -> None:
     """List partitions in a table."""
-    run_tool(ctx, "partition_operations", {"operation": "List", "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import partition_list as _partition_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _partition_list, model=session.model, table_name=table)
 
 
 @partition.command()
@@ -31,11 +35,19 @@ def create(
     ctx: PbiContext, name: str, table: str, expression: str | None, mode: str | None
 ) -> None:
     """Create a partition."""
-    definition = build_definition(
-        required={"name": name, "tableName": table},
-        optional={"expression": expression, "mode": mode},
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import partition_create
+
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        partition_create,
+        model=session.model,
+        table_name=table,
+        name=name,
+        expression=expression,
+        mode=mode,
     )
-    run_tool(ctx, "partition_operations", {"operation": "Create", "definitions": [definition]})
 
 
 @partition.command()
@@ -44,7 +56,11 @@ def create(
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a partition."""
-    run_tool(ctx, "partition_operations", {"operation": "Delete", "name": name, "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import partition_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, partition_delete, model=session.model, table_name=table, name=name)
 
 
 @partition.command()
@@ -53,12 +69,8 @@ def delete(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def refresh(ctx: PbiContext, name: str, table: str) -> None:
     """Refresh a partition."""
-    run_tool(
-        ctx,
-        "partition_operations",
-        {
-            "operation": "Refresh",
-            "name": name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import partition_refresh
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, partition_refresh, model=session.model, table_name=table, name=name)

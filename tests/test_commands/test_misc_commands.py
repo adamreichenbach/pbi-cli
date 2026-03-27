@@ -3,16 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 from click.testing import CliRunner
 
 from pbi_cli.main import cli
-from tests.conftest import MockPbiMcpClient
 
 
 def test_column_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "column", "list", "--table", "Sales"])
@@ -21,7 +21,7 @@ def test_column_list(
 
 def test_relationship_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "relationship", "list"])
@@ -30,7 +30,7 @@ def test_relationship_list(
 
 def test_database_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "database", "list"])
@@ -39,7 +39,7 @@ def test_database_list(
 
 def test_security_role_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "security-role", "list"])
@@ -48,7 +48,7 @@ def test_security_role_list(
 
 def test_calc_group_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "calc-group", "list"])
@@ -57,7 +57,7 @@ def test_calc_group_list(
 
 def test_partition_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "partition", "list", "--table", "Sales"])
@@ -66,7 +66,7 @@ def test_partition_list(
 
 def test_perspective_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "perspective", "list"])
@@ -75,16 +75,16 @@ def test_perspective_list(
 
 def test_hierarchy_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
-    result = cli_runner.invoke(cli, ["--json", "hierarchy", "list", "--table", "Date"])
+    result = cli_runner.invoke(cli, ["--json", "hierarchy", "list"])
     assert result.exit_code == 0
 
 
 def test_expression_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "expression", "list"])
@@ -93,7 +93,7 @@ def test_expression_list(
 
 def test_calendar_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "calendar", "list"])
@@ -102,7 +102,7 @@ def test_calendar_list(
 
 def test_trace_start(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "trace", "start"])
@@ -111,7 +111,7 @@ def test_trace_start(
 
 def test_transaction_begin(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "transaction", "begin"])
@@ -120,7 +120,7 @@ def test_transaction_begin(
 
 def test_transaction_commit(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "transaction", "commit"])
@@ -129,7 +129,7 @@ def test_transaction_commit(
 
 def test_transaction_rollback(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "transaction", "rollback"])
@@ -138,7 +138,7 @@ def test_transaction_rollback(
 
 def test_advanced_culture_list(
     cli_runner: CliRunner,
-    patch_get_client: MockPbiMcpClient,
+    patch_session: Any,
     tmp_connections: Path,
 ) -> None:
     result = cli_runner.invoke(cli, ["--json", "advanced", "culture", "list"])

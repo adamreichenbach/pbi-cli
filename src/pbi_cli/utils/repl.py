@@ -1,7 +1,7 @@
-"""Interactive REPL for pbi-cli with persistent MCP connection.
+"""Interactive REPL for pbi-cli with persistent session.
 
-Keeps the Power BI MCP server process alive across commands so that
-subsequent calls skip the startup cost (~2-3 seconds per invocation).
+Keeps a direct .NET connection alive across commands so that
+subsequent calls are near-instant (no reconnection overhead).
 
 Usage:
     pbi repl
@@ -19,9 +19,8 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 
 from pbi_cli.core.config import PBI_CLI_HOME, ensure_home_dir
-from pbi_cli.core.connection_store import load_connections
-from pbi_cli.core.mcp_client import get_shared_client
 from pbi_cli.core.output import print_error, print_info, print_warning
+from pbi_cli.core.session import get_current_session
 
 _QUIT_COMMANDS = frozenset({"exit", "quit", "q"})
 _HISTORY_FILE = PBI_CLI_HOME / "repl_history"
@@ -54,9 +53,9 @@ class PbiRepl:
 
     def _get_prompt(self) -> str:
         """Dynamic prompt showing active connection name."""
-        store = load_connections()
-        if store.last_used:
-            return f"pbi({store.last_used})> "
+        session = get_current_session()
+        if session is not None:
+            return f"pbi({session.connection_name})> "
         return "pbi> "
 
     def _execute_line(self, line: str) -> None:
@@ -119,14 +118,6 @@ class PbiRepl:
 
         print_info("pbi-cli interactive mode. Type 'exit' or Ctrl+D to quit.")
 
-        # Pre-warm the shared MCP server
-        try:
-            client = get_shared_client()
-            client.start()
-        except Exception as e:
-            print_warning(f"Could not pre-warm MCP server: {e}")
-            print_info("Commands will start the server on first use.")
-
         try:
             while True:
                 try:
@@ -139,11 +130,9 @@ class PbiRepl:
         except EOFError:
             pass
         finally:
-            # Shut down the shared MCP server
-            try:
-                get_shared_client().stop()
-            except Exception:
-                pass
+            from pbi_cli.core.session import disconnect
+
+            disconnect()
 
         print_info("Goodbye.")
 

@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-27
+
+### Breaking
+- Removed MCP server dependency entirely (no more `powerbi-modeling-mcp` binary)
+- Removed `connect-fabric` command (future work)
+- Removed per-object TMDL export (`table export-tmdl`, `measure export-tmdl`, etc.) -- use `pbi database export-tmdl`
+- Removed `model refresh` command
+- Removed `security-role export-tmdl` -- use `pbi database export-tmdl`
+
+### Added
+- Direct pythonnet/.NET TOM interop (in-process, sub-second commands)
+- Bundled Microsoft Analysis Services DLLs (~20MB, no external download needed)
+- 2 new Claude Code skills: Diagnostics and Partitions & Expressions (7 total)
+- New commands: `trace start/stop/fetch/export`, `transaction begin/commit/rollback`, `calendar list/mark`, `expression list/get/create/delete`, `partition list/create/delete/refresh`, `advanced culture list/get`
+- `connections last` command to show last-used connection
+- `pbi connect` now auto-installs skills (no separate `pbi skills install` needed)
+
+### Changed
+- `pbi setup` now verifies pythonnet + bundled DLLs (no longer downloads a binary)
+- Architecture: Click CLI -> tom_backend/adomd_backend -> pythonnet -> .NET TOM (in-process)
+- All 7 skills updated to reflect v2 commands and architecture
+- README rewritten for v2 architecture
+
+### Removed
+- MCP client/server architecture
+- Binary manager and auto-download from VS Code Marketplace
+- `$PBI_MCP_BINARY` environment variable
+- `~/.pbi-cli/bin/` binary directory
+
 ## [1.0.6] - 2026-03-26
 
 ### Fixed

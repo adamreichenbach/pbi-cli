@@ -12,7 +12,7 @@ Use pbi-cli to manage semantic model structure. Requires `pipx install pbi-cli-t
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
+pbi connect    # Auto-detects Power BI Desktop and installs skills
 ```
 
 ## Tables
@@ -26,7 +26,6 @@ pbi table rename OldName NewName                  # Rename table
 pbi table refresh Sales --type Full               # Refresh table data
 pbi table schema Sales                            # Get table schema
 pbi table mark-date Calendar --date-column Date   # Mark as date table
-pbi table export-tmdl Sales                       # Export as TMDL
 ```
 
 ## Columns
@@ -53,7 +52,6 @@ pbi measure update "Total Revenue" -t Sales -e "SUMX(Sales, Sales[Qty]*Sales[Pri
 pbi measure delete "Old Measure" -t Sales                           # Delete
 pbi measure rename "Old" "New" -t Sales                             # Rename
 pbi measure move "Revenue" -t Sales --to-table Finance              # Move to another table
-pbi measure export-tmdl "Total Revenue" -t Sales                    # Export as TMDL
 ```
 
 ## Relationships
@@ -65,7 +63,9 @@ pbi relationship create \
   --from-table Sales --from-column ProductKey \
   --to-table Products --to-column ProductKey       # Create relationship
 pbi relationship delete RelName                    # Delete
-pbi relationship export-tmdl RelName               # Export as TMDL
+pbi relationship find --table Sales                # Find relationships for a table
+pbi relationship activate RelName                  # Activate
+pbi relationship deactivate RelName                # Deactivate
 ```
 
 ## Hierarchies
@@ -74,7 +74,6 @@ pbi relationship export-tmdl RelName               # Export as TMDL
 pbi hierarchy list --table Date                    # List hierarchies
 pbi hierarchy get "Calendar" --table Date          # Get details
 pbi hierarchy create "Calendar" --table Date       # Create
-pbi hierarchy add-level "Calendar" --table Date --column Year --ordinal 0   # Add level
 pbi hierarchy delete "Calendar" --table Date       # Delete
 ```
 
@@ -124,4 +123,4 @@ pbi relationship list
 - Organize measures into display folders by business domain
 - Always mark calendar tables with `mark-date` for time intelligence
 - Use `--json` flag when scripting: `pbi --json measure list`
-- Export TMDL for version control: `pbi table export-tmdl Sales`
+- Export TMDL for version control: `pbi database export-tmdl ./model/`

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,7 +17,11 @@ def calc_group() -> None:
 @pass_context
 def cg_list(ctx: PbiContext) -> None:
     """List all calculation groups."""
-    run_tool(ctx, "calculation_group_operations", {"operation": "ListGroups"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import calc_group_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, calc_group_list, model=session.model)
 
 
 @calc_group.command()
@@ -27,17 +31,17 @@ def cg_list(ctx: PbiContext) -> None:
 @pass_context
 def create(ctx: PbiContext, name: str, description: str | None, precedence: int | None) -> None:
     """Create a calculation group."""
-    definition = build_definition(
-        required={"name": name},
-        optional={"description": description, "calculationGroupPrecedence": precedence},
-    )
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import calc_group_create
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "calculation_group_operations",
-        {
-            "operation": "CreateGroup",
-            "definitions": [definition],
-        },
+        calc_group_create,
+        model=session.model,
+        name=name,
+        description=description,
+        precedence=precedence,
     )
 
 
@@ -46,7 +50,11 @@ def create(ctx: PbiContext, name: str, description: str | None, precedence: int 
 @pass_context
 def delete(ctx: PbiContext, name: str) -> None:
     """Delete a calculation group."""
-    run_tool(ctx, "calculation_group_operations", {"operation": "DeleteGroup", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import calc_group_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, calc_group_delete, model=session.model, name=name)
 
 
 @calc_group.command(name="items")
@@ -54,14 +62,11 @@ def delete(ctx: PbiContext, name: str) -> None:
 @pass_context
 def list_items(ctx: PbiContext, group_name: str) -> None:
     """List calculation items in a group."""
-    run_tool(
-        ctx,
-        "calculation_group_operations",
-        {
-            "operation": "ListItems",
-            "calculationGroupName": group_name,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import calc_item_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, calc_item_list, model=session.model, group_name=group_name)
 
 
 @calc_group.command(name="create-item")
@@ -74,16 +79,16 @@ def create_item(
     ctx: PbiContext, item_name: str, group: str, expression: str, ordinal: int | None
 ) -> None:
     """Create a calculation item in a group."""
-    definition = build_definition(
-        required={"name": item_name, "expression": expression},
-        optional={"ordinal": ordinal},
-    )
-    run_tool(
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import calc_item_create
+
+    session = get_session_for_command(ctx)
+    run_command(
         ctx,
-        "calculation_group_operations",
-        {
-            "operation": "CreateItem",
-            "calculationGroupName": group,
-            "definitions": [definition],
-        },
+        calc_item_create,
+        model=session.model,
+        group_name=group,
+        name=item_name,
+        expression=expression,
+        ordinal=ordinal,
     )

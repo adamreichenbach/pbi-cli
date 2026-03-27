@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,7 +17,11 @@ def transaction() -> None:
 @pass_context
 def begin(ctx: PbiContext) -> None:
     """Begin a new transaction."""
-    run_tool(ctx, "transaction_operations", {"operation": "Begin"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import transaction_begin
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, transaction_begin, server=session.server)
 
 
 @transaction.command()
@@ -25,10 +29,11 @@ def begin(ctx: PbiContext) -> None:
 @pass_context
 def commit(ctx: PbiContext, transaction_id: str) -> None:
     """Commit the active or specified transaction."""
-    request: dict[str, object] = {"operation": "Commit"}
-    if transaction_id:
-        request["transactionId"] = transaction_id
-    run_tool(ctx, "transaction_operations", request)
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import transaction_commit
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, transaction_commit, server=session.server, transaction_id=transaction_id)
 
 
 @transaction.command()
@@ -36,7 +41,8 @@ def commit(ctx: PbiContext, transaction_id: str) -> None:
 @pass_context
 def rollback(ctx: PbiContext, transaction_id: str) -> None:
     """Rollback the active or specified transaction."""
-    request: dict[str, object] = {"operation": "Rollback"}
-    if transaction_id:
-        request["transactionId"] = transaction_id
-    run_tool(ctx, "transaction_operations", request)
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import transaction_rollback
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, transaction_rollback, server=session.server, transaction_id=transaction_id)

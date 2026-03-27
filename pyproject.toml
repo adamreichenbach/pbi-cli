@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbi-cli-tool"
-version = "1.0.6"
-description = "CLI for Power BI semantic models - wraps the Power BI MCP server for token-efficient AI agent usage"
+version = "2.0.0"
+description = "CLI for Power BI semantic models - direct .NET connection for token-efficient AI agent usage"
 readme = "README.pypi.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
     {name = "pbi-cli contributors"},
 ]
-keywords = ["power-bi", "cli", "mcp", "semantic-model", "dax", "claude-code"]
+keywords = ["power-bi", "cli", "semantic-model", "dax", "claude-code", "tom"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -29,10 +29,10 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.0.0",
-    "mcp>=1.20.0",
     "rich>=13.0.0",
-    "httpx>=0.24.0",
     "prompt-toolkit>=3.0.0",
+    "pythonnet==3.1.0rc0",
+    "clr-loader>=0.2.6",
 ]
 
 [project.scripts]
@@ -47,7 +47,6 @@ Issues = "https://github.com/MinaSaad1/pbi-cli/issues"
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
-    "pytest-asyncio>=0.21",
     "ruff>=0.4.0",
     "mypy>=1.10",
 ]
@@ -57,6 +56,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "pbi_cli.skills" = ["**/*.md"]
+"pbi_cli.dlls" = ["*.dll"]
 
 [tool.ruff]
 target-version = "py310"
@@ -65,10 +65,19 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+# .NET interop code uses CamelCase names to match the .NET API surface
+"src/pbi_cli/core/adomd_backend.py" = ["N806"]
+"src/pbi_cli/core/session.py" = ["N806"]
+"src/pbi_cli/core/tom_backend.py" = ["N806", "N814"]
+"src/pbi_cli/core/dotnet_loader.py" = ["N806", "N814"]
+# Mock objects mirror .NET CamelCase API
+"tests/conftest.py" = ["N802", "N806"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
-    "e2e: end-to-end tests requiring real Power BI binary",
+    "e2e: end-to-end tests requiring running Power BI Desktop",
 ]
 
 [tool.mypy]

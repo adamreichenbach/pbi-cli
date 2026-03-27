@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import json
+import sys
+from io import StringIO
 
-from pbi_cli.core.output import format_mcp_result, print_json
+from pbi_cli.core.output import format_result, print_json
 
 
-def test_print_json_outputs_valid_json(capsys: object) -> None:
-    import sys
-    from io import StringIO
-
+def test_print_json_outputs_valid_json() -> None:
     old_stdout = sys.stdout
     sys.stdout = buf = StringIO()
     try:
@@ -22,9 +21,7 @@ def test_print_json_outputs_valid_json(capsys: object) -> None:
     assert parsed == {"key": "value"}
 
 
-def test_print_json_handles_non_serializable(capsys: object) -> None:
-    import sys
-    from io import StringIO
+def test_print_json_handles_non_serializable() -> None:
     from pathlib import Path
 
     old_stdout = sys.stdout
@@ -38,14 +35,11 @@ def test_print_json_handles_non_serializable(capsys: object) -> None:
     assert "tmp" in parsed["path"]
 
 
-def test_format_mcp_result_json_mode(capsys: object) -> None:
-    import sys
-    from io import StringIO
-
+def test_format_result_json_mode() -> None:
     old_stdout = sys.stdout
     sys.stdout = buf = StringIO()
     try:
-        format_mcp_result({"name": "Sales"}, json_output=True)
+        format_result({"name": "Sales"}, json_output=True)
     finally:
         sys.stdout = old_stdout
 
@@ -53,21 +47,21 @@ def test_format_mcp_result_json_mode(capsys: object) -> None:
     assert parsed["name"] == "Sales"
 
 
-def test_format_mcp_result_empty_list() -> None:
+def test_format_result_empty_list() -> None:
     # Should not raise; prints "No results." to stderr
-    format_mcp_result([], json_output=False)
+    format_result([], json_output=False)
 
 
-def test_format_mcp_result_dict() -> None:
+def test_format_result_dict() -> None:
     # Should not raise; prints key-value panel
-    format_mcp_result({"name": "Test"}, json_output=False)
+    format_result({"name": "Test"}, json_output=False)
 
 
-def test_format_mcp_result_list_of_dicts() -> None:
+def test_format_result_list_of_dicts() -> None:
     # Should not raise; prints table
-    format_mcp_result([{"name": "A"}, {"name": "B"}], json_output=False)
+    format_result([{"name": "A"}, {"name": "B"}], json_output=False)
 
 
-def test_format_mcp_result_string() -> None:
+def test_format_result_string() -> None:
     # Should not raise; prints string
-    format_mcp_result("some text", json_output=False)
+    format_result("some text", json_output=False)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,21 +17,29 @@ def trace() -> None:
 @pass_context
 def start(ctx: PbiContext) -> None:
     """Start a diagnostic trace."""
-    run_tool(ctx, "trace_operations", {"operation": "Start"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import trace_start
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, trace_start, server=session.server)
 
 
 @trace.command()
 @pass_context
 def stop(ctx: PbiContext) -> None:
     """Stop the active trace."""
-    run_tool(ctx, "trace_operations", {"operation": "Stop"})
+    from pbi_cli.core.tom_backend import trace_stop
+
+    run_command(ctx, trace_stop)
 
 
 @trace.command()
 @pass_context
 def fetch(ctx: PbiContext) -> None:
     """Fetch trace events."""
-    run_tool(ctx, "trace_operations", {"operation": "Fetch"})
+    from pbi_cli.core.tom_backend import trace_fetch
+
+    run_command(ctx, trace_fetch)
 
 
 @trace.command()
@@ -39,4 +47,6 @@ def fetch(ctx: PbiContext) -> None:
 @pass_context
 def export(ctx: PbiContext, path: str) -> None:
     """Export trace events to a file."""
-    run_tool(ctx, "trace_operations", {"operation": "Export", "filePath": path})
+    from pbi_cli.core.tom_backend import trace_export
+
+    run_command(ctx, trace_export, path=path)

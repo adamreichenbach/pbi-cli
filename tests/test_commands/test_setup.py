@@ -11,32 +11,33 @@ from pbi_cli.main import cli
 
 
 def test_setup_info(cli_runner: CliRunner, tmp_config: Path) -> None:
-    fake_info = {
-        "binary_path": "/test/binary",
-        "version": "0.4.0",
-        "platform": "win32-x64",
-        "source": "managed",
-    }
-    with patch("pbi_cli.commands.setup_cmd.get_binary_info", return_value=fake_info):
+    with patch("pbi_cli.core.dotnet_loader._dll_dir", return_value=tmp_config / "dlls"):
         result = cli_runner.invoke(cli, ["--json", "setup", "--info"])
-        assert result.exit_code == 0
-        assert "0.4.0" in result.output
+    assert result.exit_code == 0
+    assert "version" in result.output
 
 
-def test_setup_check(cli_runner: CliRunner, tmp_config: Path) -> None:
-    with patch(
-        "pbi_cli.commands.setup_cmd.check_for_updates",
-        return_value=("0.3.0", "0.4.0", True),
+def test_setup_verify_missing_pythonnet(cli_runner: CliRunner, tmp_config: Path) -> None:
+    with (
+        patch("pbi_cli.core.dotnet_loader._dll_dir", return_value=tmp_config / "dlls"),
+        patch.dict("sys.modules", {"pythonnet": None}),
     ):
-        result = cli_runner.invoke(cli, ["--json", "setup", "--check"])
-        assert result.exit_code == 0
-        assert "0.4.0" in result.output
+        result = cli_runner.invoke(cli, ["setup"])
+    # Should fail because pythonnet is "missing" and dlls dir doesn't exist
+    assert result.exit_code != 0
 
 
-def test_setup_check_up_to_date(cli_runner: CliRunner, tmp_config: Path) -> None:
-    with patch(
-        "pbi_cli.commands.setup_cmd.check_for_updates",
-        return_value=("0.4.0", "0.4.0", False),
+def test_setup_verify_success(cli_runner: CliRunner, tmp_config: Path) -> None:
+    # Create fake DLL directory with required files
+    dll_dir = tmp_config / "dlls"
+    dll_dir.mkdir()
+    (dll_dir / "Microsoft.AnalysisServices.Tabular.dll").write_text("fake")
+    (dll_dir / "Microsoft.AnalysisServices.AdomdClient.dll").write_text("fake")
+
+    with (
+        patch("pbi_cli.core.dotnet_loader._dll_dir", return_value=dll_dir),
+        patch("pbi_cli.commands.connection._ensure_ready", lambda: None),
     ):
-        result = cli_runner.invoke(cli, ["setup", "--check"])
-        assert result.exit_code == 0
+        result = cli_runner.invoke(cli, ["--json", "setup"])
+    assert result.exit_code == 0
+    assert "ready" in result.output

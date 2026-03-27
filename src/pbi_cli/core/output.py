@@ -60,8 +60,8 @@ def print_key_value(title: str, data: dict[str, Any]) -> None:
     console.print(Panel("\n".join(lines), title=title, border_style="cyan"))
 
 
-def format_mcp_result(result: Any, json_output: bool) -> None:
-    """Format and print an MCP tool result.
+def format_result(result: Any, json_output: bool) -> None:
+    """Format and print a command result.
 
     In JSON mode, prints the raw result. In human mode, attempts to render
     a table or key-value display based on the shape of the data.

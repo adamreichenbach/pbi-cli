@@ -12,9 +12,8 @@ from pbi_cli.main import PbiContext, pass_context
 def repl(ctx: PbiContext) -> None:
     """Start an interactive REPL session.
 
-    Keeps the MCP server process alive across commands, avoiding the
-    2-3 second startup cost on each invocation. Type 'exit' or press
-    Ctrl+D to quit.
+    Keeps a persistent .NET connection alive across commands for
+    near-instant execution. Type 'exit' or press Ctrl+D to quit.
     """
     from pbi_cli.utils.repl import start_repl
 

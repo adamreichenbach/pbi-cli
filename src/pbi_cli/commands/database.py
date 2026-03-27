@@ -1,10 +1,10 @@
-"""Database-level operations: list, TMDL import/export, Fabric deploy."""
+"""Database-level operations: list, TMDL import/export, TMSL export."""
 
 from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,7 +17,11 @@ def database() -> None:
 @pass_context
 def database_list(ctx: PbiContext) -> None:
     """List all databases on the connected server."""
-    run_tool(ctx, "database_operations", {"operation": "List"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import database_list as _database_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _database_list, server=session.server)
 
 
 @database.command(name="import-tmdl")
@@ -25,14 +29,11 @@ def database_list(ctx: PbiContext) -> None:
 @pass_context
 def import_tmdl(ctx: PbiContext, folder_path: str) -> None:
     """Import a model from a TMDL folder."""
-    run_tool(
-        ctx,
-        "database_operations",
-        {
-            "operation": "ImportFromTmdlFolder",
-            "tmdlFolderPath": folder_path,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import import_tmdl as _import_tmdl
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _import_tmdl, server=session.server, folder_path=folder_path)
 
 
 @database.command(name="export-tmdl")
@@ -40,41 +41,19 @@ def import_tmdl(ctx: PbiContext, folder_path: str) -> None:
 @pass_context
 def export_tmdl(ctx: PbiContext, folder_path: str) -> None:
     """Export the model to a TMDL folder."""
-    run_tool(
-        ctx,
-        "database_operations",
-        {
-            "operation": "ExportToTmdlFolder",
-            "tmdlFolderPath": folder_path,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import export_tmdl as _export_tmdl
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _export_tmdl, database=session.database, folder_path=folder_path)
 
 
 @database.command(name="export-tmsl")
 @pass_context
 def export_tmsl(ctx: PbiContext) -> None:
     """Export the model as TMSL."""
-    run_tool(ctx, "database_operations", {"operation": "ExportTMSL"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import export_tmsl as _export_tmsl
 
-
-@database.command()
-@click.option("--workspace", "-w", required=True, help="Target Fabric workspace name.")
-@click.option("--new-name", default=None, help="New database name in target workspace.")
-@click.option("--tenant", default=None, help="Tenant name for B2B scenarios.")
-@pass_context
-def deploy(ctx: PbiContext, workspace: str, new_name: str | None, tenant: str | None) -> None:
-    """Deploy the model to a Fabric workspace."""
-    deploy_request: dict[str, object] = {"targetWorkspaceName": workspace}
-    if new_name:
-        deploy_request["newDatabaseName"] = new_name
-    if tenant:
-        deploy_request["targetTenantName"] = tenant
-
-    run_tool(
-        ctx,
-        "database_operations",
-        {
-            "operation": "DeployToFabric",
-            "deployToFabricRequest": deploy_request,
-        },
-    )
+    session = get_session_for_command(ctx)
+    run_command(ctx, _export_tmsl, database=session.database)

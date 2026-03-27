@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -17,7 +17,11 @@ def relationship() -> None:
 @pass_context
 def relationship_list(ctx: PbiContext) -> None:
     """List all relationships."""
-    run_tool(ctx, "relationship_operations", {"operation": "List"})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_list as _rel_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _rel_list, model=session.model)
 
 
 @relationship.command()
@@ -25,7 +29,11 @@ def relationship_list(ctx: PbiContext) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str) -> None:
     """Get details of a specific relationship."""
-    run_tool(ctx, "relationship_operations", {"operation": "Get", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_get
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, relationship_get, model=session.model, name=name)
 
 
 @relationship.command()
@@ -53,20 +61,22 @@ def create(
     active: bool,
 ) -> None:
     """Create a new relationship."""
-    definition = build_definition(
-        required={
-            "fromTable": from_table,
-            "fromColumn": from_column,
-            "toTable": to_table,
-            "toColumn": to_column,
-        },
-        optional={
-            "name": name,
-            "crossFilteringBehavior": cross_filter,
-            "isActive": active,
-        },
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_create
+
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        relationship_create,
+        model=session.model,
+        from_table=from_table,
+        from_column=from_column,
+        to_table=to_table,
+        to_column=to_column,
+        name=name,
+        cross_filter=cross_filter,
+        is_active=active,
     )
-    run_tool(ctx, "relationship_operations", {"operation": "Create", "definitions": [definition]})
 
 
 @relationship.command()
@@ -74,7 +84,11 @@ def create(
 @pass_context
 def delete(ctx: PbiContext, name: str) -> None:
     """Delete a relationship."""
-    run_tool(ctx, "relationship_operations", {"operation": "Delete", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, relationship_delete, model=session.model, name=name)
 
 
 @relationship.command()
@@ -82,7 +96,11 @@ def delete(ctx: PbiContext, name: str) -> None:
 @pass_context
 def activate(ctx: PbiContext, name: str) -> None:
     """Activate a relationship."""
-    run_tool(ctx, "relationship_operations", {"operation": "Activate", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_set_active
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, relationship_set_active, model=session.model, name=name, active=True)
 
 
 @relationship.command()
@@ -90,7 +108,11 @@ def activate(ctx: PbiContext, name: str) -> None:
 @pass_context
 def deactivate(ctx: PbiContext, name: str) -> None:
     """Deactivate a relationship."""
-    run_tool(ctx, "relationship_operations", {"operation": "Deactivate", "name": name})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_set_active
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, relationship_set_active, model=session.model, name=name, active=False)
 
 
 @relationship.command()
@@ -98,12 +120,8 @@ def deactivate(ctx: PbiContext, name: str) -> None:
 @pass_context
 def find(ctx: PbiContext, table: str) -> None:
     """Find relationships involving a table."""
-    run_tool(ctx, "relationship_operations", {"operation": "Find", "tableName": table})
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import relationship_find
 
-
-@relationship.command(name="export-tmdl")
-@click.argument("name")
-@pass_context
-def export_tmdl(ctx: PbiContext, name: str) -> None:
-    """Export a relationship as TMDL."""
-    run_tool(ctx, "relationship_operations", {"operation": "ExportTMDL", "name": name})
+    session = get_session_for_command(ctx)
+    run_command(ctx, relationship_find, model=session.model, table_name=table)

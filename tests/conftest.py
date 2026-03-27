@@ -1,7 +1,8 @@
-"""Shared test fixtures for pbi-cli."""
+"""Shared test fixtures for pbi-cli v2 (direct .NET backend)."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -9,96 +10,241 @@ import pytest
 from click.testing import CliRunner
 
 # ---------------------------------------------------------------------------
-# Canned MCP responses used by the mock client
-# ---------------------------------------------------------------------------
-
-CANNED_RESPONSES: dict[str, dict[str, Any]] = {
-    "connection_operations": {
-        "Connect": {"status": "connected", "connectionName": "test-conn"},
-        "ConnectFabric": {"status": "connected", "connectionName": "ws/model"},
-        "Disconnect": {"status": "disconnected"},
-    },
-    "dax_query_operations": {
-        "Execute": {"columns": ["Amount"], "rows": [{"Amount": 42}]},
-        "Validate": {"isValid": True},
-        "ClearCache": {"status": "cleared"},
-    },
-    "measure_operations": {
-        "List": [
-            {"name": "Total Sales", "expression": "SUM(Sales[Amount])", "tableName": "Sales"},
-        ],
-        "Get": {"name": "Total Sales", "expression": "SUM(Sales[Amount])"},
-        "Create": {"status": "created"},
-        "Update": {"status": "updated"},
-        "Delete": {"status": "deleted"},
-        "Rename": {"status": "renamed"},
-        "Move": {"status": "moved"},
-        "ExportTMDL": "measure 'Total Sales'\n  expression = SUM(Sales[Amount])",
-    },
-    "table_operations": {
-        "List": [{"name": "Sales", "mode": "Import"}],
-        "Get": {"name": "Sales", "mode": "Import", "columns": []},
-        "Create": {"status": "created"},
-        "Delete": {"status": "deleted"},
-        "Refresh": {"status": "refreshed"},
-        "GetSchema": {"name": "Sales", "columns": [{"name": "Amount", "type": "double"}]},
-        "ExportTMDL": "table Sales\n  mode: Import",
-        "Rename": {"status": "renamed"},
-        "MarkAsDateTable": {"status": "marked"},
-    },
-    "model_operations": {
-        "Get": {"name": "My Model", "compatibilityLevel": 1600},
-        "GetStats": {"tables": 5, "measures": 10, "columns": 30},
-        "Refresh": {"status": "refreshed"},
-        "Rename": {"status": "renamed"},
-        "ExportTMDL": "model Model\n  culture: en-US",
-    },
-    "column_operations": {
-        "List": [{"name": "Amount", "tableName": "Sales", "dataType": "double"}],
-        "Get": {"name": "Amount", "dataType": "double"},
-        "Create": {"status": "created"},
-        "Update": {"status": "updated"},
-        "Delete": {"status": "deleted"},
-        "Rename": {"status": "renamed"},
-        "ExportTMDL": "column Amount\n  dataType: double",
-    },
-}
-
-
-# ---------------------------------------------------------------------------
-# Mock MCP client
+# Mock TOM objects used by the mock session
 # ---------------------------------------------------------------------------
 
 
-class MockPbiMcpClient:
-    """Fake MCP client returning canned responses without spawning a process."""
+class MockCollection:
+    """Simulates a .NET ICollection (iterable, with Count/Add/Remove)."""
 
-    def __init__(self, responses: dict[str, dict[str, Any]] | None = None) -> None:
-        self.responses = responses or CANNED_RESPONSES
-        self.started = False
-        self.stopped = False
-        self.calls: list[tuple[str, dict[str, Any]]] = []
+    def __init__(self, items: list[Any] | None = None) -> None:
+        self._items = list(items or [])
 
-    def start(self) -> None:
-        self.started = True
+    def __iter__(self) -> Any:
+        return iter(self._items)
 
-    def stop(self) -> None:
-        self.stopped = True
+    def __getitem__(self, index: int) -> Any:
+        return self._items[index]
 
-    def call_tool(self, tool_name: str, request: dict[str, Any]) -> Any:
-        self.calls.append((tool_name, request))
-        operation = request.get("operation", "")
-        tool_responses = self.responses.get(tool_name, {})
-        if operation in tool_responses:
-            return tool_responses[operation]
-        return {"status": "ok"}
+    @property
+    def Count(self) -> int:
+        return len(self._items)
 
-    def list_tools(self) -> list[dict[str, Any]]:
-        return [
-            {"name": "measure_operations", "description": "Measure CRUD"},
-            {"name": "table_operations", "description": "Table CRUD"},
-            {"name": "dax_query_operations", "description": "DAX queries"},
-        ]
+    def Add(self, item: Any = None) -> Any:
+        if item is not None:
+            self._items.append(item)
+            return item
+        # Parameterless Add() -- create a simple object and return it
+        obj = type("TraceObj", (), {
+            "Name": "", "AutoRestart": False, "ID": "trace-1",
+            "Update": lambda self: None,
+            "Start": lambda self: None,
+            "Stop": lambda self: None,
+        })()
+        self._items.append(obj)
+        return obj
+
+    def Remove(self, item: Any) -> None:
+        self._items.remove(item)
+
+
+@dataclass
+class MockMeasure:
+    Name: str = "Total Sales"
+    Expression: str = "SUM(Sales[Amount])"
+    DisplayFolder: str = ""
+    Description: str = ""
+    FormatString: str = ""
+    IsHidden: bool = False
+
+
+@dataclass
+class MockColumn:
+    Name: str = "Amount"
+    DataType: str = "Double"
+    Type: str = "DataColumn"
+    SourceColumn: str = "Amount"
+    DisplayFolder: str = ""
+    Description: str = ""
+    FormatString: str = ""
+    IsHidden: bool = False
+    IsKey: bool = False
+
+
+@dataclass
+class MockPartition:
+    Name: str = "Partition1"
+    Mode: str = "Import"
+    SourceType: str = "M"
+    State: str = "Ready"
+
+
+@dataclass
+class MockRelationship:
+    Name: str = "rel1"
+    FromTable: Any = None
+    FromColumn: Any = None
+    ToTable: Any = None
+    ToColumn: Any = None
+    CrossFilteringBehavior: str = "OneDirection"
+    IsActive: bool = True
+
+
+@dataclass
+class MockHierarchy:
+    Name: str = "DateHierarchy"
+    Description: str = ""
+    Levels: Any = None
+
+    def __post_init__(self) -> None:
+        if self.Levels is None:
+            self.Levels = MockCollection()
+
+
+@dataclass
+class MockLevel:
+    Name: str = "Year"
+    Ordinal: int = 0
+    Column: Any = None
+
+
+@dataclass
+class MockRole:
+    Name: str = "Reader"
+    Description: str = ""
+    ModelPermission: str = "Read"
+    TablePermissions: Any = None
+
+    def __post_init__(self) -> None:
+        if self.TablePermissions is None:
+            self.TablePermissions = MockCollection()
+
+
+@dataclass
+class MockPerspective:
+    Name: str = "Sales View"
+    Description: str = ""
+
+
+@dataclass
+class MockExpression:
+    Name: str = "ServerURL"
+    Kind: str = "M"
+    Expression: str = '"https://example.com"'
+    Description: str = ""
+
+
+@dataclass
+class MockCulture:
+    Name: str = "en-US"
+
+
+class MockTable:
+    """Simulates a TOM Table with nested collections."""
+
+    def __init__(
+        self,
+        name: str = "Sales",
+        data_category: str = "",
+        description: str = "",
+    ) -> None:
+        self.Name = name
+        self.DataCategory = data_category
+        self.Description = description
+        self.IsHidden = False
+        self.CalculationGroup = None
+        self.Measures = MockCollection([MockMeasure()])
+        self.Columns = MockCollection([MockColumn()])
+        self.Partitions = MockCollection([MockPartition()])
+        self.Hierarchies = MockCollection()
+
+
+class MockModel:
+    """Simulates a TOM Model."""
+
+    def __init__(self) -> None:
+        self.Name = "TestModel"
+        self.Description = ""
+        self.DefaultMode = "Import"
+        self.Culture = "en-US"
+        self.CompatibilityLevel = 1600
+
+        self.Tables = MockCollection([MockTable()])
+        self.Relationships = MockCollection()
+        self.Roles = MockCollection()
+        self.Perspectives = MockCollection()
+        self.Expressions = MockCollection()
+        self.Cultures = MockCollection()
+
+    def SaveChanges(self) -> None:
+        pass
+
+    def RequestRefresh(self, refresh_type: Any) -> None:
+        pass
+
+
+class MockDatabase:
+    """Simulates a TOM Database."""
+
+    def __init__(self, model: MockModel | None = None) -> None:
+        self.Name = "TestDB"
+        self.ID = "TestDB-ID"
+        self.CompatibilityLevel = 1600
+        self.LastUpdate = "2026-01-01"
+        self.Model = model or MockModel()
+
+
+class MockServer:
+    """Simulates a TOM Server."""
+
+    def __init__(self, database: MockDatabase | None = None) -> None:
+        db = database or MockDatabase()
+        self.Databases = MockCollection([db])
+        self.Traces = MockCollection()
+
+    def Connect(self, conn_str: str) -> None:
+        pass
+
+    def Disconnect(self) -> None:
+        pass
+
+    def BeginTransaction(self) -> str:
+        return "tx-001"
+
+    def CommitTransaction(self, tx_id: str = "") -> None:
+        pass
+
+    def RollbackTransaction(self, tx_id: str = "") -> None:
+        pass
+
+
+class MockAdomdConnection:
+    """Simulates an AdomdConnection."""
+
+    def Open(self) -> None:
+        pass
+
+    def Close(self) -> None:
+        pass
+
+
+def build_mock_session() -> Any:
+    """Build a complete mock Session for testing."""
+    from pbi_cli.core.session import Session
+
+    model = MockModel()
+    database = MockDatabase(model)
+    server = MockServer(database)
+    adomd = MockAdomdConnection()
+
+    return Session(
+        server=server,
+        database=database,
+        model=model,
+        adomd_connection=adomd,
+        connection_name="test-conn",
+        data_source="localhost:12345",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -107,28 +253,31 @@ class MockPbiMcpClient:
 
 
 @pytest.fixture
-def mock_client() -> MockPbiMcpClient:
-    """A fresh mock MCP client."""
-    return MockPbiMcpClient()
+def mock_session() -> Any:
+    """A fresh mock session."""
+    return build_mock_session()
 
 
 @pytest.fixture
-def patch_get_client(
-    monkeypatch: pytest.MonkeyPatch, mock_client: MockPbiMcpClient
-) -> MockPbiMcpClient:
-    """Monkeypatch get_client in _helpers and connection modules."""
-    factory = lambda repl_mode=False: mock_client  # noqa: E731
-
-    monkeypatch.setattr("pbi_cli.commands._helpers.get_client", factory)
-    monkeypatch.setattr("pbi_cli.commands.connection.get_client", factory)
-
-    # Also patch dax.py which calls get_client directly
-    monkeypatch.setattr("pbi_cli.commands.dax.get_client", factory)
-
-    # Skip auto-setup (binary download + skills install) in tests
+def patch_session(monkeypatch: pytest.MonkeyPatch, mock_session: Any) -> Any:
+    """Monkeypatch get_session_for_command to return mock session."""
+    monkeypatch.setattr(
+        "pbi_cli.core.session.get_session_for_command",
+        lambda ctx: mock_session,
+    )
+    # Also patch modules that import get_session_for_command at module level
+    monkeypatch.setattr(
+        "pbi_cli.commands.model.get_session_for_command",
+        lambda ctx: mock_session,
+    )
+    # Also patch connection commands that call session.connect directly
+    monkeypatch.setattr(
+        "pbi_cli.core.session.connect",
+        lambda data_source, catalog="": mock_session,
+    )
+    # Skip skill install in connect
     monkeypatch.setattr("pbi_cli.commands.connection._ensure_ready", lambda: None)
-
-    return mock_client
+    return mock_session
 
 
 @pytest.fixture

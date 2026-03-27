@@ -16,13 +16,13 @@ class PbiCliError(click.ClickException):
         super().__init__(message)
 
 
-class BinaryNotFoundError(PbiCliError):
-    """Raised when the MCP server binary cannot be resolved."""
+class DotNetNotFoundError(PbiCliError):
+    """Raised when pythonnet or the bundled .NET DLLs are missing."""
 
     def __init__(
         self,
         message: str = (
-            "Power BI MCP binary not found. Run 'pbi connect' or 'pbi setup' to download it."
+            "pythonnet is required. Install it with: pip install pythonnet"
         ),
     ) -> None:
         super().__init__(message)
@@ -35,10 +35,10 @@ class ConnectionRequiredError(PbiCliError):
         super().__init__(message)
 
 
-class McpToolError(PbiCliError):
-    """Raised when an MCP tool call fails."""
+class TomError(PbiCliError):
+    """Raised when a TOM operation fails."""
 
-    def __init__(self, tool_name: str, detail: str) -> None:
-        self.tool_name = tool_name
+    def __init__(self, operation: str, detail: str) -> None:
+        self.operation = operation
         self.detail = detail
-        super().__init__(f"{tool_name}: {detail}")
+        super().__init__(f"{operation}: {detail}")

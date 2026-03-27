@@ -12,7 +12,7 @@ Manage row-level security (RLS) and perspectives for Power BI models.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
+pbi connect    # Auto-detects Power BI Desktop and installs skills
 ```
 
 ## Security Roles (RLS)
@@ -30,9 +30,6 @@ pbi security-role create "Regional Manager" \
 
 # Delete a role
 pbi security-role delete "Regional Manager"
-
-# Export role as TMDL
-pbi security-role export-tmdl "Regional Manager"
 ```
 
 ## Perspectives
@@ -60,9 +57,8 @@ pbi security-role create "Finance Team" --description "Finance data only"
 # 2. Verify roles were created
 pbi --json security-role list
 
-# 3. Export for version control
-pbi security-role export-tmdl "Sales Team"
-pbi security-role export-tmdl "Finance Team"
+# 3. Export full model for version control (includes roles)
+pbi database export-tmdl ./model-backup/
 ```
 
 ## Workflow: Create User-Focused Perspectives
@@ -108,7 +104,7 @@ pbi security-role create "Manager View" \
 
 - Create roles with clear, descriptive names
 - Always add descriptions explaining the access restriction
-- Export roles as TMDL for version control
+- Export model as TMDL for version control (`pbi database export-tmdl`)
 - Test RLS thoroughly before publishing to production
 - Use perspectives to simplify the model for different user groups
 - Document role-to-group mappings externally (RLS roles map to Azure AD groups in Power BI Service)

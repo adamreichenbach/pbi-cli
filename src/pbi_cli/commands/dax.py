@@ -6,9 +6,8 @@ import sys
 
 import click
 
-from pbi_cli.commands._helpers import _auto_reconnect, resolve_connection_name
-from pbi_cli.core.mcp_client import get_client
-from pbi_cli.core.output import format_mcp_result, print_error
+from pbi_cli.commands._helpers import run_command
+from pbi_cli.core.output import print_error
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -23,10 +22,6 @@ def dax() -> None:
     "--file", "-f", "query_file", type=click.Path(exists=True), help="Read query from file."
 )
 @click.option("--max-rows", type=int, default=None, help="Maximum rows to return.")
-@click.option("--metrics", is_flag=True, default=False, help="Include execution metrics.")
-@click.option(
-    "--metrics-only", is_flag=True, default=False, help="Return metrics without row data."
-)
 @click.option("--timeout", type=int, default=200, help="Query timeout in seconds.")
 @pass_context
 def execute(
@@ -34,8 +29,6 @@ def execute(
     query: str,
     query_file: str | None,
     max_rows: int | None,
-    metrics: bool,
-    metrics_only: bool,
     timeout: int,
 ) -> None:
     """Execute a DAX query.
@@ -53,33 +46,18 @@ def execute(
         print_error("No query provided. Pass as argument, --file, or stdin.")
         raise SystemExit(1)
 
-    request: dict[str, object] = {
-        "operation": "Execute",
-        "query": resolved_query,
-        "timeoutSeconds": timeout,
-        "getExecutionMetrics": metrics or metrics_only,
-        "executionMetricsOnly": metrics_only,
-    }
-    if max_rows is not None:
-        request["maxRows"] = max_rows
+    from pbi_cli.core.adomd_backend import execute_dax
+    from pbi_cli.core.session import get_session_for_command
 
-    client = get_client()
-    try:
-        if not ctx.repl_mode:
-            conn_name = _auto_reconnect(client, ctx)
-        else:
-            conn_name = resolve_connection_name(ctx)
-        if conn_name:
-            request["connectionName"] = conn_name
-
-        result = client.call_tool("dax_query_operations", request)
-        format_mcp_result(result, ctx.json_output)
-    except Exception as e:
-        print_error(f"DAX execution failed: {e}")
-        raise SystemExit(1)
-    finally:
-        if not ctx.repl_mode:
-            client.stop()
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        execute_dax,
+        adomd_connection=session.adomd_connection,
+        query=resolved_query,
+        max_rows=max_rows,
+        timeout=timeout,
+    )
 
 
 @dax.command()
@@ -96,54 +74,29 @@ def validate(ctx: PbiContext, query: str, query_file: str | None, timeout: int) 
         print_error("No query provided.")
         raise SystemExit(1)
 
-    request: dict[str, object] = {
-        "operation": "Validate",
-        "query": resolved_query,
-        "timeoutSeconds": timeout,
-    }
+    from pbi_cli.core.adomd_backend import validate_dax
+    from pbi_cli.core.session import get_session_for_command
 
-    client = get_client()
-    try:
-        if not ctx.repl_mode:
-            conn_name = _auto_reconnect(client, ctx)
-        else:
-            conn_name = resolve_connection_name(ctx)
-        if conn_name:
-            request["connectionName"] = conn_name
-
-        result = client.call_tool("dax_query_operations", request)
-        format_mcp_result(result, ctx.json_output)
-    except Exception as e:
-        print_error(f"DAX validation failed: {e}")
-        raise SystemExit(1)
-    finally:
-        if not ctx.repl_mode:
-            client.stop()
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        validate_dax,
+        adomd_connection=session.adomd_connection,
+        query=resolved_query,
+        timeout=timeout,
+    )
 
 
 @dax.command(name="clear-cache")
 @pass_context
-def clear_cache(ctx: PbiContext) -> None:
+def clear_cache_cmd(ctx: PbiContext) -> None:
     """Clear the DAX query cache."""
-    request: dict[str, object] = {"operation": "ClearCache"}
+    from pbi_cli.core.adomd_backend import clear_cache
+    from pbi_cli.core.session import get_session_for_command
 
-    client = get_client()
-    try:
-        if not ctx.repl_mode:
-            conn_name = _auto_reconnect(client, ctx)
-        else:
-            conn_name = resolve_connection_name(ctx)
-        if conn_name:
-            request["connectionName"] = conn_name
-
-        result = client.call_tool("dax_query_operations", request)
-        format_mcp_result(result, ctx.json_output)
-    except Exception as e:
-        print_error(f"Cache clear failed: {e}")
-        raise SystemExit(1)
-    finally:
-        if not ctx.repl_mode:
-            client.stop()
+    session = get_session_for_command(ctx)
+    db_id = str(session.database.ID) if session.database else ""
+    run_command(ctx, clear_cache, adomd_connection=session.adomd_connection, database_id=db_id)
 
 
 def _resolve_query(query: str, query_file: str | None) -> str:

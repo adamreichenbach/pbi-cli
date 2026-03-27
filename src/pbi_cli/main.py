@@ -40,10 +40,10 @@ pass_context = click.make_pass_decorator(PbiContext, ensure=True)
 def cli(ctx: click.Context, json_output: bool, connection: str | None) -> None:
     """pbi-cli: Power BI semantic model CLI.
 
-    Wraps the Power BI MCP server for token-efficient usage with
-    Claude Code and other AI agents.
+    Connects directly to Power BI Desktop's Analysis Services engine
+    for token-efficient usage with Claude Code and other AI agents.
 
-    Run 'pbi connect' to auto-detect Power BI Desktop and download the MCP binary.
+    Run 'pbi connect' to auto-detect a running Power BI Desktop instance.
     """
     ctx.ensure_object(PbiContext)
     ctx.obj = PbiContext(json_output=json_output, connection=connection)
@@ -55,7 +55,7 @@ def _register_commands() -> None:
     from pbi_cli.commands.calc_group import calc_group
     from pbi_cli.commands.calendar import calendar
     from pbi_cli.commands.column import column
-    from pbi_cli.commands.connection import connect, connect_fabric, connections, disconnect
+    from pbi_cli.commands.connection import connect, connections, disconnect
     from pbi_cli.commands.database import database
     from pbi_cli.commands.dax import dax
     from pbi_cli.commands.expression import expression
@@ -75,7 +75,6 @@ def _register_commands() -> None:
 
     cli.add_command(setup)
     cli.add_command(connect)
-    cli.add_command(connect_fabric)
     cli.add_command(disconnect)
     cli.add_command(connections)
     cli.add_command(dax)

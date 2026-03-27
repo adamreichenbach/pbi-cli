@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import click
 
-from pbi_cli.commands._helpers import build_definition, run_tool
+from pbi_cli.commands._helpers import run_command
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -18,10 +18,11 @@ def hierarchy() -> None:
 @pass_context
 def hierarchy_list(ctx: PbiContext, table: str | None) -> None:
     """List hierarchies."""
-    request: dict[str, object] = {"operation": "List"}
-    if table:
-        request["tableName"] = table
-    run_tool(ctx, "user_hierarchy_operations", request)
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import hierarchy_list as _hierarchy_list
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, _hierarchy_list, model=session.model, table_name=table)
 
 
 @hierarchy.command()
@@ -30,15 +31,11 @@ def hierarchy_list(ctx: PbiContext, table: str | None) -> None:
 @pass_context
 def get(ctx: PbiContext, name: str, table: str) -> None:
     """Get hierarchy details."""
-    run_tool(
-        ctx,
-        "user_hierarchy_operations",
-        {
-            "operation": "Get",
-            "name": name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import hierarchy_get
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, hierarchy_get, model=session.model, table_name=table, name=name)
 
 
 @hierarchy.command()
@@ -48,11 +45,18 @@ def get(ctx: PbiContext, name: str, table: str) -> None:
 @pass_context
 def create(ctx: PbiContext, name: str, table: str, description: str | None) -> None:
     """Create a hierarchy."""
-    definition = build_definition(
-        required={"name": name, "tableName": table},
-        optional={"description": description},
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import hierarchy_create
+
+    session = get_session_for_command(ctx)
+    run_command(
+        ctx,
+        hierarchy_create,
+        model=session.model,
+        table_name=table,
+        name=name,
+        description=description,
     )
-    run_tool(ctx, "user_hierarchy_operations", {"operation": "Create", "definitions": [definition]})
 
 
 @hierarchy.command()
@@ -61,12 +65,8 @@ def create(ctx: PbiContext, name: str, table: str, description: str | None) -> N
 @pass_context
 def delete(ctx: PbiContext, name: str, table: str) -> None:
     """Delete a hierarchy."""
-    run_tool(
-        ctx,
-        "user_hierarchy_operations",
-        {
-            "operation": "Delete",
-            "name": name,
-            "tableName": table,
-        },
-    )
+    from pbi_cli.core.session import get_session_for_command
+    from pbi_cli.core.tom_backend import hierarchy_delete
+
+    session = get_session_for_command(ctx)
+    run_command(ctx, hierarchy_delete, model=session.model, table_name=table, name=name)

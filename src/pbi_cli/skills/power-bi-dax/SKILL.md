@@ -12,7 +12,7 @@ Execute and validate DAX queries against connected Power BI models.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop, downloads binary, installs skills
+pbi connect    # Auto-detects Power BI Desktop and installs skills
 ```
 
 ## Executing Queries
@@ -30,8 +30,6 @@ echo "EVALUATE Sales" | pbi dax execute -
 
 # With options
 pbi dax execute "EVALUATE Sales" --max-rows 100
-pbi dax execute "EVALUATE Sales" --metrics           # Include execution metrics
-pbi dax execute "EVALUATE Sales" --metrics-only      # Metrics without data
 pbi dax execute "EVALUATE Sales" --timeout 300       # Custom timeout (seconds)
 
 # JSON output for scripting
@@ -163,7 +161,6 @@ TOPN(
 
 ## Performance Tips
 
-- Use `--metrics` to identify slow queries
 - Use `--max-rows` to limit result sets during development
 - Run `pbi dax clear-cache` before benchmarking
 - Prefer `SUMMARIZECOLUMNS` over `SUMMARIZE` for grouping
