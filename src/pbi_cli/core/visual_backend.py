@@ -86,7 +86,8 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
 
 # Roles that should default to Measure references (not Column)
 MEASURE_ROLES: frozenset[str] = frozenset({
-    "Y", "Values", "Fields", "Indicator", "Goal",
+    "Y", "Values", "Fields",  # "Fields" is used by cardNew only
+    "Indicator", "Goal",
     # v3.1.0 additions
     "ColumnY", "LineY", "X", "Size",
     # v3.4.0 additions

@@ -945,6 +945,7 @@ def test_card_template_uses_values_role(report_with_page: Path) -> None:
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "Values" in qs
+    assert isinstance(qs["Values"], dict)
     assert "Fields" not in qs
 
 
@@ -957,4 +958,5 @@ def test_multi_row_card_template_uses_values_role(report_with_page: Path) -> Non
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "Values" in qs
+    assert isinstance(qs["Values"], dict)
     assert "Fields" not in qs
