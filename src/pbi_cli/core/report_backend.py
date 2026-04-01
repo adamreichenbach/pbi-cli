@@ -515,13 +515,12 @@ def theme_set(
     if not found:
         resource_packages.append({
             "name": "RegisteredResources",
-            "resourcePackage": {
-                "items": [{
-                    "name": theme_path.name,
-                    "type": 202,
-                    "path": f"BaseThemes/{theme_path.name}",
-                }],
-            },
+            "type": "RegisteredResources",
+            "items": [{
+                "name": theme_path.name,
+                "type": 202,
+                "path": f"BaseThemes/{theme_path.name}",
+            }],
         })
     report_data["resourcePackages"] = resource_packages
 

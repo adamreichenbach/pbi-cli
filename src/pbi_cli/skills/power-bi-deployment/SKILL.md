@@ -50,6 +50,31 @@ pbi database import-tmdl ./model-tmdl/
 pbi database export-tmsl
 ```
 
+## TMDL Diff (Compare Snapshots)
+
+Compare two TMDL export folders to see what changed between snapshots.
+Useful for CI/CD pipelines ("what did this PR change in the model?").
+
+```bash
+# Compare two exports
+pbi database diff-tmdl ./model-before/ ./model-after/
+
+# JSON output for CI/CD scripting
+pbi --json database diff-tmdl ./baseline/ ./current/
+```
+
+Returns a structured summary:
+- **tables**: added, removed, and changed tables with per-table entity diffs
+  (measures, columns, partitions, hierarchies added/removed/changed)
+- **relationships**: added, removed, and changed relationships
+- **model**: changed model-level properties (e.g. culture, default power bi dataset version)
+- **summary**: total counts of all changes
+
+LineageTag-only changes (GUID regeneration without real edits) are automatically
+filtered out to avoid false positives.
+
+No connection to Power BI Desktop is needed -- works on exported folders.
+
 ## Database Operations
 
 ```bash

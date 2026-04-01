@@ -541,7 +541,7 @@ def visual_bind(
     definition_path: Path,
     page_name: str,
     visual_name: str,
-    bindings: list[dict[str, str]],
+    bindings: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Bind semantic model fields to visual data roles.
 

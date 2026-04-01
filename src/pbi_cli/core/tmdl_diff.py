@@ -145,17 +145,29 @@ def _diff_table_entities(
         "partitions_added": [],
         "partitions_removed": [],
         "partitions_changed": [],
+        "hierarchies_added": [],
+        "hierarchies_removed": [],
+        "hierarchies_changed": [],
         "other_added": [],
         "other_removed": [],
         "other_changed": [],
     }
 
+    # Map TMDL keywords to their plural result-dict prefix
+    keyword_plurals: dict[str, str] = {
+        "measure": "measures",
+        "column": "columns",
+        "partition": "partitions",
+        "hierarchy": "hierarchies",
+    }
+
     all_keys = set(base_entities) | set(head_entities)
     for key in sorted(all_keys):
         keyword, _, name = key.partition("/")
-        added_key = f"{keyword}s_added" if f"{keyword}s_added" in result else "other_added"
-        removed_key = f"{keyword}s_removed" if f"{keyword}s_removed" in result else "other_removed"
-        changed_key = f"{keyword}s_changed" if f"{keyword}s_changed" in result else "other_changed"
+        plural = keyword_plurals.get(keyword, "other")
+        added_key = f"{plural}_added"
+        removed_key = f"{plural}_removed"
+        changed_key = f"{plural}_changed"
 
         if key not in base_entities:
             result[added_key].append(name)

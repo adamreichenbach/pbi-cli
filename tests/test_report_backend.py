@@ -844,7 +844,7 @@ class TestThemeSet:
             None,
         )
         assert reg is not None
-        items = reg.get("resourcePackage", {}).get("items", [])
+        items = reg.get("items", [])
         assert any(i["name"] == "Ocean.json" for i in items)
 
     def test_theme_set_idempotent_for_same_theme(
@@ -857,7 +857,7 @@ class TestThemeSet:
         report_data = _read(sample_report / "report.json")
         packages: list[dict[str, Any]] = report_data.get("resourcePackages", [])
         reg = next(p for p in packages if p.get("name") == "RegisteredResources")
-        items = reg.get("resourcePackage", {}).get("items", [])
+        items = reg.get("items", [])
         names = [i["name"] for i in items]
         # No duplicate entries for the same file
         assert names.count("Stable.json") == 1
