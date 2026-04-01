@@ -317,3 +317,70 @@ class TestDiffTmdlFolders:
         head = _make_tmdl_folder(tmp_path / "head", relationships_text="")
         result = diff_tmdl_folders(str(base), str(head))
         assert result["relationships"] == {"added": [], "removed": [], "changed": []}
+
+    def test_backtick_fenced_measure_parsed_correctly(self, tmp_path: Path) -> None:
+        """Backtick-triple fenced multi-line measures are parsed without errors."""
+        backtick_sales = (
+            "table Sales\n"
+            "\tlineageTag: tbl-001\n"
+            "\n"
+            "\tmeasure CY_Orders = ```\n"
+            "\t\t\n"
+            "\t\tCALCULATE ( [#Orders] , YEAR('Date'[Date]) = YEAR(TODAY()) )\n"
+            "\t\t```\n"
+            "\t\tformatString: 0\n"
+            "\t\tlineageTag: msr-backtick\n"
+            "\n"
+            "\tcolumn Amount\n"
+            "\t\tdataType: decimal\n"
+            "\t\tlineageTag: col-001\n"
+            "\t\tsummarizeBy: sum\n"
+            "\t\tsourceColumn: Amount\n"
+        )
+        base = _make_tmdl_folder(tmp_path / "base", tables={"Sales": backtick_sales})
+        head = _make_tmdl_folder(tmp_path / "head", tables={"Sales": backtick_sales})
+        result = diff_tmdl_folders(str(base), str(head))
+        assert result["changed"] is False
+
+    def test_backtick_fenced_measure_expression_changed(self, tmp_path: Path) -> None:
+        """A changed backtick-fenced measure expression is detected."""
+        base_tmdl = (
+            "table Sales\n"
+            "\tlineageTag: tbl-001\n"
+            "\n"
+            "\tmeasure CY_Orders = ```\n"
+            "\t\tCALCULATE ( [#Orders] , YEAR('Date'[Date]) = YEAR(TODAY()) )\n"
+            "\t\t```\n"
+            "\t\tlineageTag: msr-backtick\n"
+        )
+        head_tmdl = base_tmdl.replace(
+            "CALCULATE ( [#Orders] , YEAR('Date'[Date]) = YEAR(TODAY()) )",
+            "CALCULATE ( [#Orders] , 'Date'[Year] = YEAR(TODAY()) )",
+        )
+        base = _make_tmdl_folder(tmp_path / "base", tables={"Sales": base_tmdl})
+        head = _make_tmdl_folder(tmp_path / "head", tables={"Sales": head_tmdl})
+        result = diff_tmdl_folders(str(base), str(head))
+        assert result["changed"] is True
+        assert "CY_Orders" in result["tables"]["changed"]["Sales"]["measures_changed"]
+
+    def test_variation_stays_inside_column_block(self, tmp_path: Path) -> None:
+        """Variation blocks at 1-tab indent are part of their parent column."""
+        tmdl_with_variation = (
+            "table Date\n"
+            "\tlineageTag: tbl-date\n"
+            "\n"
+            "\tcolumn Date\n"
+            "\t\tdataType: dateTime\n"
+            "\t\tlineageTag: col-date\n"
+            "\t\tsummarizeBy: none\n"
+            "\t\tsourceColumn: Date\n"
+            "\n"
+            "\tvariation Variation\n"
+            "\t\tisDefault\n"
+            "\t\trelationship: abc-def-123\n"
+            "\t\tdefaultHierarchy: LocalDateTable.Date Hierarchy\n"
+        )
+        base = _make_tmdl_folder(tmp_path / "base", tables={"Date": tmdl_with_variation})
+        head = _make_tmdl_folder(tmp_path / "head", tables={"Date": tmdl_with_variation})
+        result = diff_tmdl_folders(str(base), str(head))
+        assert result["changed"] is False

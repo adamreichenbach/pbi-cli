@@ -8,8 +8,10 @@ from typing import Any
 
 from pbi_cli.core.errors import PbiCliError
 
-# Entity keywords inside table files (at 1-tab indent)
-_TABLE_ENTITY_KEYWORDS = frozenset({"measure", "column", "hierarchy", "partition", "variation"})
+# Entity keywords inside table files (at 1-tab indent).
+# "variation" is intentionally excluded: it is a sub-property of a column,
+# not a sibling entity, so its content stays inside the parent column block.
+_TABLE_ENTITY_KEYWORDS = frozenset({"measure", "column", "hierarchy", "partition"})
 
 
 def diff_tmdl_folders(base_folder: str, head_folder: str) -> dict[str, Any]:
