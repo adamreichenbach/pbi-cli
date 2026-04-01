@@ -218,6 +218,19 @@ def visual_list(
         if not vfile.exists():
             continue
         data = _read_json(vfile)
+
+        # Group container: has "visualGroup" key instead of "visual"
+        if "visualGroup" in data and "visual" not in data:
+            results.append({
+                "name": data.get("name", vdir.name),
+                "visual_type": "group",
+                "x": 0,
+                "y": 0,
+                "width": 0,
+                "height": 0,
+            })
+            continue
+
         pos = data.get("position", {})
         visual_config = data.get("visual", {})
         results.append({
