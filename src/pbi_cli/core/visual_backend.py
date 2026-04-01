@@ -71,6 +71,11 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
     # v3.4.0 additions
     "cardVisual": ["Data"],
     "actionButton": [],
+    # v3.5.0 additions
+    "clusteredColumnChart": ["Category", "Y", "Legend"],
+    "clusteredBarChart": ["Category", "Y", "Legend"],
+    "textSlicer": ["Values"],
+    "listSlicer": ["Values"],
 }
 
 # Roles that should default to Measure references (not Column)
@@ -118,6 +123,11 @@ ROLE_ALIASES: dict[str, dict[str, str]] = {
     # v3.4.0 additions
     "cardVisual": {"field": "Data", "value": "Data"},
     "actionButton": {},
+    # v3.5.0 additions
+    "clusteredColumnChart": {"category": "Category", "value": "Y", "legend": "Legend"},
+    "clusteredBarChart": {"category": "Category", "value": "Y", "legend": "Legend"},
+    "textSlicer": {"value": "Values", "field": "Values"},
+    "listSlicer": {"value": "Values", "field": "Values"},
 }
 
 
@@ -194,6 +204,11 @@ DEFAULT_SIZES: dict[str, tuple[float, float]] = {
     # v3.4.0 additions -- sizes from real Desktop export
     "cardVisual": (217, 87),
     "actionButton": (51, 22),
+    # v3.5.0 additions
+    "clusteredColumnChart": (400, 300),
+    "clusteredBarChart": (400, 300),
+    "textSlicer": (200, 50),
+    "listSlicer": (200, 300),
 }
 
 

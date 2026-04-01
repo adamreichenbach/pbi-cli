@@ -65,6 +65,11 @@ SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset({
     # v3.4.0 additions
     "cardVisual",
     "actionButton",
+    # v3.5.0 additions (confirmed from HR Analysis Desktop export)
+    "clusteredColumnChart",
+    "clusteredBarChart",
+    "textSlicer",
+    "listSlicer",
 })
 
 # Mapping from user-friendly names to PBIR visualType identifiers
@@ -109,6 +114,13 @@ VISUAL_TYPE_ALIASES: dict[str, str] = {
     "modern_card": "cardVisual",
     "action_button": "actionButton",
     "button": "actionButton",
+    # v3.5.0 additions
+    "clustered_column": "clusteredColumnChart",
+    "clustered_column_chart": "clusteredColumnChart",
+    "clustered_bar": "clusteredBarChart",
+    "clustered_bar_chart": "clusteredBarChart",
+    "text_slicer": "textSlicer",
+    "list_slicer": "listSlicer",
 }
 
 

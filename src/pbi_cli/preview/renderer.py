@@ -74,6 +74,11 @@ _VISUAL_COLORS: dict[str, str] = {
     # v3.4.0 additions
     "cardVisual": "#767171",
     "actionButton": "#E8832A",
+    # v3.5.0 additions
+    "clusteredColumnChart": "#4472C4",
+    "clusteredBarChart": "#4472C4",
+    "textSlicer": "#FFC000",
+    "listSlicer": "#FFC000",
 }
 
 _VISUAL_ICONS: dict[str, str] = {
@@ -102,6 +107,11 @@ _VISUAL_ICONS: dict[str, str] = {
     # v3.4.0 additions
     "cardVisual": "&#9632;",
     "actionButton": "&#9654;",
+    # v3.5.0 additions
+    "clusteredColumnChart": "&#9616;&#9616;&#9616;",
+    "clusteredBarChart": "&#9612;&#9612;&#9612;",
+    "textSlicer": "&#9776;",
+    "listSlicer": "&#9776;",
 }
 
 

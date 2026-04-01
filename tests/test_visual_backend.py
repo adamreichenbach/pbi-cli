@@ -824,3 +824,34 @@ def test_visual_list_tags_group_containers_as_group(report_with_page: Path) -> N
     results = visual_list(report_with_page, "test_page")
     grp = next(r for r in results if r["name"] == "grp1")
     assert grp["visual_type"] == "group"
+
+
+# ---------------------------------------------------------------------------
+# Task 3 -- v3.5.0 new visual types
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("vtype,alias", [
+    ("clusteredColumnChart", "clustered_column"),
+    ("clusteredBarChart", "clustered_bar"),
+    ("textSlicer", "text_slicer"),
+    ("listSlicer", "list_slicer"),
+])
+def test_visual_add_new_v35_types(
+    report_with_page: Path, vtype: str, alias: str
+) -> None:
+    r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
+    assert r["visual_type"] == vtype
+    r2 = visual_add(report_with_page, "test_page", alias, x=50, y=0)
+    assert r2["visual_type"] == vtype
+
+
+def test_list_slicer_template_has_active_flag(report_with_page: Path) -> None:
+    r = visual_add(report_with_page, "test_page", "listSlicer", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals"
+        / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    values = data["visual"]["query"]["queryState"]["Values"]
+    assert values.get("active") is True
