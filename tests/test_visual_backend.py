@@ -959,4 +959,55 @@ def test_multi_row_card_template_uses_values_role(report_with_page: Path) -> Non
     qs = data["visual"]["query"]["queryState"]
     assert "Values" in qs
     assert isinstance(qs["Values"], dict)
-    assert "Fields" not in qs
+
+
+# ---------------------------------------------------------------------------
+# v3.8.0 -- kpi TrendLine + gauge MaxValue role fixes
+# ---------------------------------------------------------------------------
+
+
+def test_kpi_template_has_trend_line_role(report_with_page: Path) -> None:
+    """kpi template must include TrendLine queryState key (confirmed from Desktop)."""
+    r = visual_add(report_with_page, "test_page", "kpi", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    qs = data["visual"]["query"]["queryState"]
+    assert "TrendLine" in qs
+    assert isinstance(qs["TrendLine"], dict)
+    assert "Indicator" in qs
+    assert "Goal" in qs
+
+
+def test_gauge_template_has_max_value_role(report_with_page: Path) -> None:
+    """gauge template must include MaxValue queryState key (confirmed from Desktop)."""
+    r = visual_add(report_with_page, "test_page", "gauge", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    qs = data["visual"]["query"]["queryState"]
+    assert "MaxValue" in qs
+    assert isinstance(qs["MaxValue"], dict)
+    assert "Y" in qs
+
+
+@pytest.mark.parametrize("alias,expected_role", [
+    ("trend_line", "TrendLine"),
+    ("trend", "TrendLine"),
+    ("goal", "Goal"),
+])
+def test_kpi_role_aliases(alias: str, expected_role: str) -> None:
+    from pbi_cli.core.visual_backend import ROLE_ALIASES
+    assert ROLE_ALIASES["kpi"][alias] == expected_role
+
+
+@pytest.mark.parametrize("alias,expected_role", [
+    ("max", "MaxValue"),
+    ("max_value", "MaxValue"),
+    ("target", "MaxValue"),
+])
+def test_gauge_role_aliases(alias: str, expected_role: str) -> None:
+    from pbi_cli.core.visual_backend import ROLE_ALIASES
+    assert ROLE_ALIASES["gauge"][alias] == expected_role

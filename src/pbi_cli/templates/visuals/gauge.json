@@ -15,6 +15,9 @@
       "queryState": {
         "Y": {
           "projections": []
+        },
+        "MaxValue": {
+          "projections": []
         }
       }
     },

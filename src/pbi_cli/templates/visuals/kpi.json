@@ -18,6 +18,9 @@
         },
         "Goal": {
           "projections": []
+        },
+        "TrendLine": {
+          "projections": []
         }
       }
     },

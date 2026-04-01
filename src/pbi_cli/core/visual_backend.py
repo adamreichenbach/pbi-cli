@@ -53,8 +53,8 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
     "tableEx": ["Values"],
     "pivotTable": ["Rows", "Values", "Columns"],
     "slicer": ["Values"],
-    "kpi": ["Indicator", "Goal"],
-    "gauge": ["Y"],
+    "kpi": ["Indicator", "Goal", "TrendLine"],
+    "gauge": ["Y", "MaxValue"],
     "donutChart": ["Category", "Y", "Legend"],
     # v3.1.0 additions
     "columnChart": ["Category", "Y", "Legend"],
@@ -92,6 +92,8 @@ MEASURE_ROLES: frozenset[str] = frozenset({
     "ColumnY", "LineY", "X", "Size",
     # v3.4.0 additions
     "Data",
+    # v3.8.0 additions
+    "MaxValue",
 })
 
 # User-friendly role aliases to PBIR role names
@@ -103,8 +105,19 @@ ROLE_ALIASES: dict[str, dict[str, str]] = {
     "tableEx": {"value": "Values", "column": "Values"},
     "pivotTable": {"row": "Rows", "value": "Values", "column": "Columns"},
     "slicer": {"value": "Values", "field": "Values"},
-    "kpi": {"indicator": "Indicator", "value": "Indicator", "goal": "Goal"},
-    "gauge": {"value": "Y"},
+    "kpi": {
+        "indicator": "Indicator",
+        "value": "Indicator",
+        "goal": "Goal",
+        "trend_line": "TrendLine",
+        "trend": "TrendLine",
+    },
+    "gauge": {
+        "value": "Y",
+        "max": "MaxValue",
+        "max_value": "MaxValue",
+        "target": "MaxValue",
+    },
     "donutChart": {"category": "Category", "value": "Y", "legend": "Legend"},
     # v3.1.0 additions
     "columnChart": {"category": "Category", "value": "Y", "legend": "Legend"},
