@@ -10,20 +10,21 @@
     "tabOrder": __TAB_ORDER__
   },
   "visual": {
-    "visualType": "cardVisual",
+    "visualType": "scatterChart",
     "query": {
       "queryState": {
-        "Data": {
+        "Details": {
+          "projections": []
+        },
+        "X": {
+          "projections": []
+        },
+        "Y": {
           "projections": []
         }
-      },
-      "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
       }
     },
     "objects": {},
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }

@@ -10,20 +10,15 @@
     "tabOrder": __TAB_ORDER__
   },
   "visual": {
-    "visualType": "cardVisual",
+    "visualType": "gauge",
     "query": {
       "queryState": {
-        "Data": {
+        "Y": {
           "projections": []
         }
-      },
-      "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
       }
     },
     "objects": {},
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }

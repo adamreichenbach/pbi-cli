@@ -10,20 +10,15 @@
     "tabOrder": __TAB_ORDER__
   },
   "visual": {
-    "visualType": "cardVisual",
+    "visualType": "card",
     "query": {
       "queryState": {
-        "Data": {
+        "Fields": {
           "projections": []
         }
-      },
-      "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
       }
     },
     "objects": {},
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }

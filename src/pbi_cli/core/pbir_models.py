@@ -25,7 +25,7 @@ SCHEMA_VERSION = (
 )
 SCHEMA_VISUAL_CONTAINER = (
     "https://developer.microsoft.com/json-schemas/"
-    "fabric/item/report/definition/visualContainer/1.5.0/schema.json"
+    "fabric/item/report/definition/visualContainer/2.7.0/schema.json"
 )
 SCHEMA_BOOKMARKS_METADATA = (
     "https://developer.microsoft.com/json-schemas/"

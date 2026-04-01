@@ -788,3 +788,39 @@ def test_visual_set_container_no_op_returns_no_op_status(
     defn, vname = page_with_bar_visual
     result = visual_set_container(defn, "test_page", vname)
     assert result["status"] == "no-op"
+
+
+# ---------------------------------------------------------------------------
+# Task 1 (bug fix): schema URL must be 2.7.0
+# ---------------------------------------------------------------------------
+
+
+def test_visual_add_uses_correct_schema_version(report_with_page: Path) -> None:
+    result = visual_add(report_with_page, "test_page", "barChart", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals"
+        / result["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    assert "2.7.0" in data["$schema"]
+    assert "1.5.0" not in data["$schema"]
+
+
+# ---------------------------------------------------------------------------
+# Task 2 (bug fix): visualGroup containers tagged as type "group"
+# ---------------------------------------------------------------------------
+
+
+def test_visual_list_tags_group_containers_as_group(report_with_page: Path) -> None:
+    """visual_list returns visual_type 'group' for visualGroup containers."""
+    visuals_dir = report_with_page / "pages" / "test_page" / "visuals"
+    grp_dir = visuals_dir / "grp1"
+    grp_dir.mkdir()
+    _write_json(grp_dir / "visual.json", {
+        "$schema": "https://example.com/schema",
+        "name": "grp1",
+        "visualGroup": {"displayName": "Header Group", "visuals": []}
+    })
+    results = visual_list(report_with_page, "test_page")
+    grp = next(r for r in results if r["name"] == "grp1")
+    assert grp["visual_type"] == "group"

@@ -10,20 +10,18 @@
     "tabOrder": __TAB_ORDER__
   },
   "visual": {
-    "visualType": "cardVisual",
+    "visualType": "stackedBarChart",
     "query": {
       "queryState": {
-        "Data": {
+        "Category": {
+          "projections": []
+        },
+        "Y": {
           "projections": []
         }
-      },
-      "sortDefinition": {
-        "sort": [],
-        "isDefaultSort": true
       }
     },
     "objects": {},
-    "visualContainerObjects": {},
     "drillFilterOtherVisuals": true
   }
 }
