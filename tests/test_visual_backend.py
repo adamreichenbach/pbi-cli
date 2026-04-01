@@ -1011,3 +1011,35 @@ def test_kpi_role_aliases(alias: str, expected_role: str) -> None:
 def test_gauge_role_aliases(alias: str, expected_role: str) -> None:
     from pbi_cli.core.visual_backend import ROLE_ALIASES
     assert ROLE_ALIASES["gauge"][alias] == expected_role
+
+
+def test_kpi_bind_trend_line_produces_column_projection(report_with_page: Path) -> None:
+    """TrendLine must bind as a Column projection, not a Measure."""
+    visual_add(report_with_page, "test_page", "kpi", name="k1")
+    visual_bind(
+        report_with_page,
+        "test_page",
+        "k1",
+        [{"role": "trend_line", "field": "Date[Date]"}],
+    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "k1" / "visual.json"
+    data = json.loads(vfile.read_text(encoding="utf-8"))
+    proj = data["visual"]["query"]["queryState"]["TrendLine"]["projections"][0]
+    assert "Column" in proj["field"]
+    assert "Measure" not in proj["field"]
+
+
+def test_gauge_bind_max_value_produces_measure_projection(report_with_page: Path) -> None:
+    """MaxValue must bind as a Measure projection."""
+    visual_add(report_with_page, "test_page", "gauge", name="g1")
+    visual_bind(
+        report_with_page,
+        "test_page",
+        "g1",
+        [{"role": "max", "field": "Sales[BudgetMax]"}],
+    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "g1" / "visual.json"
+    data = json.loads(vfile.read_text(encoding="utf-8"))
+    proj = data["visual"]["query"]["queryState"]["MaxValue"]["projections"][0]
+    assert "Measure" in proj["field"]
+    assert "Column" not in proj["field"]
