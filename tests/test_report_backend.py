@@ -530,6 +530,21 @@ class TestPageList:
         page2 = next(p for p in result if p["name"] == "page2")
         assert page2["visual_count"] == 2
 
+    def test_page_list_regular_page_type_is_default(
+        self, sample_report: Path
+    ) -> None:
+        """Regular pages (no type field) surface as page_type='Default'."""
+        pages = page_list(sample_report)
+        assert pages[0]["page_type"] == "Default"
+
+    def test_page_list_tooltip_page_type(self, sample_report: Path) -> None:
+        """Tooltip pages surface as page_type='Tooltip'."""
+        page_json = sample_report / "pages" / "page1" / "page.json"
+        data = _read(page_json)
+        _write(page_json, {**data, "type": "Tooltip"})
+        pages = page_list(sample_report)
+        assert pages[0]["page_type"] == "Tooltip"
+
 
 # ---------------------------------------------------------------------------
 # page_add
@@ -692,6 +707,45 @@ class TestPageGet:
 
         result = page_get(sample_report, "bare_page")
         assert result["visual_count"] == 0
+
+    def test_page_get_default_page_type(self, sample_report: Path) -> None:
+        """Regular pages surface page_type='Default'; filter_config and visual_interactions None."""
+        result = page_get(sample_report, "page1")
+        assert result["page_type"] == "Default"
+        assert result["filter_config"] is None
+        assert result["visual_interactions"] is None
+
+    def test_page_get_tooltip_page_type(self, sample_report: Path) -> None:
+        """Tooltip pages surface page_type='Tooltip'."""
+        page_json = sample_report / "pages" / "page1" / "page.json"
+        data = _read(page_json)
+        _write(page_json, {**data, "type": "Tooltip"})
+        result = page_get(sample_report, "page1")
+        assert result["page_type"] == "Tooltip"
+
+    def test_page_get_surfaces_filter_config(self, sample_report: Path) -> None:
+        """page_get returns filterConfig as-is when present."""
+        filter_config = {
+            "filters": [{"name": "Filter1", "type": "Categorical"}]
+        }
+        page_json = sample_report / "pages" / "page1" / "page.json"
+        data = _read(page_json)
+        _write(page_json, {**data, "filterConfig": filter_config})
+        result = page_get(sample_report, "page1")
+        assert result["filter_config"] == filter_config
+        assert result["filter_config"]["filters"][0]["name"] == "Filter1"
+
+    def test_page_get_surfaces_visual_interactions(self, sample_report: Path) -> None:
+        """page_get returns visualInteractions as-is when present."""
+        interactions = [
+            {"source": "visual_abc", "target": "visual_def", "type": "NoFilter"}
+        ]
+        page_json = sample_report / "pages" / "page1" / "page.json"
+        data = _read(page_json)
+        _write(page_json, {**data, "visualInteractions": interactions})
+        result = page_get(sample_report, "page1")
+        assert result["visual_interactions"] == interactions
+        assert result["visual_interactions"][0]["type"] == "NoFilter"
 
 
 # ---------------------------------------------------------------------------

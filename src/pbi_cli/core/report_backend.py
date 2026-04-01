@@ -294,6 +294,7 @@ def page_list(definition_path: Path) -> list[dict[str, Any]]:
             "display_option": data.get("displayOption", "FitToPage"),
             "visual_count": visual_count,
             "is_hidden": data.get("visibility") == "HiddenInViewMode",
+            "page_type": data.get("type", "Default"),
         })
 
     # Sort by page order if available, then by ordinal
@@ -388,6 +389,9 @@ def page_get(definition_path: Path, page_name: str) -> dict[str, Any]:
         "display_option": data.get("displayOption", "FitToPage"),
         "visual_count": visual_count,
         "is_hidden": data.get("visibility") == "HiddenInViewMode",
+        "page_type": data.get("type", "Default"),
+        "filter_config": data.get("filterConfig"),
+        "visual_interactions": data.get("visualInteractions"),
     }
 
 
