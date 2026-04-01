@@ -48,6 +48,24 @@ def export_tmdl(ctx: PbiContext, folder_path: str) -> None:
     run_command(ctx, _export_tmdl, database=session.database, folder_path=folder_path)
 
 
+@database.command(name="diff-tmdl")
+@click.argument("base_folder", type=click.Path(exists=True, file_okay=False))
+@click.argument("head_folder", type=click.Path(exists=True, file_okay=False))
+@pass_context
+def diff_tmdl_cmd(ctx: PbiContext, base_folder: str, head_folder: str) -> None:
+    """Compare two TMDL export folders and show what changed.
+
+    Useful for CI/CD to summarise model changes between branches:
+
+        pbi database diff-tmdl ./base-export/ ./head-export/
+
+    No Power BI Desktop connection is required.
+    """
+    from pbi_cli.core.tmdl_diff import diff_tmdl_folders
+
+    run_command(ctx, diff_tmdl_folders, base_folder=base_folder, head_folder=head_folder)
+
+
 @database.command(name="export-tmsl")
 @pass_context
 def export_tmsl(ctx: PbiContext) -> None:
