@@ -379,6 +379,69 @@ def visual_update(
     }
 
 
+def visual_set_container(
+    definition_path: Path,
+    page_name: str,
+    visual_name: str,
+    border_show: bool | None = None,
+    background_show: bool | None = None,
+    title: str | None = None,
+) -> dict[str, Any]:
+    """Set container-level properties (border, background, title) on a visual.
+
+    Only the keyword arguments that are provided (not None) are updated.
+    Other ``visualContainerObjects`` keys are preserved unchanged.
+
+    The ``visualContainerObjects`` key is separate from ``visual.objects`` --
+    it controls the container chrome (border, background, header title) rather
+    than the visual's own formatting.
+    """
+    visual_dir = get_visual_dir(definition_path, page_name, visual_name)
+    visual_json_path = visual_dir / "visual.json"
+    if not visual_json_path.exists():
+        raise PbiCliError(
+            f"Visual '{visual_name}' not found on page '{page_name}'."
+        )
+
+    data = _read_json(visual_json_path)
+    visual = data["visual"]
+    vco: dict[str, Any] = dict(visual.get("visualContainerObjects", {}))
+
+    def _bool_entry(value: bool) -> list[dict[str, Any]]:
+        return [{
+            "properties": {
+                "show": {
+                    "expr": {"Literal": {"Value": str(value).lower()}}
+                }
+            }
+        }]
+
+    if border_show is not None:
+        vco = {**vco, "border": _bool_entry(border_show)}
+    if background_show is not None:
+        vco = {**vco, "background": _bool_entry(background_show)}
+    if title is not None:
+        vco = {**vco, "title": [{
+            "properties": {
+                "text": {
+                    "expr": {"Literal": {"Value": f"'{title}'"}}
+                }
+            }
+        }]}
+
+    updated_visual = {**visual, "visualContainerObjects": vco}
+    _write_json(visual_json_path, {**data, "visual": updated_visual})
+
+    return {
+        "status": "updated",
+        "visual": visual_name,
+        "page": page_name,
+        "border_show": border_show,
+        "background_show": background_show,
+        "title": title,
+    }
+
+
 def visual_delete(
     definition_path: Path, page_name: str, visual_name: str
 ) -> dict[str, Any]:

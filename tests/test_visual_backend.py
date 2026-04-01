@@ -19,6 +19,7 @@ from pbi_cli.core.visual_backend import (
     visual_delete,
     visual_get,
     visual_list,
+    visual_set_container,
     visual_update,
 )
 
@@ -696,3 +697,86 @@ def test_visual_add_action_button_aliases(report_with_page: Path) -> None:
             report_with_page, "test_page", alias, x=0, y=0
         )
         assert result["visual_type"] == "actionButton"
+
+
+# ---------------------------------------------------------------------------
+# Task 4 -- visual_set_container
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def page_with_bar_visual(report_with_page: Path) -> tuple[Path, str]:
+    """Returns (definition_path, visual_name) for a barChart visual."""
+    result = visual_add(report_with_page, "test_page", "barChart", x=0, y=0)
+    return report_with_page, result["name"]
+
+
+def test_visual_set_container_border_hide(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    result = visual_set_container(defn, "test_page", vname, border_show=False)
+    assert result["status"] == "updated"
+    vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
+    data = json.loads(vfile.read_text())
+    border = data["visual"]["visualContainerObjects"]["border"]
+    val = border[0]["properties"]["show"]["expr"]["Literal"]["Value"]
+    assert val == "false"
+
+
+def test_visual_set_container_background_hide(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    visual_set_container(defn, "test_page", vname, background_show=False)
+    vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
+    data = json.loads(vfile.read_text())
+    bg = data["visual"]["visualContainerObjects"]["background"]
+    val = bg[0]["properties"]["show"]["expr"]["Literal"]["Value"]
+    assert val == "false"
+
+
+def test_visual_set_container_title_text(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    visual_set_container(defn, "test_page", vname, title="Revenue by Month")
+    vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
+    data = json.loads(vfile.read_text())
+    title = data["visual"]["visualContainerObjects"]["title"]
+    val = title[0]["properties"]["text"]["expr"]["Literal"]["Value"]
+    assert val == "'Revenue by Month'"
+
+
+def test_visual_set_container_preserves_other_keys(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    visual_set_container(defn, "test_page", vname, border_show=False)
+    visual_set_container(defn, "test_page", vname, title="My Chart")
+    vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
+    data = json.loads(vfile.read_text())
+    vco = data["visual"]["visualContainerObjects"]
+    assert "border" in vco
+    assert "title" in vco
+
+
+def test_visual_set_container_border_show(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    visual_set_container(defn, "test_page", vname, border_show=True)
+    vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
+    data = json.loads(vfile.read_text())
+    val = data["visual"]["visualContainerObjects"]["border"][0][
+        "properties"]["show"]["expr"]["Literal"]["Value"]
+    assert val == "true"
+
+
+def test_visual_set_container_raises_for_missing_visual(
+    report_with_page: Path,
+) -> None:
+    with pytest.raises(PbiCliError):
+        visual_set_container(
+            report_with_page, "test_page", "nonexistent_visual", border_show=False
+        )
