@@ -855,3 +855,53 @@ def test_list_slicer_template_has_active_flag(report_with_page: Path) -> None:
     data = json.loads(vfile.read_text())
     values = data["visual"]["query"]["queryState"]["Values"]
     assert values.get("active") is True
+
+
+# ---------------------------------------------------------------------------
+# v3.6.0 -- no-query visual types (image, shape, textbox, pageNavigator)
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("vtype,alias", [
+    ("image", "img"),
+    ("textbox", "text_box"),
+    ("pageNavigator", "page_navigator"),
+    ("pageNavigator", "page_nav"),
+    ("pageNavigator", "navigator"),
+])
+def test_visual_add_v36_alias_types(report_with_page: Path, vtype: str, alias: str) -> None:
+    r = visual_add(report_with_page, "test_page", alias, x=0, y=0)
+    assert r["visual_type"] == vtype
+
+
+@pytest.mark.parametrize("vtype", ["image", "shape", "textbox", "pageNavigator"])
+def test_visual_add_no_query_v36(report_with_page: Path, vtype: str) -> None:
+    """No-query types must not have a 'query' key in the written visual.json."""
+    r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    assert "query" not in data["visual"]
+    assert data["$schema"].endswith("2.7.0/schema.json")
+
+
+@pytest.mark.parametrize("vtype", ["image", "shape", "pageNavigator"])
+def test_insert_visual_button_how_created(report_with_page: Path, vtype: str) -> None:
+    """image, shape, pageNavigator must carry howCreated at top level."""
+    r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    assert data.get("howCreated") == "InsertVisualButton"
+
+
+def test_textbox_no_how_created(report_with_page: Path) -> None:
+    """textbox is a content visual -- no howCreated key."""
+    r = visual_add(report_with_page, "test_page", "textbox", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    assert "howCreated" not in data

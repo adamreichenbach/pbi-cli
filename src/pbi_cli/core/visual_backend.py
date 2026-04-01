@@ -76,6 +76,11 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
     "clusteredBarChart": ["Category", "Y", "Legend"],
     "textSlicer": ["Values"],
     "listSlicer": ["Values"],
+    # v3.6.0 additions
+    "image": [],
+    "shape": [],
+    "textbox": [],
+    "pageNavigator": [],
 }
 
 # Roles that should default to Measure references (not Column)
@@ -128,6 +133,11 @@ ROLE_ALIASES: dict[str, dict[str, str]] = {
     "clusteredBarChart": {"category": "Category", "value": "Y", "legend": "Legend"},
     "textSlicer": {"value": "Values", "field": "Values"},
     "listSlicer": {"value": "Values", "field": "Values"},
+    # v3.6.0 additions
+    "image": {},
+    "shape": {},
+    "textbox": {},
+    "pageNavigator": {},
 }
 
 
@@ -209,6 +219,11 @@ DEFAULT_SIZES: dict[str, tuple[float, float]] = {
     "clusteredBarChart": (400, 300),
     "textSlicer": (200, 50),
     "listSlicer": (200, 300),
+    # v3.6.0 additions (from real HR Analysis Desktop export sizing)
+    "image": (200, 150),
+    "shape": (300, 200),
+    "textbox": (300, 100),
+    "pageNavigator": (120, 400),
 }
 
 

@@ -79,6 +79,11 @@ _VISUAL_COLORS: dict[str, str] = {
     "clusteredBarChart": "#4472C4",
     "textSlicer": "#FFC000",
     "listSlicer": "#FFC000",
+    # v3.6.0 additions
+    "image": "#9E480E",
+    "shape": "#7F7F7F",
+    "textbox": "#404040",
+    "pageNavigator": "#00B0F0",
 }
 
 _VISUAL_ICONS: dict[str, str] = {
@@ -112,6 +117,11 @@ _VISUAL_ICONS: dict[str, str] = {
     "clusteredBarChart": "&#9612;&#9612;&#9612;",
     "textSlicer": "&#9776;",
     "listSlicer": "&#9776;",
+    # v3.6.0 additions
+    "image": "&#9679;",
+    "shape": "&#9650;",
+    "textbox": "&#9723;",
+    "pageNavigator": "&#9658;",
 }
 
 

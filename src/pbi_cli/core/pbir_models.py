@@ -70,6 +70,11 @@ SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset({
     "clusteredBarChart",
     "textSlicer",
     "listSlicer",
+    # v3.6.0 additions (confirmed from HR Analysis Desktop export)
+    "image",
+    "shape",
+    "textbox",
+    "pageNavigator",
 })
 
 # Mapping from user-friendly names to PBIR visualType identifiers
@@ -121,6 +126,12 @@ VISUAL_TYPE_ALIASES: dict[str, str] = {
     "clustered_bar_chart": "clusteredBarChart",
     "text_slicer": "textSlicer",
     "list_slicer": "listSlicer",
+    # v3.6.0 additions
+    "img": "image",
+    "text_box": "textbox",
+    "page_navigator": "pageNavigator",
+    "page_nav": "pageNavigator",
+    "navigator": "pageNavigator",
 }
 
 
