@@ -747,6 +747,32 @@ class TestPageGet:
         assert result["visual_interactions"] == interactions
         assert result["visual_interactions"][0]["type"] == "NoFilter"
 
+    def test_page_get_page_binding_none_for_regular_page(
+        self, sample_report: Path
+    ) -> None:
+        """Regular pages have no pageBinding -- returns None."""
+        result = page_get(sample_report, "page1")
+        assert result["page_binding"] is None
+
+    def test_page_get_surfaces_page_binding(self, sample_report: Path) -> None:
+        """Drillthrough pageBinding is returned as-is when present."""
+        binding = {
+            "name": "Pod",
+            "type": "Drillthrough",
+            "parameters": [
+                {
+                    "name": "Param_Filter1",
+                    "boundFilter": "Filter1",
+                }
+            ],
+        }
+        page_json = sample_report / "pages" / "page1" / "page.json"
+        data = _read(page_json)
+        _write(page_json, {**data, "pageBinding": binding})
+        result = page_get(sample_report, "page1")
+        assert result["page_binding"] == binding
+        assert result["page_binding"]["type"] == "Drillthrough"
+
 
 # ---------------------------------------------------------------------------
 # theme_set

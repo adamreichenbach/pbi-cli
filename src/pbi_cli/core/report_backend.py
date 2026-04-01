@@ -392,6 +392,7 @@ def page_get(definition_path: Path, page_name: str) -> dict[str, Any]:
         "page_type": data.get("type", "Default"),
         "filter_config": data.get("filterConfig"),
         "visual_interactions": data.get("visualInteractions"),
+        "page_binding": data.get("pageBinding"),
     }
 
 
