@@ -929,3 +929,32 @@ def test_advanced_slicer_has_values_querystate(report_with_page: Path) -> None:
     assert "query" in data["visual"]
     assert "Values" in data["visual"]["query"]["queryState"]
     assert isinstance(data["visual"]["query"]["queryState"]["Values"]["projections"], list)
+
+
+# ---------------------------------------------------------------------------
+# Bug fix: card and multiRowCard queryState role must be "Values" not "Fields"
+# ---------------------------------------------------------------------------
+
+
+def test_card_template_uses_values_role(report_with_page: Path) -> None:
+    """card visual queryState must use 'Values' not 'Fields' (Desktop compat)."""
+    r = visual_add(report_with_page, "test_page", "card", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    qs = data["visual"]["query"]["queryState"]
+    assert "Values" in qs
+    assert "Fields" not in qs
+
+
+def test_multi_row_card_template_uses_values_role(report_with_page: Path) -> None:
+    """multiRowCard visual queryState must use 'Values' not 'Fields'."""
+    r = visual_add(report_with_page, "test_page", "multiRowCard", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    qs = data["visual"]["query"]["queryState"]
+    assert "Values" in qs
+    assert "Fields" not in qs
