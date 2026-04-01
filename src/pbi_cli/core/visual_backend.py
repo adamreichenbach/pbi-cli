@@ -81,6 +81,7 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
     "shape": [],
     "textbox": [],
     "pageNavigator": [],
+    "advancedSlicerVisual": ["Values"],
 }
 
 # Roles that should default to Measure references (not Column)
@@ -138,6 +139,7 @@ ROLE_ALIASES: dict[str, dict[str, str]] = {
     "shape": {},
     "textbox": {},
     "pageNavigator": {},
+    "advancedSlicerVisual": {"value": "Values", "field": "Values"},
 }
 
 
@@ -224,6 +226,7 @@ DEFAULT_SIZES: dict[str, tuple[float, float]] = {
     "shape": (300, 200),
     "textbox": (300, 100),
     "pageNavigator": (120, 400),
+    "advancedSlicerVisual": (280, 280),
 }
 
 

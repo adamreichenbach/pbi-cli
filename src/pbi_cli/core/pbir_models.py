@@ -75,6 +75,7 @@ SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset({
     "shape",
     "textbox",
     "pageNavigator",
+    "advancedSlicerVisual",
 })
 
 # Mapping from user-friendly names to PBIR visualType identifiers
@@ -132,6 +133,9 @@ VISUAL_TYPE_ALIASES: dict[str, str] = {
     "page_navigator": "pageNavigator",
     "page_nav": "pageNavigator",
     "navigator": "pageNavigator",
+    "advanced_slicer": "advancedSlicerVisual",
+    "adv_slicer": "advancedSlicerVisual",
+    "tile_slicer": "advancedSlicerVisual",
 }
 
 

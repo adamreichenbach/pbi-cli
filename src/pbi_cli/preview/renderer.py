@@ -84,6 +84,7 @@ _VISUAL_COLORS: dict[str, str] = {
     "shape": "#7F7F7F",
     "textbox": "#404040",
     "pageNavigator": "#00B0F0",
+    "advancedSlicerVisual": "#FFC000",
 }
 
 _VISUAL_ICONS: dict[str, str] = {
@@ -122,6 +123,7 @@ _VISUAL_ICONS: dict[str, str] = {
     "shape": "&#9650;",
     "textbox": "&#9723;",
     "pageNavigator": "&#9658;",
+    "advancedSlicerVisual": "&#9776;",
 }
 
 

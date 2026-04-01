@@ -905,3 +905,27 @@ def test_textbox_no_how_created(report_with_page: Path) -> None:
     )
     data = json.loads(vfile.read_text())
     assert "howCreated" not in data
+
+
+# ---------------------------------------------------------------------------
+# v3.6.0 -- advancedSlicerVisual
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("alias", [
+    "advancedSlicerVisual", "advanced_slicer", "adv_slicer", "tile_slicer",
+])
+def test_advanced_slicer_aliases(report_with_page: Path, alias: str) -> None:
+    r = visual_add(report_with_page, "test_page", alias, x=0, y=0)
+    assert r["visual_type"] == "advancedSlicerVisual"
+
+
+def test_advanced_slicer_has_values_querystate(report_with_page: Path) -> None:
+    r = visual_add(report_with_page, "test_page", "advancedSlicerVisual", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text())
+    assert "query" in data["visual"]
+    assert "Values" in data["visual"]["query"]["queryState"]
+    assert isinstance(data["visual"]["query"]["queryState"]["Values"]["projections"], list)
