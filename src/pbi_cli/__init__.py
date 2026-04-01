@@ -1,3 +1,3 @@
 """pbi-cli: CLI for Power BI semantic models via direct .NET interop."""
 
-__version__ = "3.4.0"
+__version__ = "3.5.0"
