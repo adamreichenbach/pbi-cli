@@ -780,3 +780,11 @@ def test_visual_set_container_raises_for_missing_visual(
         visual_set_container(
             report_with_page, "test_page", "nonexistent_visual", border_show=False
         )
+
+
+def test_visual_set_container_no_op_returns_no_op_status(
+    page_with_bar_visual: tuple[Path, str],
+) -> None:
+    defn, vname = page_with_bar_visual
+    result = visual_set_container(defn, "test_page", vname)
+    assert result["status"] == "no-op"

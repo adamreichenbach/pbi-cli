@@ -577,7 +577,7 @@ def calc_list(
 
 @visual.command(name="set-container")
 @click.argument("name")
-@click.option("--page", "-g", required=True, help="Page name/ID.")
+@click.option("--page", required=True, help="Page name/ID.")
 @click.option(
     "--border-show",
     type=bool,

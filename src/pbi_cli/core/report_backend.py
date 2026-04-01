@@ -8,6 +8,7 @@ Python dict suitable for ``format_result()``.
 from __future__ import annotations
 
 import json
+import re
 import secrets
 from pathlib import Path
 from typing import Any
@@ -292,6 +293,7 @@ def page_list(definition_path: Path) -> list[dict[str, Any]]:
             "height": data.get("height", 720),
             "display_option": data.get("displayOption", "FitToPage"),
             "visual_count": visual_count,
+            "is_hidden": data.get("visibility") == "HiddenInViewMode",
         })
 
     # Sort by page order if available, then by ordinal
@@ -385,6 +387,7 @@ def page_get(definition_path: Path, page_name: str) -> dict[str, Any]:
         "height": data.get("height", 720),
         "display_option": data.get("displayOption", "FitToPage"),
         "visual_count": visual_count,
+        "is_hidden": data.get("visibility") == "HiddenInViewMode",
     }
 
 
@@ -398,6 +401,11 @@ def page_set_background(
     Updates the ``objects.background`` property in ``page.json``.
     The color must be a hex string, e.g. ``'#F8F9FA'``.
     """
+    if not re.fullmatch(r"#[0-9A-Fa-f]{3,8}", color):
+        raise PbiCliError(
+            f"Invalid color '{color}' -- expected hex format like '#F8F9FA'."
+        )
+
     page_dir = get_page_dir(definition_path, page_name)
     page_json_path = page_dir / "page.json"
     if not page_json_path.exists():

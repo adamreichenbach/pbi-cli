@@ -980,3 +980,53 @@ def test_page_set_visibility_idempotent_visible(sample_report: Path) -> None:
 def test_page_set_visibility_raises_for_missing_page(sample_report: Path) -> None:
     with pytest.raises(PbiCliError, match="not found"):
         page_set_visibility(sample_report, "ghost_page", hidden=True)
+
+
+# ---------------------------------------------------------------------------
+# Fix 4: hex color validation in page_set_background
+# ---------------------------------------------------------------------------
+
+
+def test_page_set_background_rejects_invalid_color(sample_report: Path) -> None:
+    with pytest.raises(PbiCliError, match="Invalid color"):
+        page_set_background(sample_report, "page1", "F8F9FA")  # missing #
+
+
+def test_page_set_background_rejects_invalid_color_wrong_chars(sample_report: Path) -> None:
+    with pytest.raises(PbiCliError, match="Invalid color"):
+        page_set_background(sample_report, "page1", "#GGHHII")  # non-hex chars
+
+
+def test_page_set_background_accepts_valid_color(sample_report: Path) -> None:
+    result = page_set_background(sample_report, "page1", "#F8F9FA")
+    assert result["status"] == "updated"
+    assert result["background_color"] == "#F8F9FA"
+
+
+# ---------------------------------------------------------------------------
+# Fix 3: is_hidden surfaced in page_list and page_get
+# ---------------------------------------------------------------------------
+
+
+def test_page_list_shows_hidden_status(sample_report: Path) -> None:
+    pages = page_list(sample_report)
+    assert all("is_hidden" in p for p in pages)
+    # Initially the page is visible
+    assert pages[0]["is_hidden"] is False
+
+    # Hide the first page and verify is_hidden flips
+    first_page = pages[0]["name"]
+    page_set_visibility(sample_report, first_page, hidden=True)
+    updated = page_list(sample_report)
+    hidden_page = next(p for p in updated if p["name"] == first_page)
+    assert hidden_page["is_hidden"] is True
+
+
+def test_page_get_shows_hidden_status(sample_report: Path) -> None:
+    result = page_get(sample_report, "page1")
+    assert "is_hidden" in result
+    assert result["is_hidden"] is False
+
+    page_set_visibility(sample_report, "page1", hidden=True)
+    result = page_get(sample_report, "page1")
+    assert result["is_hidden"] is True

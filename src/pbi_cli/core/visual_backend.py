@@ -404,7 +404,22 @@ def visual_set_container(
         )
 
     data = _read_json(visual_json_path)
-    visual = data["visual"]
+    visual = data.get("visual")
+    if visual is None:
+        raise PbiCliError(
+            f"Visual '{visual_name}' has invalid JSON -- missing 'visual' key."
+        )
+
+    if border_show is None and background_show is None and title is None:
+        return {
+            "status": "no-op",
+            "visual": visual_name,
+            "page": page_name,
+            "border_show": None,
+            "background_show": None,
+            "title": None,
+        }
+
     vco: dict[str, Any] = dict(visual.get("visualContainerObjects", {}))
 
     def _bool_entry(value: bool) -> list[dict[str, Any]]:
