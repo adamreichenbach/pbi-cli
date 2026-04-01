@@ -422,6 +422,30 @@ def page_set_background(
     return {"status": "updated", "page": page_name, "background_color": color}
 
 
+def page_set_visibility(
+    definition_path: Path,
+    page_name: str,
+    hidden: bool,
+) -> dict[str, Any]:
+    """Show or hide a page in the report navigation.
+
+    Setting ``hidden=True`` writes ``"visibility": "HiddenInViewMode"`` to
+    ``page.json``.  Setting ``hidden=False`` removes the key if present.
+    """
+    page_dir = get_page_dir(definition_path, page_name)
+    page_json_path = page_dir / "page.json"
+    if not page_json_path.exists():
+        raise PbiCliError(f"Page '{page_name}' not found.")
+
+    page_data = _read_json(page_json_path)
+    if hidden:
+        updated = {**page_data, "visibility": "HiddenInViewMode"}
+    else:
+        updated = {k: v for k, v in page_data.items() if k != "visibility"}
+    _write_json(page_json_path, updated)
+    return {"status": "updated", "page": page_name, "hidden": hidden}
+
+
 # ---------------------------------------------------------------------------
 # Theme operations
 # ---------------------------------------------------------------------------

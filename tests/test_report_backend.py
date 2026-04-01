@@ -22,6 +22,7 @@ from pbi_cli.core.report_backend import (
     page_get,
     page_list,
     page_set_background,
+    page_set_visibility,
     report_create,
     report_info,
     report_validate,
@@ -939,3 +940,43 @@ def test_page_set_background_overrides_existing_background(sample_report: Path) 
 def test_page_set_background_raises_for_missing_page(sample_report: Path) -> None:
     with pytest.raises(PbiCliError, match="not found"):
         page_set_background(sample_report, "no_such_page", "#000000")
+
+
+# ---------------------------------------------------------------------------
+# Task 3 -- page_set_visibility
+# ---------------------------------------------------------------------------
+
+
+def test_page_set_visibility_hidden(sample_report: Path) -> None:
+    result = page_set_visibility(sample_report, "page1", hidden=True)
+    assert result["status"] == "updated"
+    assert result["hidden"] is True
+    data = _read(sample_report / "pages" / "page1" / "page.json")
+    assert data.get("visibility") == "HiddenInViewMode"
+
+
+def test_page_set_visibility_visible(sample_report: Path) -> None:
+    # First hide, then show
+    page_json = sample_report / "pages" / "page1" / "page.json"
+    data = _read(page_json)
+    page_json.write_text(
+        json.dumps({**data, "visibility": "HiddenInViewMode"}, indent=2),
+        encoding="utf-8",
+    )
+
+    result = page_set_visibility(sample_report, "page1", hidden=False)
+    assert result["hidden"] is False
+    updated = _read(page_json)
+    assert "visibility" not in updated
+
+
+def test_page_set_visibility_idempotent_visible(sample_report: Path) -> None:
+    # Calling visible on an already-visible page should not add visibility key
+    page_set_visibility(sample_report, "page1", hidden=False)
+    data = _read(sample_report / "pages" / "page1" / "page.json")
+    assert "visibility" not in data
+
+
+def test_page_set_visibility_raises_for_missing_page(sample_report: Path) -> None:
+    with pytest.raises(PbiCliError, match="not found"):
+        page_set_visibility(sample_report, "ghost_page", hidden=True)

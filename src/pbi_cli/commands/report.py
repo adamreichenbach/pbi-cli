@@ -214,6 +214,33 @@ def set_background(
     )
 
 
+@report.command(name="set-visibility")
+@click.argument("page_name")
+@click.option(
+    "--hidden/--visible",
+    default=True,
+    help="Hide or show the page in navigation.",
+)
+@click.pass_context
+@pass_context
+def set_visibility(
+    ctx: PbiContext, click_ctx: click.Context, page_name: str, hidden: bool
+) -> None:
+    """Hide or show a page in the report navigation."""
+    from pbi_cli.core.pbir_path import resolve_report_path
+    from pbi_cli.core.report_backend import page_set_visibility
+
+    report_path = click_ctx.parent.obj.get("report_path") if click_ctx.parent else None
+    definition_path = resolve_report_path(report_path)
+    run_command(
+        ctx,
+        page_set_visibility,
+        definition_path=definition_path,
+        page_name=page_name,
+        hidden=hidden,
+    )
+
+
 @report.command()
 @click.option("--full", is_flag=True, default=False, help="Run enhanced validation with warnings.")
 @click.pass_context
