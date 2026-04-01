@@ -85,6 +85,8 @@ _VISUAL_COLORS: dict[str, str] = {
     "textbox": "#404040",
     "pageNavigator": "#00B0F0",
     "advancedSlicerVisual": "#FFC000",
+    # v3.8.0 additions
+    "azureMap": "#0078D4",
 }
 
 _VISUAL_ICONS: dict[str, str] = {
@@ -124,6 +126,8 @@ _VISUAL_ICONS: dict[str, str] = {
     "textbox": "&#9723;",
     "pageNavigator": "&#9658;",
     "advancedSlicerVisual": "&#9776;",
+    # v3.8.0 additions
+    "azureMap": "&#9670;",
 }
 
 

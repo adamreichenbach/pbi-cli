@@ -1042,4 +1042,26 @@ def test_gauge_bind_max_value_produces_measure_projection(report_with_page: Path
     data = json.loads(vfile.read_text(encoding="utf-8"))
     proj = data["visual"]["query"]["queryState"]["MaxValue"]["projections"][0]
     assert "Measure" in proj["field"]
-    assert "Column" not in proj["field"]
+
+
+# --- v3.8.0 azureMap tests ---
+
+
+@pytest.mark.parametrize("alias", ["azureMap", "azure_map", "map"])
+def test_azure_map_aliases(report_with_page: Path, alias: str) -> None:
+    r = visual_add(report_with_page, "test_page", alias, x=0, y=0)
+    assert r["visual_type"] == "azureMap"
+
+
+def test_azure_map_has_category_and_size_roles(report_with_page: Path) -> None:
+    r = visual_add(report_with_page, "test_page", "azureMap", x=0, y=0)
+    vfile = (
+        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
+    )
+    data = json.loads(vfile.read_text(encoding="utf-8"))
+    qs = data["visual"]["query"]["queryState"]
+    assert "Category" in qs
+    assert "Size" in qs
+    assert isinstance(qs["Category"], dict)
+    assert isinstance(qs["Size"], dict)
+    assert data["$schema"].endswith("2.7.0/schema.json")

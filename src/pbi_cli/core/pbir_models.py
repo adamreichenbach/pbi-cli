@@ -76,6 +76,8 @@ SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset({
     "textbox",
     "pageNavigator",
     "advancedSlicerVisual",
+    # v3.8.0 additions
+    "azureMap",
 })
 
 # Mapping from user-friendly names to PBIR visualType identifiers
@@ -136,6 +138,9 @@ VISUAL_TYPE_ALIASES: dict[str, str] = {
     "advanced_slicer": "advancedSlicerVisual",
     "adv_slicer": "advancedSlicerVisual",
     "tile_slicer": "advancedSlicerVisual",
+    # v3.8.0 additions
+    "azure_map": "azureMap",
+    "map": "azureMap",
 }
 
 
