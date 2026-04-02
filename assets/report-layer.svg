@@ -1,109 +1,92 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="850" height="340" viewBox="0 0 850 340">
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="380" viewBox="0 0 850 380">
   <rect width="100%" height="100%" fill="#0d1117" rx="8"/>
 
   <!-- Title -->
-  <text x="425" y="30" font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#06d6a0" text-anchor="middle" font-weight="bold">Report Layer: Build Entire Reports from CLI</text>
-  <text x="425" y="50" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">No connection needed. Works with .pbip projects. Auto-syncs with Desktop.</text>
+  <text x="425" y="28" font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#06d6a0" text-anchor="middle" font-weight="bold">Report Layer: Build Entire Reports from CLI</text>
+  <text x="425" y="48" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">No connection needed. Works with .pbip projects. Auto-syncs with Desktop.</text>
 
-  <!-- 4 columns: Visuals, Pages, Themes, Filters -->
+  <!-- 2x2 grid layout instead of 4 narrow columns -->
+  <!-- Card size: 390 x 140, gap 20 -->
 
-  <!-- Col 1: Visuals -->
-  <rect x="25" y="70" width="190" height="240" rx="8" fill="#161b22" stroke="#d97757" stroke-width="1.5"/>
-  <text x="120" y="95" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#d97757" text-anchor="middle" font-weight="bold">Visuals</text>
-  <text x="120" y="112" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">32 types with data binding</text>
+  <!-- ============ Card 1: Visuals (top-left) ============ -->
+  <rect x="20" y="65" width="395" height="135" rx="8" fill="#161b22" stroke="#d97757" stroke-width="1.5"/>
+  <text x="40" y="90" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#d97757" font-weight="bold">Visuals</text>
+  <text x="130" y="90" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">32 types with data binding</text>
 
   <!-- Mini chart icons -->
-  <g transform="translate(45, 125)">
-    <!-- bar chart icon -->
-    <rect x="0" y="12" width="8" height="18" rx="1" fill="#d97757" opacity="0.5"/>
-    <rect x="10" y="6" width="8" height="24" rx="1" fill="#d97757" opacity="0.7"/>
-    <rect x="20" y="0" width="8" height="30" rx="1" fill="#d97757"/>
-    <!-- card icon -->
-    <rect x="40" y="2" width="30" height="28" rx="3" fill="none" stroke="#d97757" stroke-width="1" opacity="0.6"/>
-    <text x="55" y="21" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#d97757" text-anchor="middle">42</text>
-    <!-- scatter icon -->
-    <circle cx="90" cy="20" r="3" fill="#d97757" opacity="0.4"/>
-    <circle cx="100" cy="10" r="3" fill="#d97757" opacity="0.6"/>
-    <circle cx="108" cy="16" r="3" fill="#d97757" opacity="0.8"/>
-    <circle cx="96" cy="25" r="3" fill="#d97757"/>
+  <g transform="translate(320, 72)">
+    <rect x="0" y="8" width="7" height="14" rx="1" fill="#d97757" opacity="0.5"/>
+    <rect x="9" y="3" width="7" height="19" rx="1" fill="#d97757" opacity="0.7"/>
+    <rect x="18" y="0" width="7" height="22" rx="1" fill="#d97757"/>
+    <circle cx="40" cy="14" r="3" fill="#d97757" opacity="0.5"/>
+    <circle cx="50" cy="6" r="3" fill="#d97757" opacity="0.7"/>
+    <circle cx="58" cy="10" r="3" fill="#d97757"/>
   </g>
 
-  <text x="45" y="180" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">visual add --type bar</text>
-  <text x="45" y="196" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">visual bind --category</text>
-  <text x="45" y="212" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">visual bulk-bind --type</text>
-  <text x="45" y="228" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">visual bulk-update</text>
+  <text x="40" y="114" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi visual add --type bar --name chart1</text>
+  <text x="40" y="131" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi visual bind chart1 --category --value</text>
+  <text x="40" y="148" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi visual bulk-update --type kpi --width 250</text>
 
-  <text x="120" y="260" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#d97757" text-anchor="middle">bar, line, card, KPI, gauge,</text>
-  <text x="120" y="274" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#d97757" text-anchor="middle">scatter, combo, table, matrix</text>
-  <text x="120" y="288" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#d97757" text-anchor="middle">slicer, map, and 21 more</text>
+  <text x="40" y="172" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">bar, line, card, KPI, gauge, scatter, combo, table, matrix,</text>
+  <text x="40" y="188" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">slicer, map, treemap, funnel, waterfall, and 18 more</text>
 
-  <!-- Col 2: Pages -->
-  <rect x="230" y="70" width="190" height="240" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
-  <text x="325" y="95" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="bold">Pages</text>
-  <text x="325" y="112" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Layout and navigation</text>
+  <!-- ============ Card 2: Pages (top-right) ============ -->
+  <rect x="435" y="65" width="395" height="135" rx="8" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+  <text x="455" y="90" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#58a6ff" font-weight="bold">Pages</text>
+  <text x="525" y="90" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">Layout, bookmarks, drillthrough</text>
 
-  <!-- Page stack icon -->
-  <g transform="translate(275, 125)">
-    <rect x="8" y="0" width="45" height="30" rx="3" fill="none" stroke="#58a6ff" stroke-width="1" opacity="0.3"/>
-    <rect x="4" y="4" width="45" height="30" rx="3" fill="none" stroke="#58a6ff" stroke-width="1" opacity="0.6"/>
-    <rect x="0" y="8" width="45" height="30" rx="3" fill="none" stroke="#58a6ff" stroke-width="1"/>
-    <line x1="3" y1="18" x2="42" y2="18" stroke="#58a6ff" stroke-width="0.5" stroke-opacity="0.3"/>
-    <rect x="5" y="21" width="10" height="12" rx="1" fill="#58a6ff" opacity="0.2"/>
-    <rect x="18" y="21" width="10" height="12" rx="1" fill="#58a6ff" opacity="0.2"/>
-    <rect x="31" y="21" width="10" height="12" rx="1" fill="#58a6ff" opacity="0.2"/>
+  <!-- Page icon -->
+  <g transform="translate(780, 72)">
+    <rect x="0" y="0" width="24" height="22" rx="2" fill="none" stroke="#58a6ff" stroke-width="1.2" opacity="0.4"/>
+    <rect x="6" y="3" width="24" height="22" rx="2" fill="none" stroke="#58a6ff" stroke-width="1.2" opacity="0.7"/>
+    <rect x="12" y="6" width="24" height="22" rx="2" fill="none" stroke="#58a6ff" stroke-width="1.2"/>
   </g>
 
-  <text x="250" y="180" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">report add-page</text>
-  <text x="250" y="196" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">report set-background</text>
-  <text x="250" y="212" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">report set-visibility</text>
-  <text x="250" y="228" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">bookmarks add</text>
+  <text x="455" y="114" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi report add-page --display-name "Sales"</text>
+  <text x="455" y="131" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi report set-background --color "#F5F5F5"</text>
+  <text x="455" y="148" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi bookmarks add "Executive View"</text>
 
-  <text x="325" y="260" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#58a6ff" text-anchor="middle">Add, remove, configure pages</text>
-  <text x="325" y="274" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#58a6ff" text-anchor="middle">Drillthrough, bookmarks</text>
-  <text x="325" y="288" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#58a6ff" text-anchor="middle">Custom canvas sizes</text>
+  <text x="455" y="172" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">Add, remove, configure pages. Set background colours.</text>
+  <text x="455" y="188" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">Hide pages, manage bookmarks, custom canvas sizes.</text>
 
-  <!-- Col 3: Themes -->
-  <rect x="435" y="70" width="190" height="240" rx="8" fill="#161b22" stroke="#F2C811" stroke-width="1.5"/>
-  <text x="530" y="95" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#F2C811" text-anchor="middle" font-weight="bold">Themes</text>
-  <text x="530" y="112" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Branding and formatting</text>
+  <!-- ============ Card 3: Themes (bottom-left) ============ -->
+  <rect x="20" y="215" width="395" height="135" rx="8" fill="#161b22" stroke="#F2C811" stroke-width="1.5"/>
+  <text x="40" y="240" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#F2C811" font-weight="bold">Themes</text>
+  <text x="120" y="240" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">Branding and conditional formatting</text>
 
-  <!-- Color palette icon -->
-  <g transform="translate(490, 125)">
-    <circle cx="10" cy="15" r="8" fill="#0078D4"/>
-    <circle cx="28" cy="15" r="8" fill="#00BCF2"/>
-    <circle cx="46" cy="15" r="8" fill="#FFB900"/>
-    <circle cx="64" cy="15" r="8" fill="#D83B01"/>
+  <!-- Color palette -->
+  <g transform="translate(345, 226)">
+    <circle cx="0" cy="8" r="6" fill="#0078D4"/>
+    <circle cx="15" cy="8" r="6" fill="#00BCF2"/>
+    <circle cx="30" cy="8" r="6" fill="#FFB900"/>
+    <circle cx="45" cy="8" r="6" fill="#D83B01"/>
   </g>
 
-  <text x="455" y="180" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">report set-theme</text>
-  <text x="455" y="196" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">report diff-theme</text>
-  <text x="455" y="212" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">format background-gradient</text>
-  <text x="455" y="228" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">format background-conditional</text>
+  <text x="40" y="264" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi report set-theme --file brand.json</text>
+  <text x="40" y="281" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi report diff-theme --file proposed.json</text>
+  <text x="40" y="298" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi format background-gradient --min --max</text>
 
-  <text x="530" y="260" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#F2C811" text-anchor="middle">Apply corporate themes</text>
-  <text x="530" y="274" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#F2C811" text-anchor="middle">Compare before applying</text>
-  <text x="530" y="288" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#F2C811" text-anchor="middle">Conditional formatting rules</text>
+  <text x="40" y="322" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">Apply corporate themes. Compare before applying.</text>
+  <text x="40" y="338" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">Gradient, rules-based, and measure-driven formatting.</text>
 
-  <!-- Col 4: Filters -->
-  <rect x="640" y="70" width="190" height="240" rx="8" fill="#161b22" stroke="#ff6b6b" stroke-width="1.5"/>
-  <text x="735" y="95" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#ff6b6b" text-anchor="middle" font-weight="bold">Filters</text>
-  <text x="735" y="112" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Page and visual filters</text>
+  <!-- ============ Card 4: Filters (bottom-right) ============ -->
+  <rect x="435" y="215" width="395" height="135" rx="8" fill="#161b22" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="455" y="240" font-family="'Segoe UI', Arial, sans-serif" font-size="16" fill="#ff6b6b" font-weight="bold">Filters</text>
+  <text x="520" y="240" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">Page and visual filters</text>
 
   <!-- Funnel icon -->
-  <g transform="translate(700, 125)">
-    <polygon points="0,0 60,0 45,15 15,15" fill="none" stroke="#ff6b6b" stroke-width="1.2" opacity="0.6"/>
-    <polygon points="15,15 45,15 38,30 22,30" fill="none" stroke="#ff6b6b" stroke-width="1.2"/>
+  <g transform="translate(790, 224)">
+    <polygon points="0,0 40,0 30,12 10,12" fill="none" stroke="#ff6b6b" stroke-width="1.2" opacity="0.6"/>
+    <polygon points="10,12 30,12 25,22 15,22" fill="none" stroke="#ff6b6b" stroke-width="1.2"/>
   </g>
 
-  <text x="660" y="180" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">filters add-topn --n 10</text>
-  <text x="660" y="196" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">filters add-relative-date</text>
-  <text x="660" y="212" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">filters add-categorical</text>
-  <text x="660" y="228" font-family="'Courier New', Courier, monospace" font-size="13" fill="#8b949e">filters clear --page ...</text>
+  <text x="455" y="264" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi filters add-topn --n 10 --order-by Revenue</text>
+  <text x="455" y="281" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi filters add-relative-date --period months</text>
+  <text x="455" y="298" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi filters add-categorical --value "East"</text>
 
-  <text x="735" y="260" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#ff6b6b" text-anchor="middle">TopN, relative date, categorical</text>
-  <text x="735" y="274" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#ff6b6b" text-anchor="middle">Page-level or visual-level</text>
-  <text x="735" y="288" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#ff6b6b" text-anchor="middle">Integer literals for Desktop</text>
+  <text x="455" y="322" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">TopN, relative date, and categorical filters.</text>
+  <text x="455" y="338" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e">Page-level or visual-level. Integer literals for Desktop.</text>
 
   <!-- Footer -->
-  <text x="425" y="330" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Auto-syncs with Desktop -- changes appear without manual close/reopen</text>
+  <text x="425" y="372" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">Auto-syncs with Desktop after every write -- no manual close/reopen needed</text>
 </svg>
