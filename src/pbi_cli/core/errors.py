@@ -40,3 +40,27 @@ class TomError(PbiCliError):
         self.operation = operation
         self.detail = detail
         super().__init__(f"{operation}: {detail}")
+
+
+class VisualTypeError(PbiCliError):
+    """Raised when a visual type is not recognised."""
+
+    def __init__(self, visual_type: str) -> None:
+        self.visual_type = visual_type
+        super().__init__(
+            f"Unknown visual type '{visual_type}'. "
+            "Run 'pbi visual types' to see supported types."
+        )
+
+
+class ReportNotFoundError(PbiCliError):
+    """Raised when no PBIR report definition folder can be found."""
+
+    def __init__(
+        self,
+        message: str = (
+            "No PBIR report found. Run this command inside a .pbip project "
+            "or pass --path to the .Report folder."
+        ),
+    ) -> None:
+        super().__init__(message)

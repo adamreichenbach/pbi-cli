@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Give Claude Code the Power BI skills it needs.</b><br/>
-  Install once, then just ask Claude to work with your semantic models.
+  Install once, then just ask Claude to work with your semantic models <i>and</i> reports.
 </p>
 
 <p align="center">
@@ -117,21 +117,33 @@ Add the printed path to your system PATH, then restart your terminal. We recomme
 
 ## Skills
 
-After running `pbi connect`, Claude Code discovers **7 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
+After running `pbi connect`, Claude Code discovers **12 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="7 Skills" width="850"/>
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="12 Skills" width="850"/>
 </p>
+
+### Semantic Model Skills (require `pbi connect`)
 
 | Skill | What you say | What Claude does |
 |-------|-------------|-----------------|
 | **DAX** | *"What are the top 10 products by revenue?"* | Writes and executes DAX queries, validates syntax |
 | **Modeling** | *"Create a star schema with Sales and Calendar"* | Creates tables, relationships, measures, hierarchies |
-| **Deployment** | *"Save a snapshot before I make changes"* | Exports/imports TMDL, manages transactions |
+| **Deployment** | *"Save a snapshot before I make changes"* | Exports/imports TMDL, manages transactions, diffs snapshots |
 | **Security** | *"Set up RLS for regional managers"* | Creates roles, filters, perspectives |
 | **Docs** | *"Document everything in this model"* | Generates data dictionaries, measure inventories |
 | **Partitions** | *"Show me the M query for the Sales table"* | Manages partitions, expressions, calendar config |
 | **Diagnostics** | *"Why is this query so slow?"* | Traces queries, checks model health, benchmarks |
+
+### Report Layer Skills (no connection needed)
+
+| Skill | What you say | What Claude does |
+|-------|-------------|-----------------|
+| **Report** | *"Create a new report project for Sales"* | Scaffolds PBIR reports, validates structure, previews layout |
+| **Visuals** | *"Add a bar chart showing revenue by region"* | Adds, binds, updates, bulk-manages 32 visual types |
+| **Pages** | *"Add an Executive Overview page"* | Manages pages, bookmarks, visibility, drillthrough |
+| **Themes** | *"Apply our corporate brand colours"* | Applies themes, conditional formatting, colour scales |
+| **Filters** | *"Show only the top 10 products"* | Adds page/visual filters (TopN, date, categorical) |
 
 ---
 
@@ -141,7 +153,10 @@ After running `pbi connect`, Claude Code discovers **7 Power BI skills** automat
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/architecture-flow.svg" alt="Architecture" width="850"/>
 </p>
 
-Direct in-process .NET interop from Python to Power BI Desktop. No MCP server, no external binaries, sub-second execution.
+**Two layers, one CLI:**
+
+- **Semantic Model layer** -- Direct in-process .NET interop from Python to Power BI Desktop via TOM/ADOMD. No MCP server, no external binaries, sub-second execution.
+- **Report layer** -- Reads and writes PBIR (Enhanced Report Format) JSON files directly. No connection needed. Works with `.pbip` projects.
 
 <details>
 <summary><b>Configuration details</b></summary>
@@ -163,18 +178,54 @@ Bundled DLLs ship inside the Python package (`pbi_cli/dlls/`).
 
 ## All Commands
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/feature-grid.svg" alt="22 Command Groups" width="850"/>
-</p>
+27 command groups covering both the semantic model and the report layer.
+
+| Category | Commands |
+|----------|----------|
+| **Queries** | `dax execute`, `dax validate`, `dax clear-cache` |
+| **Model** | `table`, `column`, `measure`, `relationship`, `hierarchy`, `calc-group` |
+| **Deploy** | `database export-tmdl`, `database import-tmdl`, `database export-tmsl`, `database diff-tmdl`, `transaction` |
+| **Security** | `security-role`, `perspective` |
+| **Connect** | `connect`, `disconnect`, `connections list`, `connections last` |
+| **Data** | `partition`, `expression`, `calendar`, `advanced culture` |
+| **Diagnostics** | `trace start/stop/fetch/export`, `model stats` |
+| **Report** | `report create`, `report info`, `report validate`, `report preview`, `report reload` |
+| **Pages** | `report add-page`, `report delete-page`, `report get-page`, `report set-background`, `report set-visibility` |
+| **Visuals** | `visual add/get/list/update/delete`, `visual bind`, `visual bulk-bind/bulk-update/bulk-delete`, `visual where` |
+| **Filters** | `filters list`, `filters add-categorical/add-topn/add-relative-date`, `filters remove/clear` |
+| **Formatting** | `format get/clear`, `format background-gradient/background-conditional/background-measure` |
+| **Bookmarks** | `bookmarks list/get/add/delete/set-visibility` |
+| **Tools** | `setup`, `repl`, `skills install/list/uninstall` |
 
 Use `--json` for machine-readable output (for scripts and AI agents):
 
 ```bash
 pbi --json measure list
 pbi --json dax execute "EVALUATE Sales"
+pbi --json visual list --page overview
 ```
 
 Run `pbi <command> --help` for full options.
+
+---
+
+## Supported Visual Types (32)
+
+pbi-cli supports creating and binding data to 32 Power BI visual types:
+
+**Charts:** bar, line, column, area, ribbon, waterfall, stacked bar, clustered bar, clustered column, scatter, funnel, combo, donut/pie, treemap
+
+**Cards/KPIs:** card (legacy), cardVisual (modern), cardNew, multi-row card, KPI, gauge
+
+**Tables:** table, matrix (pivot table)
+
+**Slicers:** slicer, text slicer, list slicer, advanced slicer (tile/image)
+
+**Maps:** Azure Map
+
+**Decorative:** action button, image, shape, textbox, page navigator
+
+Use friendly aliases: `pbi visual add --page p1 --type bar` instead of `--type barChart`.
 
 ---
 
@@ -208,7 +259,7 @@ pip install -e ".[dev]"
 ```bash
 ruff check src/ tests/         # Lint
 mypy src/                      # Type check
-pytest -m "not e2e"            # Run tests
+pytest -m "not e2e"            # Run tests (488 tests)
 ```
 
 ---

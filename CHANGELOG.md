@@ -5,6 +5,112 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2026-04-02
+
+### Added
+- Split `power-bi-report` skill into 5 focused skills: `power-bi-report` (overview), `power-bi-visuals`, `power-bi-pages`, `power-bi-themes`, `power-bi-filters` (12 skills total)
+- CLAUDE.md snippet now organises skills by layer (Semantic Model vs Report Layer)
+- Skill triggering test suite (19 prompts, 12 skills)
+
+### Fixed
+- `filter_add_topn` inner subquery now correctly references category table when it differs from order-by table
+- `theme_set` resourcePackages structure now matches Desktop format (flat `items` array)
+- `visual_bind` type annotation corrected to `list[dict[str, Any]]`
+- `tmdl_diff` hierarchy changes reported as `hierarchies_*` instead of falling to `other_*`
+- Missing `VisualTypeError` and `ReportNotFoundError` classes added to `errors.py`
+- `report`, `visual`, `filters`, `format`, `bookmarks` command groups registered in CLI
+
+### Changed
+- README rewritten to cover both semantic model and report layers, 12 skills, 27 command groups, 32 visual types
+
+## [3.9.0] - 2026-04-01
+
+### Added
+- `pbi database diff-tmdl` command: compare two TMDL export folders offline, summarise changes (tables, measures, columns, relationships, model properties); lineageTag-only changes are stripped to avoid false positives
+
+### Fixed
+- `filter_add_topn` inner subquery now correctly references the category table when it differs from the order-by table (cross-table TopN filters)
+- `theme_set` resourcePackages structure now matches Desktop format (flat `items`, not nested `resourcePackage`)
+- `visual_bind` type annotation corrected from `list[dict[str, str]]` to `list[dict[str, Any]]`
+- `tmdl_diff` hierarchy changes now reported as `hierarchies_*` instead of falling through to `other_*`
+- Missing `VisualTypeError` and `ReportNotFoundError` error classes added to `errors.py`
+- `report`, `visual`, `filters`, `format`, `bookmarks` command groups registered in CLI (were implemented but inaccessible)
+
+## [3.8.0] - 2026-04-01
+
+### Added
+- `azureMap` visual type (Azure Maps) with Category and Size roles
+- `pageBinding` field surfaced in `page_get()` for drillthrough pages
+
+### Fixed
+- `card` and `multiRowCard` queryState role corrected from `Fields` to `Values` (matches Desktop)
+- `kpi` template: added `TrendLine` queryState key (date/axis column for sparkline)
+- `gauge` template: added `MaxValue` queryState key (target/max measure)
+- `MaxValue` added to `MEASURE_ROLES`
+- kpi role aliases: `--trend`, `--trend_line`
+- gauge role aliases: `--max`, `--max_value`, `--target`
+
+## [3.7.0] - 2026-04-01
+
+### Added
+- `page_type`, `filter_config`, and `visual_interactions` fields in page read operations (`page_get`, `page_list`)
+
+## [3.6.0] - 2026-04-01
+
+### Added
+- `image` visual type (static images, no data binding)
+- `shape` visual type (decorative shapes)
+- `textbox` visual type (rich text)
+- `pageNavigator` visual type (page navigation buttons)
+- `advancedSlicerVisual` visual type (tile/image slicer)
+
+## [3.5.0] - 2026-04-01
+
+### Added
+- `clusteredColumnChart` visual type with aliases `clustered_column`
+- `clusteredBarChart` visual type with aliases `clustered_bar`
+- `textSlicer` visual type with alias `text_slicer`
+- `listSlicer` visual type with alias `list_slicer`
+
+## [3.4.0] - 2026-03-31
+
+### Added
+- `cardVisual` (modern card) visual type with `Data` role and aliases `card_visual`, `modern_card`
+- `actionButton` visual type with alias `action_button`, `button`
+- `pbi report set-background` command to set page background colour
+- `pbi report set-visibility` command to hide/show pages
+- `pbi visual set-container` command for border, background, and title on visual containers
+
+### Fixed
+- Visual container schema URL updated from 1.5.0 to 2.7.0
+- `visualGroup` containers tagged as type `group` in `visual_list`
+- Colour validation, KeyError guards, visibility surfacing, no-op detection
+
+## [3.0.0] - 2026-03-31
+
+### Added
+- **PBIR report layer**: `pbi report` command group (create, info, validate, list-pages, add-page, delete-page, get-page, set-theme, get-theme, diff-theme, preview, reload, convert)
+- **Visual CRUD**: `pbi visual` command group (add, get, list, update, delete, bind, where, bulk-bind, bulk-update, bulk-delete, calc-add, calc-list, calc-delete, set-container)
+- **Filters**: `pbi filters` command group (list, add-categorical, add-topn, add-relative-date, remove, clear)
+- **Formatting**: `pbi format` command group (get, clear, background-gradient, background-conditional, background-measure)
+- **Bookmarks**: `pbi bookmarks` command group (list, get, add, delete, set-visibility)
+- 20 visual type templates (barChart, lineChart, card, tableEx, pivotTable, slicer, kpi, gauge, donutChart, columnChart, areaChart, ribbonChart, waterfallChart, scatterChart, funnelChart, multiRowCard, treemap, cardNew, stackedBarChart, lineStackedColumnComboChart)
+- HTML preview server (`pbi report preview`) with live reload
+- Power BI Desktop reload trigger (`pbi report reload`)
+- PBIR path auto-detection (walk-up from CWD, `.pbip` sibling detection)
+- `power-bi-report` Claude Code skill (8th skill)
+- Visual data binding with `Table[Column]` notation and role aliases
+- Visual calculations (calc-add, calc-list, calc-delete)
+- Bulk operations for mass visual updates across pages
+
+### Changed
+- Architecture: pbi-cli now covers both semantic model layer (via .NET TOM) and report layer (via PBIR JSON files)
+
+## [2.2.0] - 2026-03-27
+
+### Added
+- Promotional SVG assets and redesigned README
+
 ## [2.0.0] - 2026-03-27
 
 ### Breaking

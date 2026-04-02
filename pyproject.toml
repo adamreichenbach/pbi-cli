@@ -4,15 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbi-cli-tool"
-version = "2.2.0"
-description = "CLI for Power BI semantic models - direct .NET connection for token-efficient AI agent usage"
+version = "3.10.0"
+description = "CLI for Power BI semantic models and PBIR reports - direct .NET connection for token-efficient AI agent usage"
 readme = "README.pypi.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
     {name = "pbi-cli contributors"},
 ]
-keywords = ["power-bi", "cli", "semantic-model", "dax", "claude-code", "tom"]
+keywords = ["power-bi", "cli", "semantic-model", "dax", "claude-code", "tom", "pbir", "report"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -50,6 +50,8 @@ dev = [
     "ruff>=0.4.0",
     "mypy>=1.10",
 ]
+reload = ["pywin32>=306"]
+preview = ["websockets>=12.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -57,6 +59,7 @@ where = ["src"]
 [tool.setuptools.package-data]
 "pbi_cli.skills" = ["**/*.md"]
 "pbi_cli.dlls" = ["*.dll"]
+"pbi_cli.templates" = ["**/*.json"]
 
 [tool.ruff]
 target-version = "py310"
@@ -71,6 +74,10 @@ select = ["E", "F", "I", "N", "W", "UP"]
 "src/pbi_cli/core/session.py" = ["N806"]
 "src/pbi_cli/core/tom_backend.py" = ["N806", "N814"]
 "src/pbi_cli/core/dotnet_loader.py" = ["N806", "N814"]
+# Win32 API constants use UPPER_CASE; PowerShell inline scripts are long
+"src/pbi_cli/utils/desktop_reload.py" = ["N806", "E501"]
+# HTML/SVG template strings are inherently long
+"src/pbi_cli/preview/renderer.py" = ["E501"]
 # Mock objects mirror .NET CamelCase API
 "tests/conftest.py" = ["N802", "N806"]
 

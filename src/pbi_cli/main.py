@@ -52,6 +52,7 @@ def cli(ctx: click.Context, json_output: bool, connection: str | None) -> None:
 def _register_commands() -> None:
     """Lazily import and register all command groups."""
     from pbi_cli.commands.advanced import advanced
+    from pbi_cli.commands.bookmarks import bookmarks
     from pbi_cli.commands.calc_group import calc_group
     from pbi_cli.commands.calendar import calendar
     from pbi_cli.commands.column import column
@@ -59,6 +60,8 @@ def _register_commands() -> None:
     from pbi_cli.commands.database import database
     from pbi_cli.commands.dax import dax
     from pbi_cli.commands.expression import expression
+    from pbi_cli.commands.filters import filters
+    from pbi_cli.commands.format_cmd import format_cmd
     from pbi_cli.commands.hierarchy import hierarchy
     from pbi_cli.commands.measure import measure
     from pbi_cli.commands.model import model
@@ -66,12 +69,14 @@ def _register_commands() -> None:
     from pbi_cli.commands.perspective import perspective
     from pbi_cli.commands.relationship import relationship
     from pbi_cli.commands.repl_cmd import repl
+    from pbi_cli.commands.report import report
     from pbi_cli.commands.security import security_role
     from pbi_cli.commands.setup_cmd import setup
     from pbi_cli.commands.skills_cmd import skills
     from pbi_cli.commands.table import table
     from pbi_cli.commands.trace import trace
     from pbi_cli.commands.transaction import transaction
+    from pbi_cli.commands.visual import visual
 
     cli.add_command(setup)
     cli.add_command(connect)
@@ -96,6 +101,11 @@ def _register_commands() -> None:
     cli.add_command(advanced)
     cli.add_command(repl)
     cli.add_command(skills)
+    cli.add_command(report)
+    cli.add_command(visual)
+    cli.add_command(filters)
+    cli.add_command(format_cmd)
+    cli.add_command(bookmarks)
 
 
 _register_commands()
