@@ -19,7 +19,6 @@ Requires pywin32.
 
 from __future__ import annotations
 
-import os
 import subprocess
 import time
 from pathlib import Path
@@ -301,7 +300,11 @@ def _accept_save_dialog() -> None:
 def _reopen_pbip(pbip_path: str) -> dict[str, Any]:
     """Launch the .pbip file with the system default handler."""
     try:
-        os.startfile(pbip_path)  # noqa: S606  # Windows-only API
+        subprocess.Popen(  # noqa: S603
+            ["cmd", "/c", "start", "", pbip_path],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         return {
             "status": "success",
             "method": "pywin32",
