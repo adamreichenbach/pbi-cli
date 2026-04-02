@@ -54,10 +54,6 @@
   <text x="78" y="453" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e">Running:</text>
   <text x="130" y="453" font-family="'Courier New', Courier, monospace" font-size="12" fill="#58a6ff">pbi filters add-topn --page overview --n 10 --order-by Revenue</text>
 
-  <!-- Input bar at bottom -->
-  <rect x="60" y="454" width="730" height="26" rx="13" fill="#0d1117" stroke="#484f58" stroke-width="1"/>
-  <text x="82" y="472" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#484f58">Ask Claude to modify your report...</text>
-
   <!-- Footer -->
   <text x="425" y="508" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">No drag-and-drop. No manual binding. Just describe what you want on the page.</text>
 </svg>
