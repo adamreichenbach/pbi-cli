@@ -62,11 +62,10 @@
 
   <!-- PBI-CLI center block with dual-layer labels -->
   <rect x="288" y="190" width="274" height="70" rx="10" fill="#161b22" stroke="#F2C811" stroke-width="2"/>
-  <text x="425" y="217" font-family="'Segoe UI', Arial, sans-serif" font-size="18" fill="#F2C811" text-anchor="middle" font-weight="bold">pbi-cli</text>
-  <text x="355" y="245" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#58a6ff" text-anchor="middle">Modeling Layer</text>
-  <text x="355" y="245" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#58a6ff" text-anchor="middle">Modeling</text>
-  <text x="425" y="245" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#8b949e" text-anchor="middle">+</text>
-  <text x="495" y="245" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="#06d6a0" text-anchor="middle">Reporting</text>
+  <text x="425" y="220" font-family="'Segoe UI', Arial, sans-serif" font-size="20" fill="#F2C811" text-anchor="middle" font-weight="bold">pbi-cli</text>
+  <text x="365" y="248" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="600">Modeling</text>
+  <text x="425" y="248" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#8b949e" text-anchor="middle">+</text>
+  <text x="485" y="248" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0" text-anchor="middle" font-weight="600">Reporting</text>
 
   <!-- Right arrow -->
   <line x1="566" y1="225" x2="678" y2="225" stroke="#F2C811" stroke-width="2" stroke-dasharray="6,4" stroke-opacity="0.4"/>
