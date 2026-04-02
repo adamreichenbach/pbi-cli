@@ -21,7 +21,7 @@
   <!-- Step badge -->
   <circle cx="140" cy="92" r="14" fill="#58a6ff"/>
   <text x="140" y="98" font-family="'Segoe UI', Arial, sans-serif" font-size="15" fill="#0d1117" text-anchor="middle" font-weight="bold">1</text>
-  <text x="140" y="134" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="bold">CLI Writes</text>
+  <text x="140" y="126" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#58a6ff" text-anchor="middle" font-weight="bold">CLI Writes</text>
   <!-- File icon -->
   <g transform="translate(110, 140)">
     <rect x="0" y="0" width="32" height="40" rx="3" fill="none" stroke="#58a6ff" stroke-width="1.5"/>
@@ -44,7 +44,7 @@
   <rect x="258" y="75" width="160" height="165" rx="10" fill="#161b22" stroke="#F2C811" stroke-width="1.5"/>
   <circle cx="338" cy="92" r="14" fill="#F2C811"/>
   <text x="338" y="98" font-family="'Segoe UI', Arial, sans-serif" font-size="15" fill="#0d1117" text-anchor="middle" font-weight="bold">2</text>
-  <text x="338" y="134" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#F2C811" text-anchor="middle" font-weight="bold">Snapshot</text>
+  <text x="338" y="126" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#F2C811" text-anchor="middle" font-weight="bold">Snapshot</text>
   <!-- Camera icon -->
   <g transform="translate(308, 140)">
     <rect x="0" y="10" width="50" height="34" rx="5" fill="none" stroke="#F2C811" stroke-width="1.5"/>
@@ -63,7 +63,7 @@
   <rect x="456" y="75" width="160" height="165" rx="10" fill="#161b22" stroke="#06d6a0" stroke-width="1.5"/>
   <circle cx="536" cy="92" r="14" fill="#06d6a0"/>
   <text x="536" y="98" font-family="'Segoe UI', Arial, sans-serif" font-size="15" fill="#0d1117" text-anchor="middle" font-weight="bold">3</text>
-  <text x="536" y="134" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0" text-anchor="middle" font-weight="bold">Desktop Saves</text>
+  <text x="536" y="126" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0" text-anchor="middle" font-weight="bold">Desktop Saves</text>
   <!-- Save icon with checkmark -->
   <g transform="translate(508, 140)">
     <rect x="0" y="0" width="44" height="44" rx="5" fill="none" stroke="#06d6a0" stroke-width="1.5"/>
@@ -83,7 +83,7 @@
   <rect x="654" y="75" width="160" height="165" rx="10" fill="#161b22" stroke="#d97757" stroke-width="1.5"/>
   <circle cx="734" cy="92" r="14" fill="#d97757"/>
   <text x="734" y="98" font-family="'Segoe UI', Arial, sans-serif" font-size="15" fill="#0d1117" text-anchor="middle" font-weight="bold">4</text>
-  <text x="734" y="134" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#d97757" text-anchor="middle" font-weight="bold">Reopen</text>
+  <text x="734" y="126" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#d97757" text-anchor="middle" font-weight="bold">Reopen</text>
   <!-- Refresh/cycle icon -->
   <g transform="translate(706, 140)">
     <path d="M 24,2 A 22,22 0 1,1 2,24" fill="none" stroke="#d97757" stroke-width="2.5" stroke-linecap="round"/>
