@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/banner.svg" alt="pbi-cli — Vibe Modeling" width="850"/>
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/banner.svg" alt="pbi-cli" width="850"/>
 </p>
 
 <p align="center">
@@ -18,7 +18,8 @@
 <p align="center">
   <a href="#why-pbi-cli">Why pbi-cli</a> &bull;
   <a href="#get-started">Get Started</a> &bull;
-  <a href="#just-ask-claude">Just Ask Claude</a> &bull;
+  <a href="#semantic-model-layer">Modeling</a> &bull;
+  <a href="#report-layer">Reporting</a> &bull;
   <a href="#skills">Skills</a> &bull;
   <a href="#all-commands">All Commands</a> &bull;
   <a href="#contributing">Contributing</a>
@@ -81,7 +82,9 @@ Add the printed path to your system PATH, then restart your terminal. We recomme
 
 ---
 
-## Just Ask Claude
+## Semantic Model Layer
+
+Ask Claude to work with your Power BI semantic model. Requires `pbi connect`.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/chat-demo.svg" alt="Just Ask Claude" width="850"/>
@@ -117,57 +120,33 @@ Add the printed path to your system PATH, then restart your terminal. We recomme
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/rls-testing.svg" alt="RLS testing" width="850"/>
 </p>
 
-### NEW: Build reports from CLI
+---
+
+## Report Layer
+
+Ask Claude to build and manage your Power BI reports. No connection needed -- works directly on PBIR files.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/chat-demo-report.svg" alt="Ask Claude to build reports" width="850"/>
 </p>
 
+### Build a report in 6 steps
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/report-workflow.svg" alt="Report workflow" width="850"/>
 </p>
+
+### Visuals, pages, themes, filters
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/report-layer.svg" alt="Report layer capabilities" width="850"/>
 </p>
 
-### 32 Visual Types
+### 32 visual types
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/visual-types.svg" alt="32 Visual Types" width="850"/>
 </p>
-
----
-
-## Skills
-
-After running `pbi connect`, Claude Code discovers **12 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="12 Skills" width="850"/>
-</p>
-
-### Semantic Model Skills (require `pbi connect`)
-
-| Skill | What you say | What Claude does |
-|-------|-------------|-----------------|
-| **DAX** | *"What are the top 10 products by revenue?"* | Writes and executes DAX queries, validates syntax |
-| **Modeling** | *"Create a star schema with Sales and Calendar"* | Creates tables, relationships, measures, hierarchies |
-| **Deployment** | *"Save a snapshot before I make changes"* | Exports/imports TMDL, manages transactions, diffs snapshots |
-| **Security** | *"Set up RLS for regional managers"* | Creates roles, filters, perspectives |
-| **Docs** | *"Document everything in this model"* | Generates data dictionaries, measure inventories |
-| **Partitions** | *"Show me the M query for the Sales table"* | Manages partitions, expressions, calendar config |
-| **Diagnostics** | *"Why is this query so slow?"* | Traces queries, checks model health, benchmarks |
-
-### Report Layer Skills (no connection needed)
-
-| Skill | What you say | What Claude does |
-|-------|-------------|-----------------|
-| **Report** | *"Create a new report project for Sales"* | Scaffolds PBIR reports, validates structure, previews layout |
-| **Visuals** | *"Add a bar chart showing revenue by region"* | Adds, binds, updates, bulk-manages 32 visual types |
-| **Pages** | *"Add an Executive Overview page"* | Manages pages, bookmarks, visibility, drillthrough |
-| **Themes** | *"Apply our corporate brand colours"* | Applies themes, conditional formatting, colour scales |
-| **Filters** | *"Show only the top 10 products"* | Adds page/visual filters (TopN, date, categorical) |
 
 ---
 
@@ -206,6 +185,38 @@ Bundled DLLs ship inside the Python package (`pbi_cli/dlls/`).
 
 ---
 
+## Skills
+
+After running `pbi connect`, Claude Code discovers **12 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="12 Skills" width="850"/>
+</p>
+
+### Semantic Model Skills (require `pbi connect`)
+
+| Skill | What you say | What Claude does |
+|-------|-------------|-----------------|
+| **DAX** | *"What are the top 10 products by revenue?"* | Writes and executes DAX queries, validates syntax |
+| **Modeling** | *"Create a star schema with Sales and Calendar"* | Creates tables, relationships, measures, hierarchies |
+| **Deployment** | *"Save a snapshot before I make changes"* | Exports/imports TMDL, manages transactions, diffs snapshots |
+| **Security** | *"Set up RLS for regional managers"* | Creates roles, filters, perspectives |
+| **Docs** | *"Document everything in this model"* | Generates data dictionaries, measure inventories |
+| **Partitions** | *"Show me the M query for the Sales table"* | Manages partitions, expressions, calendar config |
+| **Diagnostics** | *"Why is this query so slow?"* | Traces queries, checks model health, benchmarks |
+
+### Report Layer Skills (no connection needed)
+
+| Skill | What you say | What Claude does |
+|-------|-------------|-----------------|
+| **Report** | *"Create a new report project for Sales"* | Scaffolds PBIR reports, validates structure, previews layout |
+| **Visuals** | *"Add a bar chart showing revenue by region"* | Adds, binds, updates, bulk-manages 32 visual types |
+| **Pages** | *"Add an Executive Overview page"* | Manages pages, bookmarks, visibility, drillthrough |
+| **Themes** | *"Apply our corporate brand colours"* | Applies themes, conditional formatting, colour scales |
+| **Filters** | *"Show only the top 10 products"* | Adds page/visual filters (TopN, date, categorical) |
+
+---
+
 ## All Commands
 
 27 command groups covering both the semantic model and the report layer.
@@ -236,26 +247,6 @@ pbi --json visual list --page overview
 ```
 
 Run `pbi <command> --help` for full options.
-
----
-
-## Supported Visual Types (32)
-
-pbi-cli supports creating and binding data to 32 Power BI visual types:
-
-**Charts:** bar, line, column, area, ribbon, waterfall, stacked bar, clustered bar, clustered column, scatter, funnel, combo, donut/pie, treemap
-
-**Cards/KPIs:** card (legacy), cardVisual (modern), cardNew, multi-row card, KPI, gauge
-
-**Tables:** table, matrix (pivot table)
-
-**Slicers:** slicer, text slicer, list slicer, advanced slicer (tile/image)
-
-**Maps:** Azure Map
-
-**Decorative:** action button, image, shape, textbox, page navigator
-
-Use friendly aliases: `pbi visual add --page p1 --type bar` instead of `--type barChart`.
 
 ---
 
