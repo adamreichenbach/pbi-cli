@@ -49,18 +49,18 @@
   <text x="220" y="246" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Direct TOM interop via pythonnet</text>
 
   <!-- Commands -->
-  <circle cx="80" cy="268" r="3" fill="#58a6ff" opacity="0.6"/>
-  <text x="92" y="272" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi measure create</text>
-  <circle cx="80" cy="288" r="3" fill="#58a6ff" opacity="0.6"/>
-  <text x="92" y="292" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi dax execute</text>
-  <circle cx="80" cy="308" r="3" fill="#58a6ff" opacity="0.6"/>
-  <text x="92" y="312" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi database export-tmdl</text>
-  <circle cx="80" cy="328" r="3" fill="#58a6ff" opacity="0.6"/>
-  <text x="92" y="332" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi relationship create</text>
+  <circle cx="55" cy="268" r="3" fill="#58a6ff" opacity="0.6"/>
+  <text x="67" y="272" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi measure create</text>
+  <circle cx="55" cy="288" r="3" fill="#58a6ff" opacity="0.6"/>
+  <text x="67" y="292" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi dax execute</text>
+  <circle cx="55" cy="308" r="3" fill="#58a6ff" opacity="0.6"/>
+  <text x="67" y="312" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi database export-tmdl</text>
+  <circle cx="55" cy="328" r="3" fill="#58a6ff" opacity="0.6"/>
+  <text x="67" y="332" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi relationship create</text>
 
   <!-- 7 skills badge -->
-  <rect x="160" y="348" width="120" height="24" rx="12" fill="#58a6ff" fill-opacity="0.1" stroke="#58a6ff" stroke-width="1"/>
-  <text x="220" y="364" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#58a6ff" text-anchor="middle" font-weight="600">7 Claude Skills</text>
+  <rect x="160" y="354" width="120" height="24" rx="12" fill="#58a6ff" fill-opacity="0.1" stroke="#58a6ff" stroke-width="1"/>
+  <text x="220" y="370" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#58a6ff" text-anchor="middle" font-weight="600">7 Claude Skills</text>
 
   <!-- ============ RIGHT: Report Layer ============ -->
   <rect x="435" y="125" width="390" height="250" rx="10" fill="#161b22" stroke="#06d6a0" stroke-width="1.5"/>
@@ -86,19 +86,19 @@
   <text x="630" y="246" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">Read/write JSON, no connection</text>
 
   <!-- Commands -->
-  <circle cx="490" cy="268" r="3" fill="#06d6a0" opacity="0.6"/>
-  <text x="502" y="272" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi visual add --type bar</text>
-  <circle cx="490" cy="288" r="3" fill="#06d6a0" opacity="0.6"/>
-  <text x="502" y="292" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi visual bind --category</text>
-  <circle cx="490" cy="308" r="3" fill="#06d6a0" opacity="0.6"/>
-  <text x="502" y="312" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi filters add-topn --n 10</text>
-  <circle cx="490" cy="328" r="3" fill="#06d6a0" opacity="0.6"/>
-  <text x="502" y="332" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi report set-theme</text>
+  <circle cx="465" cy="268" r="3" fill="#06d6a0" opacity="0.6"/>
+  <text x="477" y="272" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi visual add --type bar</text>
+  <circle cx="465" cy="288" r="3" fill="#06d6a0" opacity="0.6"/>
+  <text x="477" y="292" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi visual bind --category</text>
+  <circle cx="465" cy="308" r="3" fill="#06d6a0" opacity="0.6"/>
+  <text x="477" y="312" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi filters add-topn --n 10</text>
+  <circle cx="465" cy="328" r="3" fill="#06d6a0" opacity="0.6"/>
+  <text x="477" y="332" font-family="'Courier New', Courier, monospace" font-size="12" fill="#e6edf3">pbi report set-theme</text>
 
   <!-- 5 skills badge -->
-  <rect x="570" y="348" width="120" height="24" rx="12" fill="#06d6a0" fill-opacity="0.1" stroke="#06d6a0" stroke-width="1"/>
-  <text x="630" y="364" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#06d6a0" text-anchor="middle" font-weight="600">5 Claude Skills</text>
+  <rect x="570" y="354" width="120" height="24" rx="12" fill="#06d6a0" fill-opacity="0.1" stroke="#06d6a0" stroke-width="1"/>
+  <text x="630" y="370" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#06d6a0" text-anchor="middle" font-weight="600">5 Claude Skills</text>
 
   <!-- ============ Footer stats ============ -->
-  <text x="425" y="405" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">27 command groups  |  125+ subcommands  |  32 visual types  |  12 Claude skills</text>
+  <text x="425" y="412" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">27 command groups  |  125+ subcommands  |  32 visual types  |  12 Claude skills</text>
 </svg>
