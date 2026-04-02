@@ -32,8 +32,8 @@ def run_command(
 
     If the current Click context has a ``report_path`` key (set by
     report-layer command groups), write operations automatically
-    trigger a Desktop close/reopen cycle so Power BI picks up the
-    PBIR file changes.
+    trigger a safe Desktop sync: save Desktop's work, re-apply our
+    PBIR changes, and reopen.
     """
     try:
         result = fn(**kwargs)
@@ -46,7 +46,8 @@ def run_command(
 
     # Auto-sync Desktop for report-layer write operations
     if _is_report_write(result):
-        _try_desktop_sync()
+        definition_path = kwargs.get("definition_path")
+        _try_desktop_sync(definition_path)
 
     return result
 
@@ -74,12 +75,12 @@ def _is_report_write(result: Any) -> bool:
     return False
 
 
-def _try_desktop_sync() -> None:
+def _try_desktop_sync(definition_path: Any = None) -> None:
     """Attempt Desktop sync, silently ignore failures."""
     try:
         from pbi_cli.utils.desktop_sync import sync_desktop
 
-        # Find report_path from the Click context chain
+        # Find report_path hint from the Click context chain
         report_path = None
         click_ctx = click.get_current_context(silent=True)
         parent = click_ctx.parent if click_ctx else None
@@ -90,7 +91,10 @@ def _try_desktop_sync() -> None:
                 break
             parent = parent.parent
 
-        result = sync_desktop(report_path)
+        # Convert definition_path to string for sync
+        defn_str = str(definition_path) if definition_path is not None else None
+
+        result = sync_desktop(report_path, definition_path=defn_str)
         status = result.get("status", "")
         msg = result.get("message", "")
         if status == "success":
