@@ -32,6 +32,10 @@
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/before-after.svg" alt="Why pbi-cli" width="850"/>
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/dual-layer.svg" alt="Two layers, one CLI" width="850"/>
+</p>
+
 ---
 
 ## Get Started
@@ -111,6 +115,12 @@ Add the printed path to your system PATH, then restart your terminal. We recomme
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/rls-testing.svg" alt="RLS testing" width="850"/>
+</p>
+
+### NEW: Build reports from CLI
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/report-layer.svg" alt="Report layer" width="850"/>
 </p>
 
 ---
