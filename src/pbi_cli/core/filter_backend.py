@@ -98,6 +98,28 @@ def filter_list(
     return _get_filters(data)
 
 
+def _to_pbi_literal(value: str) -> str:
+    """Convert a CLI string value to a Power BI literal.
+
+    Power BI uses typed literals: strings are single-quoted (``'text'``),
+    integers use an ``L`` suffix (``123L``), and doubles use ``D`` (``1.5D``).
+    """
+    # Try integer first (e.g. "2014" -> "2014L")
+    try:
+        int(value)
+        return f"{value}L"
+    except ValueError:
+        pass
+    # Try float (e.g. "3.14" -> "3.14D")
+    try:
+        float(value)
+        return f"{value}D"
+    except ValueError:
+        pass
+    # Fall back to string literal
+    return f"'{value}'"
+
+
 def filter_add_categorical(
     definition_path: Path,
     page_name: str,
@@ -122,7 +144,7 @@ def filter_add_categorical(
     scope = "visual" if visual_name is not None else "page"
 
     where_values: list[list[dict[str, Any]]] = [
-        [{"Literal": {"Value": f"'{v}'"}}] for v in values
+        [{"Literal": {"Value": _to_pbi_literal(v)}}] for v in values
     ]
 
     entry: dict[str, Any] = {
