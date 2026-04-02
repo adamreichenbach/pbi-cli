@@ -85,24 +85,22 @@
   <text x="734" y="98" font-family="'Segoe UI', Arial, sans-serif" font-size="15" fill="#0d1117" text-anchor="middle" font-weight="bold">4</text>
   <text x="734" y="126" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#d97757" text-anchor="middle" font-weight="bold">Reopen</text>
   <!-- Refresh/cycle icon -->
-  <g transform="translate(706, 138)">
-    <!-- Outer glow ring -->
-    <circle cx="28" cy="26" r="24" fill="none" stroke="#d97757" stroke-width="0.5" stroke-opacity="0.15"/>
+  <g transform="translate(709, 142)">
+    <!-- Two-arrow circular refresh using semicircles with gap -->
+    <!-- Right half arc (orange): top-right to bottom-right -->
+    <path d="M 25,0 A 22,22 0 0,1 25,44" fill="none" stroke="#d97757" stroke-width="3" stroke-linecap="round"/>
+    <!-- Orange arrowhead at bottom -->
+    <polygon points="25,44 19,38 31,38" fill="#d97757"/>
 
-    <!-- Top arc (orange): closing Desktop -->
-    <path d="M 28,2 A 26,26 0 0,1 52,30" fill="none" stroke="#d97757" stroke-width="3" stroke-linecap="round"/>
-    <!-- Top arrow head -->
-    <polygon points="52,30 46,24 48,34" fill="#d97757"/>
-
-    <!-- Bottom arc (green): reopening Desktop -->
-    <path d="M 28,50 A 26,26 0 0,1 4,22" fill="none" stroke="#06d6a0" stroke-width="3" stroke-linecap="round"/>
-    <!-- Bottom arrow head -->
-    <polygon points="4,22 10,28 8,18" fill="#06d6a0"/>
+    <!-- Left half arc (green): bottom-left to top-left -->
+    <path d="M 25,44 A 22,22 0 0,1 25,0" fill="none" stroke="#06d6a0" stroke-width="3" stroke-linecap="round"/>
+    <!-- Green arrowhead at top -->
+    <polygon points="25,0 19,6 31,6" fill="#06d6a0"/>
 
     <!-- Center PBI mini icon -->
-    <rect x="18" y="14" width="8" height="22" rx="2" fill="#F2C811" opacity="0.6"/>
-    <rect x="27" y="20" width="8" height="16" rx="2" fill="#F2C811" opacity="0.8"/>
-    <rect x="36" y="25" width="8" height="11" rx="2" fill="#F2C811"/>
+    <rect x="14" y="12" width="7" height="20" rx="2" fill="#F2C811" opacity="0.6"/>
+    <rect x="22" y="17" width="7" height="15" rx="2" fill="#F2C811" opacity="0.8"/>
+    <rect x="30" y="21" width="7" height="11" rx="2" fill="#F2C811"/>
   </g>
   <text x="734" y="205" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e" text-anchor="middle">PBIR restored,</text>
   <text x="734" y="221" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#d97757" text-anchor="middle" font-weight="600">Desktop reopens</text>
