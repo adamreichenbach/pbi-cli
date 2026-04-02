@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="340" viewBox="0 0 850 340">
+  <defs>
+    <linearGradient id="sync-glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06d6a0" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#06d6a0" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#06d6a0" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#0d1117" rx="8"/>
+
+  <!-- Title -->
+  <text x="425" y="30" font-family="'Segoe UI', Arial, sans-serif" font-size="20" fill="#06d6a0" text-anchor="middle" font-weight="bold">Desktop Auto-Sync</text>
+  <text x="425" y="50" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#8b949e" text-anchor="middle">Your report changes appear in Desktop automatically. Your modeling work is preserved.</text>
+
+  <rect x="80" y="60" width="690" height="1" fill="url(#sync-glow)"/>
+
+  <!-- ============ Step 1: CLI writes PBIR ============ -->
+  <rect x="20" y="80" width="155" height="120" rx="10" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+  <!-- Step number -->
+  <circle cx="42" cy="100" r="12" fill="#58a6ff"/>
+  <text x="42" y="105" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="bold">1</text>
+  <text x="105" y="104" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#58a6ff" text-anchor="middle" font-weight="bold">CLI Writes</text>
+  <!-- File icon with pencil -->
+  <g transform="translate(60, 118)">
+    <rect x="0" y="0" width="36" height="44" rx="3" fill="none" stroke="#58a6ff" stroke-width="1.5"/>
+    <line x1="8" y1="12" x2="28" y2="12" stroke="#58a6ff" stroke-width="1" stroke-opacity="0.4"/>
+    <line x1="8" y1="20" x2="28" y2="20" stroke="#58a6ff" stroke-width="1" stroke-opacity="0.4"/>
+    <line x1="8" y1="28" x2="20" y2="28" stroke="#58a6ff" stroke-width="1" stroke-opacity="0.4"/>
+    <!-- Pencil -->
+    <line x1="30" y1="32" x2="42" y2="20" stroke="#06d6a0" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="42" cy="20" r="2" fill="#06d6a0"/>
+  </g>
+  <text x="97" y="180" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">page.json</text>
+  <text x="97" y="193" font-family="'Courier New', Courier, monospace" font-size="10" fill="#8b949e" text-anchor="middle">visual.json</text>
+
+  <!-- Arrow 1 > 2 -->
+  <line x1="180" y1="140" x2="205" y2="140" stroke="#F2C811" stroke-width="2"/>
+  <polygon points="210,140 203,135 203,145" fill="#F2C811"/>
+
+  <!-- ============ Step 2: Snapshot ============ -->
+  <rect x="215" y="80" width="155" height="120" rx="10" fill="#161b22" stroke="#F2C811" stroke-width="1.5"/>
+  <circle cx="237" cy="100" r="12" fill="#F2C811"/>
+  <text x="237" y="105" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="bold">2</text>
+  <text x="305" y="104" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#F2C811" text-anchor="middle" font-weight="bold">Snapshot</text>
+  <!-- Camera/snapshot icon -->
+  <g transform="translate(257, 118)">
+    <rect x="0" y="8" width="44" height="32" rx="4" fill="none" stroke="#F2C811" stroke-width="1.5"/>
+    <circle cx="22" cy="24" r="10" fill="none" stroke="#F2C811" stroke-width="1.5"/>
+    <circle cx="22" cy="24" r="4" fill="#F2C811" opacity="0.4"/>
+    <rect x="14" y="4" width="16" height="8" rx="2" fill="none" stroke="#F2C811" stroke-width="1"/>
+  </g>
+  <text x="292" y="180" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">Captures your</text>
+  <text x="292" y="193" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">PBIR changes</text>
+
+  <!-- Arrow 2 > 3 -->
+  <line x1="375" y1="140" x2="400" y2="140" stroke="#F2C811" stroke-width="2"/>
+  <polygon points="405,140 398,135 398,145" fill="#F2C811"/>
+
+  <!-- ============ Step 3: Desktop Saves ============ -->
+  <rect x="410" y="80" width="155" height="120" rx="10" fill="#161b22" stroke="#06d6a0" stroke-width="1.5"/>
+  <circle cx="432" cy="100" r="12" fill="#06d6a0"/>
+  <text x="432" y="105" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="bold">3</text>
+  <text x="503" y="104" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#06d6a0" text-anchor="middle" font-weight="bold">Desktop Saves</text>
+  <!-- Floppy/save icon with checkmark -->
+  <g transform="translate(453, 118)">
+    <rect x="0" y="0" width="40" height="40" rx="4" fill="none" stroke="#06d6a0" stroke-width="1.5"/>
+    <rect x="8" y="0" width="24" height="14" rx="2" fill="none" stroke="#06d6a0" stroke-width="1" stroke-opacity="0.5"/>
+    <rect x="6" y="24" width="28" height="14" rx="2" fill="#06d6a0" opacity="0.15"/>
+    <!-- Checkmark -->
+    <polyline points="12,32 18,38 30,26" fill="none" stroke="#06d6a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="487" y="180" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">Preserves your</text>
+  <text x="487" y="193" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#06d6a0" text-anchor="middle" font-weight="600">modeling work</text>
+
+  <!-- Arrow 3 > 4 -->
+  <line x1="570" y1="140" x2="595" y2="140" stroke="#F2C811" stroke-width="2"/>
+  <polygon points="600,140 593,135 593,145" fill="#F2C811"/>
+
+  <!-- ============ Step 4: Re-apply + Reopen ============ -->
+  <rect x="605" y="80" width="225" height="120" rx="10" fill="#161b22" stroke="#d97757" stroke-width="1.5"/>
+  <circle cx="627" cy="100" r="12" fill="#d97757"/>
+  <text x="627" y="105" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#0d1117" text-anchor="middle" font-weight="bold">4</text>
+  <text x="735" y="104" font-family="'Segoe UI', Arial, sans-serif" font-size="13" fill="#d97757" text-anchor="middle" font-weight="bold">Re-apply + Reopen</text>
+  <!-- Refresh/cycle icon -->
+  <g transform="translate(680, 118)">
+    <path d="M 20,2 A 18,18 0 1,1 2,20" fill="none" stroke="#d97757" stroke-width="2.5" stroke-linecap="round"/>
+    <polygon points="20,2 14,0 16,8" fill="#d97757"/>
+    <path d="M 20,38 A 18,18 0 1,1 38,20" fill="none" stroke="#06d6a0" stroke-width="2.5" stroke-linecap="round"/>
+    <polygon points="20,38 26,40 24,32" fill="#06d6a0"/>
+    <!-- Center PBI icon -->
+    <rect x="13" y="13" width="5" height="14" rx="1" fill="#F2C811" opacity="0.6"/>
+    <rect x="19" y="17" width="5" height="10" rx="1" fill="#F2C811" opacity="0.8"/>
+    <rect x="25" y="20" width="5" height="7" rx="1" fill="#F2C811"/>
+  </g>
+  <text x="717" y="180" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">Restores PBIR changes,</text>
+  <text x="717" y="193" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="#d97757" text-anchor="middle" font-weight="600">Desktop reopens fresh</text>
+
+  <!-- ============ Bottom: Before/After comparison ============ -->
+  <rect x="80" y="218" width="690" height="1" fill="url(#sync-glow)"/>
+
+  <!-- Before -->
+  <rect x="50" y="235" width="350" height="85" rx="8" fill="#161b22" stroke="#ff6b6b" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="225" y="258" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#ff6b6b" text-anchor="middle" font-weight="bold">Without Auto-Sync</text>
+  <text x="80" y="280" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#ff6b6b">&#x2717;</text>
+  <text x="98" y="280" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">Close Desktop manually after every change</text>
+  <text x="80" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#ff6b6b">&#x2717;</text>
+  <text x="98" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#8b949e">Risk losing unsaved modeling work</text>
+
+  <!-- After -->
+  <rect x="450" y="235" width="350" height="85" rx="8" fill="#161b22" stroke="#06d6a0" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="625" y="258" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0" text-anchor="middle" font-weight="bold">With Auto-Sync</text>
+  <text x="480" y="280" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0">&#x2713;</text>
+  <text x="498" y="280" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#e6edf3">Desktop reopens automatically</text>
+  <text x="480" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="14" fill="#06d6a0">&#x2713;</text>
+  <text x="498" y="300" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#e6edf3">All your work is preserved -- both layers</text>
+</svg>

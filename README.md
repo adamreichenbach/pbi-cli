@@ -168,6 +168,12 @@ After running `pbi connect`, Claude Code discovers **12 Power BI skills** automa
 - **Semantic Model layer** -- Direct in-process .NET interop from Python to Power BI Desktop via TOM/ADOMD. No MCP server, no external binaries, sub-second execution.
 - **Report layer** -- Reads and writes PBIR (Enhanced Report Format) JSON files directly. No connection needed. Works with `.pbip` projects.
 
+### Desktop Auto-Sync
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/auto-sync.svg" alt="Desktop Auto-Sync" width="850"/>
+</p>
+
 <details>
 <summary><b>Configuration details</b></summary>
 
