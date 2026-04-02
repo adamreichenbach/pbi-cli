@@ -29,11 +29,11 @@ def render_report(definition_path: Path) -> str:
         for page_dir in page_dirs:
             pages_html.append(_render_page(page_dir))
 
-    pages_content = "\n".join(pages_html) if pages_html else "<p class='empty'>No pages in report</p>"
-
-    return _HTML_TEMPLATE.replace("{{THEME}}", escape(theme)).replace(
-        "{{PAGES}}", pages_content
+    pages_content = (
+        "\n".join(pages_html) if pages_html else "<p class='empty'>No pages in report</p>"
     )
+
+    return _HTML_TEMPLATE.replace("{{THEME}}", escape(theme)).replace("{{PAGES}}", pages_content)
 
 
 def render_page(definition_path: Path, page_name: str) -> str:
@@ -218,7 +218,7 @@ def _render_visual_content(vtype: str, w: float, h: float, bindings: list[str]) 
         for i in range(num_bars):
             bar_h = body_h * (0.3 + 0.5 * ((i * 37 + 13) % 7) / 7)
             bars += (
-                f'<rect x="{i * bar_w * 2 + bar_w/2}" y="{body_h - bar_h}" '
+                f'<rect x="{i * bar_w * 2 + bar_w / 2}" y="{body_h - bar_h}" '
                 f'width="{bar_w}" height="{bar_h}" fill="#4472C4" opacity="0.7"/>'
             )
         return f'<svg class="chart-svg" viewBox="0 0 {w} {body_h}">{bars}</svg>'
@@ -230,7 +230,9 @@ def _render_visual_content(vtype: str, w: float, h: float, bindings: list[str]) 
             px = (w / (num_points - 1)) * i
             py = body_h * (0.2 + 0.6 * ((i * 47 + 23) % 11) / 11)
             points.append(f"{px},{py}")
-        polyline = f'<polyline points="{" ".join(points)}" fill="none" stroke="#ED7D31" stroke-width="3"/>'
+        polyline = (
+            f'<polyline points="{" ".join(points)}" fill="none" stroke="#ED7D31" stroke-width="3"/>'
+        )
         return f'<svg class="chart-svg" viewBox="0 0 {w} {body_h}">{polyline}</svg>'
 
     if vtype == "card":
@@ -286,13 +288,15 @@ def _get_page_order(definition_path: Path) -> list[str]:
         return []
     try:
         data = json.loads(pages_json.read_text(encoding="utf-8"))
-        return data.get("pageOrder", [])
+        order: list[str] = data.get("pageOrder", [])
+        return order
     except (json.JSONDecodeError, KeyError):
         return []
 
 
 def _read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 # ---------------------------------------------------------------------------

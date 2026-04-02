@@ -21,15 +21,19 @@ from pbi_cli.core.pbir_path import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-_REPORT_JSON = json.dumps({
-    "$schema": "https://developer.microsoft.com/json-schemas/"
-               "fabric/item/report/definition/report/1.0.0/schema.json"
-})
-_VERSION_JSON = json.dumps({
-    "$schema": "https://developer.microsoft.com/json-schemas/"
-               "fabric/item/report/definition/version/1.0.0/schema.json",
-    "version": "1.0.0",
-})
+_REPORT_JSON = json.dumps(
+    {
+        "$schema": "https://developer.microsoft.com/json-schemas/"
+        "fabric/item/report/definition/report/1.0.0/schema.json"
+    }
+)
+_VERSION_JSON = json.dumps(
+    {
+        "$schema": "https://developer.microsoft.com/json-schemas/"
+        "fabric/item/report/definition/version/1.0.0/schema.json",
+        "version": "1.0.0",
+    }
+)
 
 
 def scaffold_valid_pbir(root: Path, report_name: str = "MyReport") -> Path:

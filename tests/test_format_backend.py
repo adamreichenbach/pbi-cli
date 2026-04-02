@@ -158,9 +158,7 @@ def report_with_visual(tmp_path: Path) -> Path:
 
 
 def _read_visual(definition: Path) -> dict[str, Any]:
-    path = (
-        definition / "pages" / PAGE_NAME / "visuals" / VISUAL_NAME / "visual.json"
-    )
+    path = definition / "pages" / PAGE_NAME / "visuals" / VISUAL_NAME / "visual.json"
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -216,9 +214,7 @@ def test_format_background_gradient_correct_structure(report_with_visual: Path) 
 
     data = _read_visual(report_with_visual)
     entry = data["visual"]["objects"]["values"][0]
-    fill_rule_expr = (
-        entry["properties"]["backColor"]["solid"]["color"]["expr"]["FillRule"]
-    )
+    fill_rule_expr = entry["properties"]["backColor"]["solid"]["color"]["expr"]["FillRule"]
     assert "linearGradient2" in fill_rule_expr["FillRule"]
     linear = fill_rule_expr["FillRule"]["linearGradient2"]
     assert "min" in linear
@@ -511,7 +507,9 @@ FIELD_UNITS = "Sum(financials.Units Sold)"
 def test_format_background_conditional_adds_entry(report_with_visual: Path) -> None:
     """format_background_conditional creates an entry in objects.values."""
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
         input_table="financials",
         input_column="Units Sold",
         threshold=100000,
@@ -527,7 +525,9 @@ def test_format_background_conditional_adds_entry(report_with_visual: Path) -> N
 def test_format_background_conditional_correct_structure(report_with_visual: Path) -> None:
     """Conditional entry has Conditional.Cases with ComparisonKind and color."""
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
         input_table="financials",
         input_column="Units Sold",
         threshold=100000,
@@ -549,7 +549,9 @@ def test_format_background_conditional_correct_structure(report_with_visual: Pat
 def test_format_background_conditional_selector_metadata(report_with_visual: Path) -> None:
     """Conditional entry selector.metadata equals the supplied field_query_ref."""
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
         input_table="financials",
         input_column="Units Sold",
         threshold=100000,
@@ -567,7 +569,9 @@ def test_format_background_conditional_default_field_query_ref(
 ) -> None:
     """When field_query_ref is omitted, it defaults to 'Sum(table.column)'."""
     result = format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
         input_table="financials",
         input_column="Units Sold",
         threshold=100000,
@@ -580,15 +584,23 @@ def test_format_background_conditional_default_field_query_ref(
 def test_format_background_conditional_replaces_existing(report_with_visual: Path) -> None:
     """Applying conditional twice on same field_query_ref replaces the entry."""
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
-        input_table="financials", input_column="Units Sold",
-        threshold=100000, color_hex="#FF0000",
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
+        input_table="financials",
+        input_column="Units Sold",
+        threshold=100000,
+        color_hex="#FF0000",
         field_query_ref=FIELD_UNITS,
     )
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
-        input_table="financials", input_column="Units Sold",
-        threshold=50000, color_hex="#00FF00",
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
+        input_table="financials",
+        input_column="Units Sold",
+        threshold=50000,
+        color_hex="#00FF00",
         field_query_ref=FIELD_UNITS,
     )
 
@@ -602,19 +614,22 @@ def test_format_background_conditional_replaces_existing(report_with_visual: Pat
 def test_format_background_conditional_comparison_lte(report_with_visual: Path) -> None:
     """comparison='lte' maps to ComparisonKind=5."""
     format_background_conditional(
-        report_with_visual, PAGE_NAME, VISUAL_NAME,
-        input_table="financials", input_column="Units Sold",
-        threshold=10000, color_hex="#AABBCC",
+        report_with_visual,
+        PAGE_NAME,
+        VISUAL_NAME,
+        input_table="financials",
+        input_column="Units Sold",
+        threshold=10000,
+        color_hex="#AABBCC",
         comparison="lte",
         field_query_ref=FIELD_UNITS,
     )
 
     data = _read_visual(report_with_visual)
     entry = data["visual"]["objects"]["values"][0]
-    kind = (
-        entry["properties"]["backColor"]["solid"]["color"]["expr"]
-        ["Conditional"]["Cases"][0]["Condition"]["Comparison"]["ComparisonKind"]
-    )
+    kind = entry["properties"]["backColor"]["solid"]["color"]["expr"]["Conditional"]["Cases"][0][
+        "Condition"
+    ]["Comparison"]["ComparisonKind"]
     assert kind == 5  # lte
 
 
@@ -624,8 +639,12 @@ def test_format_background_conditional_invalid_comparison(
     """An unknown comparison string raises PbiCliError."""
     with pytest.raises(PbiCliError):
         format_background_conditional(
-            report_with_visual, PAGE_NAME, VISUAL_NAME,
-            input_table="financials", input_column="Units Sold",
-            threshold=100, color_hex="#000000",
+            report_with_visual,
+            PAGE_NAME,
+            VISUAL_NAME,
+            input_table="financials",
+            input_column="Units Sold",
+            threshold=100,
+            color_hex="#000000",
             comparison="between",
         )

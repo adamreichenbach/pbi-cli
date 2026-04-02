@@ -94,3 +94,11 @@ strict = true
 [[tool.mypy.overrides]]
 module = ["pythonnet", "clr", "clr_loader"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["win32gui", "win32con", "win32api", "win32process", "win32com.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["websockets", "websockets.*"]
+ignore_missing_imports = true

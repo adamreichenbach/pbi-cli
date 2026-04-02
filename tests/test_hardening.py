@@ -27,26 +27,35 @@ def report_with_page(tmp_path: Path) -> Path:
     defn = tmp_path / "Test.Report" / "definition"
     defn.mkdir(parents=True)
     _write(defn / "version.json", {"$schema": "...", "version": "2.0.0"})
-    _write(defn / "report.json", {
-        "$schema": "...",
-        "themeCollection": {"baseTheme": {"name": "CY24SU06"}},
-        "layoutOptimization": "None",
-    })
-    _write(defn / "pages" / "pages.json", {
-        "$schema": "...",
-        "pageOrder": ["test_page"],
-        "activePageName": "test_page",
-    })
+    _write(
+        defn / "report.json",
+        {
+            "$schema": "...",
+            "themeCollection": {"baseTheme": {"name": "CY24SU06"}},
+            "layoutOptimization": "None",
+        },
+    )
+    _write(
+        defn / "pages" / "pages.json",
+        {
+            "$schema": "...",
+            "pageOrder": ["test_page"],
+            "activePageName": "test_page",
+        },
+    )
     page_dir = defn / "pages" / "test_page"
     page_dir.mkdir(parents=True)
-    _write(page_dir / "page.json", {
-        "$schema": "...",
-        "name": "test_page",
-        "displayName": "Test Page",
-        "displayOption": "FitToPage",
-        "width": 1280,
-        "height": 720,
-    })
+    _write(
+        page_dir / "page.json",
+        {
+            "$schema": "...",
+            "name": "test_page",
+            "displayName": "Test Page",
+            "displayOption": "FitToPage",
+            "width": 1280,
+            "height": 720,
+        },
+    )
     (page_dir / "visuals").mkdir()
     return defn
 
@@ -55,12 +64,15 @@ def report_with_page(tmp_path: Path) -> Path:
 # Fix #1: Measure detection via role heuristic
 # ---------------------------------------------------------------------------
 
+
 class TestMeasureDetection:
     def test_value_role_creates_measure_ref(self, report_with_page: Path) -> None:
         """--value bindings should produce Measure references, not Column."""
         visual_add(report_with_page, "test_page", "bar_chart", name="chart1")
         visual_bind(
-            report_with_page, "test_page", "chart1",
+            report_with_page,
+            "test_page",
+            "chart1",
             bindings=[{"role": "value", "field": "Sales[Amount]"}],
         )
         vfile = report_with_page / "pages" / "test_page" / "visuals" / "chart1" / "visual.json"
@@ -73,7 +85,9 @@ class TestMeasureDetection:
         """--category bindings should produce Column references."""
         visual_add(report_with_page, "test_page", "bar_chart", name="chart2")
         visual_bind(
-            report_with_page, "test_page", "chart2",
+            report_with_page,
+            "test_page",
+            "chart2",
             bindings=[{"role": "category", "field": "Date[Year]"}],
         )
         vfile = report_with_page / "pages" / "test_page" / "visuals" / "chart2" / "visual.json"
@@ -86,7 +100,9 @@ class TestMeasureDetection:
         """--field on card should be a Measure (Values role is the correct Desktop key)."""
         visual_add(report_with_page, "test_page", "card", name="card1")
         visual_bind(
-            report_with_page, "test_page", "card1",
+            report_with_page,
+            "test_page",
+            "card1",
             bindings=[{"role": "field", "field": "Sales[Revenue]"}],
         )
         vfile = report_with_page / "pages" / "test_page" / "visuals" / "card1" / "visual.json"
@@ -98,7 +114,9 @@ class TestMeasureDetection:
         """Explicit measure=True forces Measure even on category role."""
         visual_add(report_with_page, "test_page", "bar_chart", name="chart3")
         visual_bind(
-            report_with_page, "test_page", "chart3",
+            report_with_page,
+            "test_page",
+            "chart3",
             bindings=[{"role": "category", "field": "Sales[Calc]", "measure": True}],
         )
         vfile = report_with_page / "pages" / "test_page" / "visuals" / "chart3" / "visual.json"
@@ -111,6 +129,7 @@ class TestMeasureDetection:
 # Fix #2: visual_bind merges with existing bindings
 # ---------------------------------------------------------------------------
 
+
 class TestBindMerge:
     def test_second_bind_preserves_first(self, report_with_page: Path) -> None:
         """Calling bind twice should keep all bindings."""
@@ -118,13 +137,17 @@ class TestBindMerge:
 
         # First bind: category
         visual_bind(
-            report_with_page, "test_page", "merged",
+            report_with_page,
+            "test_page",
+            "merged",
             bindings=[{"role": "category", "field": "Date[Year]"}],
         )
 
         # Second bind: value
         visual_bind(
-            report_with_page, "test_page", "merged",
+            report_with_page,
+            "test_page",
+            "merged",
             bindings=[{"role": "value", "field": "Sales[Amount]"}],
         )
 
@@ -150,12 +173,15 @@ class TestBindMerge:
 # Fix #3: Table names with spaces
 # ---------------------------------------------------------------------------
 
+
 class TestFieldRefParsing:
     def test_table_with_spaces(self, report_with_page: Path) -> None:
         """Table[Column] notation should work with spaces in table name."""
         visual_add(report_with_page, "test_page", "bar_chart", name="spaces")
         result = visual_bind(
-            report_with_page, "test_page", "spaces",
+            report_with_page,
+            "test_page",
+            "spaces",
             bindings=[{"role": "category", "field": "Sales Table[Region Name]"}],
         )
         assert result["bindings"][0]["query_ref"] == "Sales Table.Region Name"
@@ -164,7 +190,9 @@ class TestFieldRefParsing:
         """Standard Table[Column] still works."""
         visual_add(report_with_page, "test_page", "bar_chart", name="simple")
         result = visual_bind(
-            report_with_page, "test_page", "simple",
+            report_with_page,
+            "test_page",
+            "simple",
             bindings=[{"role": "category", "field": "Date[Year]"}],
         )
         assert result["bindings"][0]["query_ref"] == "Date.Year"
@@ -174,7 +202,9 @@ class TestFieldRefParsing:
         visual_add(report_with_page, "test_page", "card", name="bad")
         with pytest.raises(PbiCliError, match="Table\\[Column\\]"):
             visual_bind(
-                report_with_page, "test_page", "bad",
+                report_with_page,
+                "test_page",
+                "bad",
                 bindings=[{"role": "field", "field": "JustAName"}],
             )
 
@@ -182,6 +212,7 @@ class TestFieldRefParsing:
 # ---------------------------------------------------------------------------
 # Fix #4: _find_from_pbip guard
 # ---------------------------------------------------------------------------
+
 
 class TestPbipGuard:
     def test_nonexistent_dir_returns_none(self, tmp_path: Path) -> None:
@@ -198,6 +229,7 @@ class TestPbipGuard:
 # ---------------------------------------------------------------------------
 # Fix #9: report_convert overwrite guard
 # ---------------------------------------------------------------------------
+
 
 class TestConvertGuard:
     def test_convert_blocks_overwrite(self, tmp_path: Path) -> None:

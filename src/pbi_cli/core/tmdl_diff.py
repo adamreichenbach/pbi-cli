@@ -128,9 +128,7 @@ def _list_tmdl_names(tables_dir: Path) -> set[str]:
     return {p.stem for p in tables_dir.glob("*.tmdl")}
 
 
-def _diff_table_entities(
-    base_text: str, head_text: str
-) -> dict[str, list[str]]:
+def _diff_table_entities(base_text: str, head_text: str) -> dict[str, list[str]]:
     """Compare entity blocks within two table TMDL files."""
     base_entities = _parse_table_entities(base_text)
     head_entities = _parse_table_entities(head_text)
@@ -226,7 +224,7 @@ def _extract_entity_name(keyword: str, declaration: str) -> str:
     # e.g. "measure 'Total Revenue' = ..."  -> "Total Revenue"
     # e.g. "column ProductID"               -> "ProductID"
     # e.g. "partition Sales = m"            -> "Sales"
-    rest = declaration[len(keyword):].strip()
+    rest = declaration[len(keyword) :].strip()
     if rest.startswith("'"):
         end = rest.find("'", 1)
         return rest[1:end] if end > 0 else rest[1:]

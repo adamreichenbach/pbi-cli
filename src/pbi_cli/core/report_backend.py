@@ -34,7 +34,8 @@ from pbi_cli.core.pbir_path import (
 
 def _read_json(path: Path) -> dict[str, Any]:
     """Read and parse a JSON file."""
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -76,12 +77,14 @@ def report_info(definition_path: Path) -> dict[str, Any]:
                         for v in visuals_dir.iterdir()
                         if v.is_dir() and (v / "visual.json").exists()
                     )
-                pages.append({
-                    "name": page_data.get("name", page_dir.name),
-                    "display_name": page_data.get("displayName", ""),
-                    "ordinal": page_data.get("ordinal", 0),
-                    "visual_count": visual_count,
-                })
+                pages.append(
+                    {
+                        "name": page_data.get("name", page_dir.name),
+                        "display_name": page_data.get("displayName", ""),
+                        "ordinal": page_data.get("ordinal", 0),
+                        "visual_count": visual_count,
+                    }
+                )
 
     theme = report_data.get("themeCollection", {}).get("baseTheme", {})
 
@@ -115,39 +118,48 @@ def report_create(
     pages_dir.mkdir(parents=True, exist_ok=True)
 
     # version.json
-    _write_json(definition_dir / "version.json", {
-        "$schema": SCHEMA_VERSION,
-        "version": "2.0.0",
-    })
+    _write_json(
+        definition_dir / "version.json",
+        {
+            "$schema": SCHEMA_VERSION,
+            "version": "2.0.0",
+        },
+    )
 
     # report.json (matches Desktop defaults)
-    _write_json(definition_dir / "report.json", {
-        "$schema": SCHEMA_REPORT,
-        "themeCollection": {
-            "baseTheme": dict(DEFAULT_BASE_THEME),
+    _write_json(
+        definition_dir / "report.json",
+        {
+            "$schema": SCHEMA_REPORT,
+            "themeCollection": {
+                "baseTheme": dict(DEFAULT_BASE_THEME),
+            },
+            "layoutOptimization": "None",
+            "settings": {
+                "useStylableVisualContainerHeader": True,
+                "defaultDrillFilterOtherVisuals": True,
+                "allowChangeFilterTypes": True,
+                "useEnhancedTooltips": True,
+                "useDefaultAggregateDisplayName": True,
+            },
+            "slowDataSourceSettings": {
+                "isCrossHighlightingDisabled": False,
+                "isSlicerSelectionsButtonEnabled": False,
+                "isFilterSelectionsButtonEnabled": False,
+                "isFieldWellButtonEnabled": False,
+                "isApplyAllButtonEnabled": False,
+            },
         },
-        "layoutOptimization": "None",
-        "settings": {
-            "useStylableVisualContainerHeader": True,
-            "defaultDrillFilterOtherVisuals": True,
-            "allowChangeFilterTypes": True,
-            "useEnhancedTooltips": True,
-            "useDefaultAggregateDisplayName": True,
-        },
-        "slowDataSourceSettings": {
-            "isCrossHighlightingDisabled": False,
-            "isSlicerSelectionsButtonEnabled": False,
-            "isFilterSelectionsButtonEnabled": False,
-            "isFieldWellButtonEnabled": False,
-            "isApplyAllButtonEnabled": False,
-        },
-    })
+    )
 
     # pages.json (empty page order)
-    _write_json(definition_dir / "pages" / "pages.json", {
-        "$schema": SCHEMA_PAGES_METADATA,
-        "pageOrder": [],
-    })
+    _write_json(
+        definition_dir / "pages" / "pages.json",
+        {
+            "$schema": SCHEMA_PAGES_METADATA,
+            "pageOrder": [],
+        },
+    )
 
     # Scaffold a blank semantic model if no dataset path provided
     if not dataset_path:
@@ -155,38 +167,47 @@ def report_create(
         _scaffold_blank_semantic_model(target_path, name)
 
     # definition.pbir (datasetReference is REQUIRED by Desktop)
-    _write_json(report_folder / "definition.pbir", {
-        "version": "4.0",
-        "datasetReference": {
-            "byPath": {"path": dataset_path},
+    _write_json(
+        report_folder / "definition.pbir",
+        {
+            "version": "4.0",
+            "datasetReference": {
+                "byPath": {"path": dataset_path},
+            },
         },
-    })
+    )
 
     # .platform file for the report
-    _write_json(report_folder / ".platform", {
-        "$schema": (
-            "https://developer.microsoft.com/json-schemas/"
-            "fabric/gitIntegration/platformProperties/2.0.0/schema.json"
-        ),
-        "metadata": {
-            "type": "Report",
-            "displayName": name,
+    _write_json(
+        report_folder / ".platform",
+        {
+            "$schema": (
+                "https://developer.microsoft.com/json-schemas/"
+                "fabric/gitIntegration/platformProperties/2.0.0/schema.json"
+            ),
+            "metadata": {
+                "type": "Report",
+                "displayName": name,
+            },
+            "config": {
+                "version": "2.0",
+                "logicalId": "00000000-0000-0000-0000-000000000000",
+            },
         },
-        "config": {
-            "version": "2.0",
-            "logicalId": "00000000-0000-0000-0000-000000000000",
-        },
-    })
+    )
 
     # .pbip project file
-    _write_json(target_path / f"{name}.pbip", {
-        "version": "1.0",
-        "artifacts": [
-            {
-                "report": {"path": f"{name}.Report"},
-            }
-        ],
-    })
+    _write_json(
+        target_path / f"{name}.pbip",
+        {
+            "version": "1.0",
+            "artifacts": [
+                {
+                    "report": {"path": f"{name}.Report"},
+                }
+            ],
+        },
+    )
 
     return {
         "status": "created",
@@ -236,9 +257,7 @@ def report_validate(definition_path: Path) -> dict[str, Any]:
                     pdata = _read_json(page_json)
                     for req in ("name", "displayName", "displayOption"):
                         if req not in pdata:
-                            errors.append(
-                                f"Page '{page_dir.name}' missing required '{req}'"
-                            )
+                            errors.append(f"Page '{page_dir.name}' missing required '{req}'")
                 except json.JSONDecodeError:
                     pass
 
@@ -281,21 +300,21 @@ def page_list(definition_path: Path) -> list[dict[str, Any]]:
         visuals_dir = page_dir / "visuals"
         if visuals_dir.is_dir():
             visual_count = sum(
-                1
-                for v in visuals_dir.iterdir()
-                if v.is_dir() and (v / "visual.json").exists()
+                1 for v in visuals_dir.iterdir() if v.is_dir() and (v / "visual.json").exists()
             )
-        results.append({
-            "name": data.get("name", page_dir.name),
-            "display_name": data.get("displayName", ""),
-            "ordinal": data.get("ordinal", 0),
-            "width": data.get("width", 1280),
-            "height": data.get("height", 720),
-            "display_option": data.get("displayOption", "FitToPage"),
-            "visual_count": visual_count,
-            "is_hidden": data.get("visibility") == "HiddenInViewMode",
-            "page_type": data.get("type", "Default"),
-        })
+        results.append(
+            {
+                "name": data.get("name", page_dir.name),
+                "display_name": data.get("displayName", ""),
+                "ordinal": data.get("ordinal", 0),
+                "width": data.get("width", 1280),
+                "height": data.get("height", 720),
+                "display_option": data.get("displayOption", "FitToPage"),
+                "visual_count": visual_count,
+                "is_hidden": data.get("visibility") == "HiddenInViewMode",
+                "page_type": data.get("type", "Default"),
+            }
+        )
 
     # Sort by page order if available, then by ordinal
     if page_order:
@@ -327,14 +346,17 @@ def page_add(
     (page_dir / "visuals").mkdir()
 
     # Write page.json (no ordinal - Desktop uses pages.json pageOrder instead)
-    _write_json(page_dir / "page.json", {
-        "$schema": SCHEMA_PAGE,
-        "name": page_name,
-        "displayName": display_name,
-        "displayOption": display_option,
-        "height": height,
-        "width": width,
-    })
+    _write_json(
+        page_dir / "page.json",
+        {
+            "$schema": SCHEMA_PAGE,
+            "name": page_name,
+            "displayName": display_name,
+            "displayOption": display_option,
+            "height": height,
+            "width": width,
+        },
+    )
 
     # Update pages.json
     _update_page_order(definition_path, page_name, action="add")
@@ -375,9 +397,7 @@ def page_get(definition_path: Path, page_name: str) -> dict[str, Any]:
     visuals_dir = page_dir / "visuals"
     if visuals_dir.is_dir():
         visual_count = sum(
-            1
-            for v in visuals_dir.iterdir()
-            if v.is_dir() and (v / "visual.json").exists()
+            1 for v in visuals_dir.iterdir() if v.is_dir() and (v / "visual.json").exists()
         )
 
     return {
@@ -407,9 +427,7 @@ def page_set_background(
     The color must be a hex string, e.g. ``'#F8F9FA'``.
     """
     if not re.fullmatch(r"#[0-9A-Fa-f]{3,8}", color):
-        raise PbiCliError(
-            f"Invalid color '{color}' -- expected hex format like '#F8F9FA'."
-        )
+        raise PbiCliError(f"Invalid color '{color}' -- expected hex format like '#F8F9FA'.")
 
     page_dir = get_page_dir(definition_path, page_name)
     page_json_path = page_dir / "page.json"
@@ -419,15 +437,7 @@ def page_set_background(
     page_data = _read_json(page_json_path)
     background_entry = {
         "properties": {
-            "color": {
-                "solid": {
-                    "color": {
-                        "expr": {
-                            "Literal": {"Value": f"'{color}'"}
-                        }
-                    }
-                }
-            }
+            "color": {"solid": {"color": {"expr": {"Literal": {"Value": f"'{color}'"}}}}}
         }
     }
     objects = {**page_data.get("objects", {}), "background": [background_entry]}
@@ -464,9 +474,7 @@ def page_set_visibility(
 # ---------------------------------------------------------------------------
 
 
-def theme_set(
-    definition_path: Path, theme_path: Path
-) -> dict[str, Any]:
+def theme_set(definition_path: Path, theme_path: Path) -> dict[str, Any]:
     """Apply a custom theme JSON to the report."""
     if not theme_path.exists():
         raise PbiCliError(f"Theme file not found: {theme_path}")
@@ -489,9 +497,7 @@ def theme_set(
     resources_dir = report_folder / "StaticResources" / "RegisteredResources"
     resources_dir.mkdir(parents=True, exist_ok=True)
     theme_dest = resources_dir / theme_path.name
-    theme_dest.write_text(
-        theme_path.read_text(encoding="utf-8"), encoding="utf-8"
-    )
+    theme_dest.write_text(theme_path.read_text(encoding="utf-8"), encoding="utf-8")
 
     # Update resource packages in report.json
     resource_packages = report_data.get("resourcePackages", [])
@@ -513,15 +519,19 @@ def theme_set(
             break
 
     if not found:
-        resource_packages.append({
-            "name": "RegisteredResources",
-            "type": "RegisteredResources",
-            "items": [{
-                "name": theme_path.name,
-                "type": 202,
-                "path": f"BaseThemes/{theme_path.name}",
-            }],
-        })
+        resource_packages.append(
+            {
+                "name": "RegisteredResources",
+                "type": "RegisteredResources",
+                "items": [
+                    {
+                        "name": theme_path.name,
+                        "type": 202,
+                        "path": f"BaseThemes/{theme_path.name}",
+                    }
+                ],
+            }
+        )
     report_data["resourcePackages"] = resource_packages
 
     _write_json(report_json_path, report_data)
@@ -670,8 +680,7 @@ def report_convert(
 
     if report_folder is None:
         raise PbiCliError(
-            f"No .Report folder found in '{source_path}'. "
-            "Expected a folder ending in .Report."
+            f"No .Report folder found in '{source_path}'. Expected a folder ending in .Report."
         )
 
     name = report_folder.name.replace(".Report", "")
@@ -680,26 +689,22 @@ def report_convert(
     # Create .pbip file
     pbip_path = target / f"{name}.pbip"
     if pbip_path.exists() and not force:
-        raise PbiCliError(
-            f".pbip file already exists at '{pbip_path}'. Use --force to overwrite."
-        )
-    _write_json(pbip_path, {
-        "version": "1.0",
-        "artifacts": [
-            {"report": {"path": f"{name}.Report"}},
-        ],
-    })
+        raise PbiCliError(f".pbip file already exists at '{pbip_path}'. Use --force to overwrite.")
+    _write_json(
+        pbip_path,
+        {
+            "version": "1.0",
+            "artifacts": [
+                {"report": {"path": f"{name}.Report"}},
+            ],
+        },
+    )
 
     # Create .gitignore if not present
     gitignore = target / ".gitignore"
     gitignore_created = not gitignore.exists()
     if gitignore_created:
-        gitignore_content = (
-            "# Power BI local settings\n"
-            ".pbi/\n"
-            "*.pbix\n"
-            "*.bak\n"
-        )
+        gitignore_content = "# Power BI local settings\n.pbi/\n*.pbix\n*.bak\n"
         gitignore.write_text(gitignore_content, encoding="utf-8")
 
     # Validate the definition.pbir exists
@@ -728,38 +733,40 @@ def _scaffold_blank_semantic_model(target_path: Path, name: str) -> None:
 
     # model.tmdl (minimal valid TMDL)
     (defn_dir / "model.tmdl").write_text(
-        "model Model\n"
-        "  culture: en-US\n"
-        "  defaultPowerBIDataSourceVersion: powerBI_V3\n",
+        "model Model\n  culture: en-US\n  defaultPowerBIDataSourceVersion: powerBI_V3\n",
         encoding="utf-8",
     )
 
     # .platform file (required by Desktop)
-    _write_json(model_dir / ".platform", {
-        "$schema": (
-            "https://developer.microsoft.com/json-schemas/"
-            "fabric/gitIntegration/platformProperties/2.0.0/schema.json"
-        ),
-        "metadata": {
-            "type": "SemanticModel",
-            "displayName": name,
+    _write_json(
+        model_dir / ".platform",
+        {
+            "$schema": (
+                "https://developer.microsoft.com/json-schemas/"
+                "fabric/gitIntegration/platformProperties/2.0.0/schema.json"
+            ),
+            "metadata": {
+                "type": "SemanticModel",
+                "displayName": name,
+            },
+            "config": {
+                "version": "2.0",
+                "logicalId": "00000000-0000-0000-0000-000000000000",
+            },
         },
-        "config": {
-            "version": "2.0",
-            "logicalId": "00000000-0000-0000-0000-000000000000",
-        },
-    })
+    )
 
     # definition.pbism (matches Desktop format)
-    _write_json(model_dir / "definition.pbism", {
-        "version": "4.1",
-        "settings": {},
-    })
+    _write_json(
+        model_dir / "definition.pbism",
+        {
+            "version": "4.1",
+            "settings": {},
+        },
+    )
 
 
-def _update_page_order(
-    definition_path: Path, page_name: str, action: str
-) -> None:
+def _update_page_order(definition_path: Path, page_name: str, action: str) -> None:
     """Update pages.json with page add/remove."""
     pages_meta_path = definition_path / "pages" / "pages.json"
 

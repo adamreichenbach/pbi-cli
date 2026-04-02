@@ -39,46 +39,48 @@ SCHEMA_BOOKMARK = (
 
 # -- Visual type identifiers ------------------------------------------------
 
-SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset({
-    # Original 9
-    "barChart",
-    "lineChart",
-    "card",
-    "pivotTable",
-    "tableEx",
-    "slicer",
-    "kpi",
-    "gauge",
-    "donutChart",
-    # v3.1.0 additions
-    "columnChart",
-    "areaChart",
-    "ribbonChart",
-    "waterfallChart",
-    "scatterChart",
-    "funnelChart",
-    "multiRowCard",
-    "treemap",
-    "cardNew",
-    "stackedBarChart",
-    "lineStackedColumnComboChart",
-    # v3.4.0 additions
-    "cardVisual",
-    "actionButton",
-    # v3.5.0 additions (confirmed from HR Analysis Desktop export)
-    "clusteredColumnChart",
-    "clusteredBarChart",
-    "textSlicer",
-    "listSlicer",
-    # v3.6.0 additions (confirmed from HR Analysis Desktop export)
-    "image",
-    "shape",
-    "textbox",
-    "pageNavigator",
-    "advancedSlicerVisual",
-    # v3.8.0 additions
-    "azureMap",
-})
+SUPPORTED_VISUAL_TYPES: frozenset[str] = frozenset(
+    {
+        # Original 9
+        "barChart",
+        "lineChart",
+        "card",
+        "pivotTable",
+        "tableEx",
+        "slicer",
+        "kpi",
+        "gauge",
+        "donutChart",
+        # v3.1.0 additions
+        "columnChart",
+        "areaChart",
+        "ribbonChart",
+        "waterfallChart",
+        "scatterChart",
+        "funnelChart",
+        "multiRowCard",
+        "treemap",
+        "cardNew",
+        "stackedBarChart",
+        "lineStackedColumnComboChart",
+        # v3.4.0 additions
+        "cardVisual",
+        "actionButton",
+        # v3.5.0 additions (confirmed from HR Analysis Desktop export)
+        "clusteredColumnChart",
+        "clusteredBarChart",
+        "textSlicer",
+        "listSlicer",
+        # v3.6.0 additions (confirmed from HR Analysis Desktop export)
+        "image",
+        "shape",
+        "textbox",
+        "pageNavigator",
+        "advancedSlicerVisual",
+        # v3.8.0 additions
+        "azureMap",
+    }
+)
 
 # Mapping from user-friendly names to PBIR visualType identifiers
 VISUAL_TYPE_ALIASES: dict[str, str] = {

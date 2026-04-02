@@ -27,7 +27,7 @@ def start_preview_server(
     """
     # Check for websockets dependency
     try:
-        import websockets  # type: ignore[import-untyped]
+        import websockets
     except ImportError:
         return {
             "status": "error",

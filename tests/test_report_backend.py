@@ -87,15 +87,18 @@ def _make_page(
     page_dir = pages_dir / page_name
     page_dir.mkdir(parents=True, exist_ok=True)
 
-    _write(page_dir / "page.json", {
-        "$schema": _SCHEMA_PAGE,
-        "name": page_name,
-        "displayName": display_name,
-        "displayOption": "FitToPage",
-        "width": 1280,
-        "height": 720,
-        "ordinal": ordinal,
-    })
+    _write(
+        page_dir / "page.json",
+        {
+            "$schema": _SCHEMA_PAGE,
+            "name": page_name,
+            "displayName": display_name,
+            "displayOption": "FitToPage",
+            "width": 1280,
+            "height": 720,
+            "ordinal": ordinal,
+        },
+    )
 
     visuals_dir = page_dir / "visuals"
     visuals_dir.mkdir(exist_ok=True)
@@ -103,22 +106,25 @@ def _make_page(
     if with_visual:
         visual_dir = visuals_dir / "visual_def456"
         visual_dir.mkdir()
-        _write(visual_dir / "visual.json", {
-            "$schema": _SCHEMA_VISUAL_CONTAINER,
-            "name": "vis1",
-            "position": {"x": 50, "y": 50, "width": 400, "height": 300, "z": 0, "tabOrder": 0},
-            "visual": {
-                "$schema": _SCHEMA_VISUAL_CONFIG,
-                "visualType": "barChart",
-                "query": {
-                    "queryState": {
-                        "Category": {"projections": []},
-                        "Y": {"projections": []},
+        _write(
+            visual_dir / "visual.json",
+            {
+                "$schema": _SCHEMA_VISUAL_CONTAINER,
+                "name": "vis1",
+                "position": {"x": 50, "y": 50, "width": 400, "height": 300, "z": 0, "tabOrder": 0},
+                "visual": {
+                    "$schema": _SCHEMA_VISUAL_CONFIG,
+                    "visualType": "barChart",
+                    "query": {
+                        "queryState": {
+                            "Category": {"projections": []},
+                            "Y": {"projections": []},
+                        },
                     },
+                    "objects": {},
                 },
-                "objects": {},
             },
-        })
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -151,38 +157,50 @@ def sample_report(tmp_path: Path) -> Path:
     pages_dir.mkdir(parents=True)
 
     # version.json
-    _write(definition_dir / "version.json", {
-        "$schema": _SCHEMA_VERSION,
-        "version": "1.0.0",
-    })
+    _write(
+        definition_dir / "version.json",
+        {
+            "$schema": _SCHEMA_VERSION,
+            "version": "1.0.0",
+        },
+    )
 
     # report.json
-    _write(definition_dir / "report.json", {
-        "$schema": _SCHEMA_REPORT,
-        "themeCollection": {
-            "baseTheme": {
-                "name": "CY24SU06",
-                "reportVersionAtImport": "5.55",
-                "type": "SharedResources",
+    _write(
+        definition_dir / "report.json",
+        {
+            "$schema": _SCHEMA_REPORT,
+            "themeCollection": {
+                "baseTheme": {
+                    "name": "CY24SU06",
+                    "reportVersionAtImport": "5.55",
+                    "type": "SharedResources",
+                },
             },
+            "layoutOptimization": "Disabled",
         },
-        "layoutOptimization": "Disabled",
-    })
+    )
 
     # pages.json
-    _write(pages_dir / "pages.json", {
-        "$schema": _SCHEMA_PAGES_METADATA,
-        "pageOrder": ["page1"],
-    })
+    _write(
+        pages_dir / "pages.json",
+        {
+            "$schema": _SCHEMA_PAGES_METADATA,
+            "pageOrder": ["page1"],
+        },
+    )
 
     # definition.pbir
-    _write(report_folder / "definition.pbir", {
-        "$schema": (
-            "https://developer.microsoft.com/json-schemas/"
-            "fabric/item/report/definitionProperties/2.0.0/schema.json"
-        ),
-        "version": "4.0",
-    })
+    _write(
+        report_folder / "definition.pbir",
+        {
+            "$schema": (
+                "https://developer.microsoft.com/json-schemas/"
+                "fabric/item/report/definitionProperties/2.0.0/schema.json"
+            ),
+            "version": "4.0",
+        },
+    )
 
     # Page with one visual
     _make_page(pages_dir, "page1", "Page One", ordinal=0, with_visual=True)
@@ -227,15 +245,20 @@ class TestReportInfo:
         """A report with no pages directory returns zero counts."""
         definition_dir = tmp_path / "Empty.Report" / "definition"
         definition_dir.mkdir(parents=True)
-        _write(definition_dir / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "themeCollection": {
-                "baseTheme": {
-                    "name": "CY24SU06", "reportVersionAtImport": "5.55", "type": "SharedResources"
+        _write(
+            definition_dir / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "themeCollection": {
+                    "baseTheme": {
+                        "name": "CY24SU06",
+                        "reportVersionAtImport": "5.55",
+                        "type": "SharedResources",
+                    },
                 },
+                "layoutOptimization": "Disabled",
             },
-            "layoutOptimization": "Disabled",
-        })
+        )
 
         result = report_info(definition_dir)
         assert result["page_count"] == 0
@@ -261,10 +284,13 @@ class TestReportInfo:
         """Returns 'Default' when themeCollection is absent from report.json."""
         definition_dir = tmp_path / "Bare.Report" / "definition"
         definition_dir.mkdir(parents=True)
-        _write(definition_dir / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            definition_dir / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "layoutOptimization": "Disabled",
+            },
+        )
 
         result = report_info(definition_dir)
         assert result["theme"] == "Default"
@@ -319,8 +345,7 @@ class TestReportCreate:
         data = _read(pbip_file)
         assert data["version"] == "1.0"
         assert any(
-            a.get("report", {}).get("path") == "SalesReport.Report"
-            for a in data["artifacts"]
+            a.get("report", {}).get("path") == "SalesReport.Report" for a in data["artifacts"]
         )
 
     def test_report_create_returns_definition_path(self, tmp_path: Path) -> None:
@@ -382,11 +407,14 @@ class TestReportValidate:
         """Validation fails when version.json is absent."""
         definition_dir = tmp_path / "NoVer.Report" / "definition"
         definition_dir.mkdir(parents=True)
-        _write(definition_dir / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "themeCollection": {"baseTheme": {}},
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            definition_dir / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "themeCollection": {"baseTheme": {}},
+                "layoutOptimization": "Disabled",
+            },
+        )
 
         result = report_validate(definition_dir)
         assert result["valid"] is False
@@ -402,10 +430,13 @@ class TestReportValidate:
 
     def test_report_validate_missing_theme_collection(self, sample_report: Path) -> None:
         """report.json without 'themeCollection' is invalid."""
-        _write(sample_report / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            sample_report / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "layoutOptimization": "Disabled",
+            },
+        )
 
         result = report_validate(sample_report)
         assert result["valid"] is False
@@ -413,10 +444,13 @@ class TestReportValidate:
 
     def test_report_validate_missing_layout_optimization(self, sample_report: Path) -> None:
         """report.json without 'layoutOptimization' is invalid."""
-        _write(sample_report / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "themeCollection": {"baseTheme": {}},
-        })
+        _write(
+            sample_report / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "themeCollection": {"baseTheme": {}},
+            },
+        )
 
         result = report_validate(sample_report)
         assert result["valid"] is False
@@ -468,11 +502,14 @@ class TestPageList:
         """Returns empty list when the pages directory does not exist."""
         definition_dir = tmp_path / "NoPages.Report" / "definition"
         definition_dir.mkdir(parents=True)
-        _write(definition_dir / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "themeCollection": {"baseTheme": {}},
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            definition_dir / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "themeCollection": {"baseTheme": {}},
+                "layoutOptimization": "Disabled",
+            },
+        )
 
         result = page_list(definition_dir)
         assert result == []
@@ -492,10 +529,13 @@ class TestPageList:
         pages_dir = sample_report / "pages"
         _make_page(pages_dir, "page2", "Page Two", ordinal=1, with_visual=False)
         # Set page2 first in the explicit order
-        _write(pages_dir / "pages.json", {
-            "$schema": _SCHEMA_PAGES_METADATA,
-            "pageOrder": ["page2", "page1"],
-        })
+        _write(
+            pages_dir / "pages.json",
+            {
+                "$schema": _SCHEMA_PAGES_METADATA,
+                "pageOrder": ["page2", "page1"],
+            },
+        )
 
         result = page_list(sample_report)
         assert result[0]["name"] == "page2"
@@ -519,20 +559,21 @@ class TestPageList:
         # Add a second visual to page2
         second_visual = pages_dir / "page2" / "visuals" / "visual_second"
         second_visual.mkdir()
-        _write(second_visual / "visual.json", {
-            "$schema": _SCHEMA_VISUAL_CONTAINER,
-            "name": "vis2",
-            "position": {"x": 0, "y": 0, "width": 200, "height": 200, "z": 1, "tabOrder": 1},
-            "visual": {"$schema": _SCHEMA_VISUAL_CONFIG, "visualType": "card", "objects": {}},
-        })
+        _write(
+            second_visual / "visual.json",
+            {
+                "$schema": _SCHEMA_VISUAL_CONTAINER,
+                "name": "vis2",
+                "position": {"x": 0, "y": 0, "width": 200, "height": 200, "z": 1, "tabOrder": 1},
+                "visual": {"$schema": _SCHEMA_VISUAL_CONFIG, "visualType": "card", "objects": {}},
+            },
+        )
 
         result = page_list(sample_report)
         page2 = next(p for p in result if p["name"] == "page2")
         assert page2["visual_count"] == 2
 
-    def test_page_list_regular_page_type_is_default(
-        self, sample_report: Path
-    ) -> None:
+    def test_page_list_regular_page_type_is_default(self, sample_report: Path) -> None:
         """Regular pages (no type field) surface as page_type='Default'."""
         pages = page_list(sample_report)
         assert pages[0]["page_type"] == "Default"
@@ -579,9 +620,7 @@ class TestPageAdd:
         assert data["height"] == 1080
 
     def test_page_add_respects_display_option(self, sample_report: Path) -> None:
-        page_add(
-            sample_report, "Actual Size", name="actual_page", display_option="ActualSize"
-        )
+        page_add(sample_report, "Actual Size", name="actual_page", display_option="ActualSize")
         data = _read(sample_report / "pages" / "actual_page" / "page.json")
         assert data["displayOption"] == "ActualSize"
 
@@ -725,9 +764,7 @@ class TestPageGet:
 
     def test_page_get_surfaces_filter_config(self, sample_report: Path) -> None:
         """page_get returns filterConfig as-is when present."""
-        filter_config = {
-            "filters": [{"name": "Filter1", "type": "Categorical"}]
-        }
+        filter_config = {"filters": [{"name": "Filter1", "type": "Categorical"}]}
         page_json = sample_report / "pages" / "page1" / "page.json"
         data = _read(page_json)
         _write(page_json, {**data, "filterConfig": filter_config})
@@ -737,9 +774,7 @@ class TestPageGet:
 
     def test_page_get_surfaces_visual_interactions(self, sample_report: Path) -> None:
         """page_get returns visualInteractions as-is when present."""
-        interactions = [
-            {"source": "visual_abc", "target": "visual_def", "type": "NoFilter"}
-        ]
+        interactions = [{"source": "visual_abc", "target": "visual_def", "type": "NoFilter"}]
         page_json = sample_report / "pages" / "page1" / "page.json"
         data = _read(page_json)
         _write(page_json, {**data, "visualInteractions": interactions})
@@ -747,9 +782,7 @@ class TestPageGet:
         assert result["visual_interactions"] == interactions
         assert result["visual_interactions"][0]["type"] == "NoFilter"
 
-    def test_page_get_page_binding_none_for_regular_page(
-        self, sample_report: Path
-    ) -> None:
+    def test_page_get_page_binding_none_for_regular_page(self, sample_report: Path) -> None:
         """Regular pages have no pageBinding -- returns None."""
         result = page_get(sample_report, "page1")
         assert result["page_binding"] is None
@@ -783,23 +816,22 @@ class TestThemeSet:
     def _make_theme_file(self, tmp_path: Path, name: str = "MyTheme") -> Path:
         """Create a minimal theme JSON file and return its path."""
         theme_file = tmp_path / f"{name}.json"
-        _write(theme_file, {
-            "name": name,
-            "dataColors": ["#118DFF", "#12239E"],
-            "background": "#FFFFFF",
-        })
+        _write(
+            theme_file,
+            {
+                "name": name,
+                "dataColors": ["#118DFF", "#12239E"],
+                "background": "#FFFFFF",
+            },
+        )
         return theme_file
 
-    def test_theme_set_returns_applied_status(
-        self, sample_report: Path, tmp_path: Path
-    ) -> None:
+    def test_theme_set_returns_applied_status(self, sample_report: Path, tmp_path: Path) -> None:
         theme_file = self._make_theme_file(tmp_path)
         result = theme_set(sample_report, theme_file)
         assert result["status"] == "applied"
 
-    def test_theme_set_returns_theme_name(
-        self, sample_report: Path, tmp_path: Path
-    ) -> None:
+    def test_theme_set_returns_theme_name(self, sample_report: Path, tmp_path: Path) -> None:
         theme_file = self._make_theme_file(tmp_path, name="CorporateBlue")
         result = theme_set(sample_report, theme_file)
         assert result["theme"] == "CorporateBlue"
@@ -820,9 +852,7 @@ class TestThemeSet:
         dest_data = _read(Path(result["file"]))
         assert dest_data["name"] == "BrightTheme"
 
-    def test_theme_set_updates_report_json(
-        self, sample_report: Path, tmp_path: Path
-    ) -> None:
+    def test_theme_set_updates_report_json(self, sample_report: Path, tmp_path: Path) -> None:
         """report.json must have a 'customTheme' entry after theme_set."""
         theme_file = self._make_theme_file(tmp_path, name="Teal")
         theme_set(sample_report, theme_file)
@@ -847,9 +877,7 @@ class TestThemeSet:
         items = reg.get("items", [])
         assert any(i["name"] == "Ocean.json" for i in items)
 
-    def test_theme_set_idempotent_for_same_theme(
-        self, sample_report: Path, tmp_path: Path
-    ) -> None:
+    def test_theme_set_idempotent_for_same_theme(self, sample_report: Path, tmp_path: Path) -> None:
         """Applying the same theme twice does not duplicate resource entries."""
         theme_file = self._make_theme_file(tmp_path, name="Stable")
         theme_set(sample_report, theme_file)
@@ -862,9 +890,7 @@ class TestThemeSet:
         # No duplicate entries for the same file
         assert names.count("Stable.json") == 1
 
-    def test_theme_set_missing_theme_file_raises(
-        self, sample_report: Path, tmp_path: Path
-    ) -> None:
+    def test_theme_set_missing_theme_file_raises(self, sample_report: Path, tmp_path: Path) -> None:
         """Referencing a theme file that does not exist raises PbiCliError."""
         missing = tmp_path / "ghost_theme.json"
         with pytest.raises(PbiCliError, match="ghost_theme.json"):
@@ -917,11 +943,14 @@ class TestThemeGet:
         """If themeCollection has no baseTheme, base_theme is an empty string."""
         definition_dir = tmp_path / "NoBase.Report" / "definition"
         definition_dir.mkdir(parents=True)
-        _write(definition_dir / "report.json", {
-            "$schema": _SCHEMA_REPORT,
-            "themeCollection": {},
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            definition_dir / "report.json",
+            {
+                "$schema": _SCHEMA_REPORT,
+                "themeCollection": {},
+                "layoutOptimization": "Disabled",
+            },
+        )
         result = theme_get(definition_dir)
         assert result["base_theme"] == ""
         assert result["custom_theme"] is None

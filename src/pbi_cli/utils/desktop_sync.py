@@ -37,8 +37,8 @@ def sync_desktop(
     files here are snapshotted before Desktop saves and restored after.
     """
     try:
-        import win32con  # type: ignore[import-untyped]  # noqa: F401
-        import win32gui  # type: ignore[import-untyped]  # noqa: F401
+        import win32con  # noqa: F401
+        import win32gui  # noqa: F401
     except ImportError:
         return {
             "status": "manual",
@@ -84,6 +84,7 @@ def sync_desktop(
 # Snapshot / Restore
 # ---------------------------------------------------------------------------
 
+
 def _snapshot_recent_changes(
     definition_path: str | Path | None,
     max_age_seconds: float = 5.0,
@@ -126,12 +127,13 @@ def _restore_snapshots(snapshots: dict[Path, bytes]) -> list[str]:
 # Desktop process discovery
 # ---------------------------------------------------------------------------
 
+
 def _find_desktop_process(
     pbip_hint: str | Path | None,
 ) -> dict[str, Any] | None:
     """Find the PBI Desktop window, its PID, and the .pbip file it has open."""
-    import win32gui  # type: ignore[import-untyped]
-    import win32process  # type: ignore[import-untyped]
+    import win32gui
+    import win32process
 
     hint_stem = None
     if pbip_hint is not None:
@@ -163,13 +165,15 @@ def _find_desktop_process(
             if hint_stem not in Path(pbip_path).stem.lower():
                 return True
 
-        matches.append({
-            "hwnd": hwnd,
-            "pid": pid,
-            "title": title,
-            "exe_path": exe_path,
-            "pbip_path": pbip_path,
-        })
+        matches.append(
+            {
+                "hwnd": hwnd,
+                "pid": pid,
+                "title": title,
+                "exe_path": exe_path,
+                "pbip_path": pbip_path,
+            }
+        )
         return True
 
     try:
@@ -185,8 +189,13 @@ def _get_process_info(pid: int) -> dict[str, str] | None:
     try:
         out = subprocess.check_output(
             [
-                "wmic", "process", "where", f"ProcessId={pid}",
-                "get", "ExecutablePath,CommandLine", "/format:list",
+                "wmic",
+                "process",
+                "where",
+                f"ProcessId={pid}",
+                "get",
+                "ExecutablePath,CommandLine",
+                "/format:list",
             ],
             text=True,
             stderr=subprocess.DEVNULL,
@@ -215,13 +224,14 @@ def _get_process_info(pid: int) -> dict[str, str] | None:
 # Close with save
 # ---------------------------------------------------------------------------
 
+
 def _close_with_save(hwnd: int, pid: int) -> dict[str, Any] | None:
     """Close Desktop via WM_CLOSE and click Save in the dialog.
 
     Returns an error dict on failure, or None on success.
     """
-    import win32con  # type: ignore[import-untyped]
-    import win32gui  # type: ignore[import-untyped]
+    import win32con
+    import win32gui
 
     win32gui.PostMessage(hwnd, win32con.WM_CLOSE, 0, 0)
     time.sleep(2)
@@ -252,7 +262,7 @@ def _accept_save_dialog() -> None:
       [Save]  [Don't Save]  [Cancel]
     'Save' is the default focused button, so Enter clicks it.
     """
-    import win32gui  # type: ignore[import-untyped]
+    import win32gui
 
     dialog_found = False
 
@@ -287,10 +297,11 @@ def _accept_save_dialog() -> None:
 # Reopen / utilities
 # ---------------------------------------------------------------------------
 
+
 def _reopen_pbip(pbip_path: str) -> dict[str, Any]:
     """Launch the .pbip file with the system default handler."""
     try:
-        os.startfile(pbip_path)  # type: ignore[attr-defined]
+        os.startfile(pbip_path)  # noqa: S606  # Windows-only API
         return {
             "status": "success",
             "method": "pywin32",
@@ -321,6 +332,6 @@ def _process_alive(pid: int) -> bool:
 
 def _get_wscript_shell() -> Any:
     """Get a WScript.Shell COM object for SendKeys."""
-    import win32com.client  # type: ignore[import-untyped]
+    import win32com.client
 
     return win32com.client.Dispatch("WScript.Shell")

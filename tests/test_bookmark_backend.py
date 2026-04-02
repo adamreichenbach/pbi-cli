@@ -216,19 +216,16 @@ def test_bookmark_set_visibility_hide_sets_display_mode(definition_path: Path) -
     """set_visibility with hidden=True writes display.mode='hidden' on singleVisual."""
     bookmark_add(definition_path, "Hide Test", "page_a", name="bm_hide")
 
-    result = bookmark_set_visibility(
-        definition_path, "bm_hide", "page_a", "visual_x", hidden=True
-    )
+    result = bookmark_set_visibility(definition_path, "bm_hide", "page_a", "visual_x", hidden=True)
 
     assert result["status"] == "updated"
     assert result["hidden"] is True
 
     bm_file = definition_path / "bookmarks" / "bm_hide.bookmark.json"
     data = json.loads(bm_file.read_text(encoding="utf-8"))
-    single = (
-        data["explorationState"]["sections"]["page_a"]
-        ["visualContainers"]["visual_x"]["singleVisual"]
-    )
+    single = data["explorationState"]["sections"]["page_a"]["visualContainers"]["visual_x"][
+        "singleVisual"
+    ]
     assert single["display"] == {"mode": "hidden"}
 
 
@@ -237,19 +234,14 @@ def test_bookmark_set_visibility_show_removes_display_key(definition_path: Path)
     bookmark_add(definition_path, "Show Test", "page_b", name="bm_show")
 
     # First hide it, then show it
-    bookmark_set_visibility(
-        definition_path, "bm_show", "page_b", "visual_y", hidden=True
-    )
-    bookmark_set_visibility(
-        definition_path, "bm_show", "page_b", "visual_y", hidden=False
-    )
+    bookmark_set_visibility(definition_path, "bm_show", "page_b", "visual_y", hidden=True)
+    bookmark_set_visibility(definition_path, "bm_show", "page_b", "visual_y", hidden=False)
 
     bm_file = definition_path / "bookmarks" / "bm_show.bookmark.json"
     data = json.loads(bm_file.read_text(encoding="utf-8"))
-    single = (
-        data["explorationState"]["sections"]["page_b"]
-        ["visualContainers"]["visual_y"]["singleVisual"]
-    )
+    single = data["explorationState"]["sections"]["page_b"]["visualContainers"]["visual_y"][
+        "singleVisual"
+    ]
     assert "display" not in single
 
 
@@ -258,16 +250,12 @@ def test_bookmark_set_visibility_creates_path_if_absent(definition_path: Path) -
     bookmark_add(definition_path, "New Path", "page_c", name="bm_newpath")
 
     # The bookmark was created without any sections; the function should create them.
-    bookmark_set_visibility(
-        definition_path, "bm_newpath", "page_c", "visual_z", hidden=True
-    )
+    bookmark_set_visibility(definition_path, "bm_newpath", "page_c", "visual_z", hidden=True)
 
     bm_file = definition_path / "bookmarks" / "bm_newpath.bookmark.json"
     data = json.loads(bm_file.read_text(encoding="utf-8"))
     assert "page_c" in data["explorationState"]["sections"]
-    assert "visual_z" in (
-        data["explorationState"]["sections"]["page_c"]["visualContainers"]
-    )
+    assert "visual_z" in (data["explorationState"]["sections"]["page_c"]["visualContainers"])
 
 
 def test_bookmark_set_visibility_preserves_existing_single_visual_keys(
@@ -277,28 +265,23 @@ def test_bookmark_set_visibility_preserves_existing_single_visual_keys(
     bookmark_add(definition_path, "Preserve", "page_d", name="bm_preserve")
 
     # Pre-populate a singleVisual with a visualType key via set_visibility helper
-    bookmark_set_visibility(
-        definition_path, "bm_preserve", "page_d", "visual_w", hidden=False
-    )
+    bookmark_set_visibility(definition_path, "bm_preserve", "page_d", "visual_w", hidden=False)
 
     # Manually inject a visualType into the singleVisual
     bm_file = definition_path / "bookmarks" / "bm_preserve.bookmark.json"
     raw = json.loads(bm_file.read_text(encoding="utf-8"))
-    raw["explorationState"]["sections"]["page_d"]["visualContainers"]["visual_w"][
-        "singleVisual"
-    ]["visualType"] = "barChart"
+    raw["explorationState"]["sections"]["page_d"]["visualContainers"]["visual_w"]["singleVisual"][
+        "visualType"
+    ] = "barChart"
     bm_file.write_text(json.dumps(raw, indent=2), encoding="utf-8")
 
     # Now hide and verify visualType is retained
-    bookmark_set_visibility(
-        definition_path, "bm_preserve", "page_d", "visual_w", hidden=True
-    )
+    bookmark_set_visibility(definition_path, "bm_preserve", "page_d", "visual_w", hidden=True)
 
     updated = json.loads(bm_file.read_text(encoding="utf-8"))
-    single = (
-        updated["explorationState"]["sections"]["page_d"]
-        ["visualContainers"]["visual_w"]["singleVisual"]
-    )
+    single = updated["explorationState"]["sections"]["page_d"]["visualContainers"]["visual_w"][
+        "singleVisual"
+    ]
     assert single["visualType"] == "barChart"
     assert single["display"] == {"mode": "hidden"}
 
@@ -308,6 +291,4 @@ def test_bookmark_set_visibility_raises_for_unknown_bookmark(
 ) -> None:
     """set_visibility raises PbiCliError when the bookmark does not exist."""
     with pytest.raises(PbiCliError, match="not found"):
-        bookmark_set_visibility(
-            definition_path, "nonexistent", "page_x", "visual_x", hidden=True
-        )
+        bookmark_set_visibility(definition_path, "nonexistent", "page_x", "visual_x", hidden=True)

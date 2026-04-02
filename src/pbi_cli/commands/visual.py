@@ -25,7 +25,8 @@ def visual(ctx: click.Context, path: str | None) -> None:
 def _get_report_path(click_ctx: click.Context) -> str | None:
     """Extract report_path from parent context."""
     if click_ctx.parent:
-        return click_ctx.parent.obj.get("report_path")
+        result: str | None = click_ctx.parent.obj.get("report_path")
+        return result
     return None
 
 

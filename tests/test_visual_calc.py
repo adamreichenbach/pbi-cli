@@ -123,15 +123,11 @@ def test_visual_calc_add_correct_structure(
     """Added projection has correct NativeVisualCalculation fields."""
     definition, page, visual = visual_on_page
 
-    visual_calc_add(
-        definition, page, visual, "Running sum", "RUNNINGSUM([Sum of Sales])", role="Y"
-    )
+    visual_calc_add(definition, page, visual, "Running sum", "RUNNINGSUM([Sum of Sales])", role="Y")
 
     data = _read_json(_vfile(definition, page, visual))
     projections = data["visual"]["query"]["queryState"]["Y"]["projections"]
-    nvc_proj = next(
-        p for p in projections if "NativeVisualCalculation" in p.get("field", {})
-    )
+    nvc_proj = next(p for p in projections if "NativeVisualCalculation" in p.get("field", {}))
     nvc = nvc_proj["field"]["NativeVisualCalculation"]
 
     assert nvc["Language"] == "dax"
@@ -154,9 +150,7 @@ def test_visual_calc_add_query_refs(
 
     data = _read_json(_vfile(definition, page, visual))
     projections = data["visual"]["query"]["queryState"]["Y"]["projections"]
-    nvc_proj = next(
-        p for p in projections if "NativeVisualCalculation" in p.get("field", {})
-    )
+    nvc_proj = next(p for p in projections if "NativeVisualCalculation" in p.get("field", {}))
 
     assert nvc_proj["queryRef"] == "select"
     assert nvc_proj["nativeQueryRef"] == "My Calc"
@@ -296,9 +290,7 @@ def test_visual_calc_delete_removes_projection(
 
     data = _read_json(_vfile(definition, page, visual))
     projections = data["visual"]["query"]["queryState"]["Y"]["projections"]
-    nvc_projections = [
-        p for p in projections if "NativeVisualCalculation" in p.get("field", {})
-    ]
+    nvc_projections = [p for p in projections if "NativeVisualCalculation" in p.get("field", {})]
     assert nvc_projections == []
 
 

@@ -25,7 +25,8 @@ from pbi_cli.core.pbir_path import get_page_dir, get_visual_dir
 
 def _read_json(path: Path) -> dict[str, Any]:
     """Read and parse a JSON file."""
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -288,9 +289,7 @@ def filter_add_topn(
                                 "Select": [
                                     {
                                         "Column": {
-                                            "Expression": {
-                                                "SourceRef": {"Source": cat_alias}
-                                            },
+                                            "Expression": {"SourceRef": {"Source": cat_alias}},
                                             "Property": column,
                                         },
                                         "Name": "field",
@@ -333,9 +332,7 @@ def filter_add_topn(
                             "Expressions": [
                                 {
                                     "Column": {
-                                        "Expression": {
-                                            "SourceRef": {"Source": cat_alias}
-                                        },
+                                        "Expression": {"SourceRef": {"Source": cat_alias}},
                                         "Property": column,
                                     }
                                 }
@@ -399,9 +396,7 @@ def filter_add_relative_date(
     time_unit_lower = time_unit.strip().lower()
     if time_unit_lower not in _RELATIVE_DATE_TIME_UNITS:
         valid = ", ".join(_RELATIVE_DATE_TIME_UNITS)
-        raise PbiCliError(
-            f"time_unit must be one of {valid}, got '{time_unit}'."
-        )
+        raise PbiCliError(f"time_unit must be one of {valid}, got '{time_unit}'.")
     time_unit_code = _RELATIVE_DATE_TIME_UNITS[time_unit_lower]
     days_code = _RELATIVE_DATE_TIME_UNITS["days"]
 

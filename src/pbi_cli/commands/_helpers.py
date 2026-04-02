@@ -14,10 +14,19 @@ if TYPE_CHECKING:
     from pbi_cli.main import PbiContext
 
 # Statuses that indicate a write operation (triggers Desktop sync)
-_WRITE_STATUSES = frozenset({
-    "created", "deleted", "updated", "applied", "added",
-    "cleared", "bound", "removed", "set",
-})
+_WRITE_STATUSES = frozenset(
+    {
+        "created",
+        "deleted",
+        "updated",
+        "applied",
+        "added",
+        "cleared",
+        "bound",
+        "removed",
+        "set",
+    }
+)
 
 
 def run_command(

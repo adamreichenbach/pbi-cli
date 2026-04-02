@@ -171,9 +171,7 @@ def test_visual_add_table(report_with_page: Path) -> None:
     assert result["status"] == "created"
     assert result["visual_type"] == "tableEx"
 
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / "mytable" / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "mytable" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     assert data["visual"]["visualType"] == "tableEx"
 
@@ -185,9 +183,7 @@ def test_visual_add_matrix(report_with_page: Path) -> None:
     assert result["status"] == "created"
     assert result["visual_type"] == "pivotTable"
 
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / "mymatrix" / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "mymatrix" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     assert data["visual"]["visualType"] == "pivotTable"
 
@@ -215,14 +211,7 @@ def test_visual_add_custom_position(report_with_page: Path) -> None:
     assert result["width"] == 600.0
     assert result["height"] == 450.0
 
-    vfile = (
-        report_with_page
-        / "pages"
-        / "test_page"
-        / "visuals"
-        / "positioned"
-        / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "positioned" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     pos = data["position"]
     assert pos["x"] == 100.0
@@ -374,9 +363,7 @@ def test_visual_update_position(report_with_page: Path) -> None:
     assert result["position"]["height"] == 250.0
 
     # Confirm the file on disk reflects the change
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / "movable" / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "movable" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     pos = data["position"]
     assert pos["x"] == 50.0
@@ -470,14 +457,7 @@ def test_visual_bind_category_value(report_with_page: Path) -> None:
     assert "Y" in roles_applied
 
     # Verify the projections were written into visual.json
-    vfile = (
-        report_with_page
-        / "pages"
-        / "test_page"
-        / "visuals"
-        / "bound_bar"
-        / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "bound_bar" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     query_state = data["visual"]["query"]["queryState"]
 
@@ -518,14 +498,7 @@ def test_visual_bind_multiple_values(report_with_page: Path) -> None:
     assert all(b["role"] == "Values" for b in result["bindings"])
 
     # Confirm all three projections landed in the Values role
-    vfile = (
-        report_with_page
-        / "pages"
-        / "test_page"
-        / "visuals"
-        / "bound_table"
-        / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "bound_table" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     projections = data["visual"]["query"]["queryState"]["Values"]["projections"]
     assert len(projections) == 3
@@ -562,18 +535,14 @@ def test_visual_bind_multiple_values(report_with_page: Path) -> None:
         ("combo_chart", "lineStackedColumnComboChart"),
     ],
 )
-def test_visual_add_new_types(
-    report_with_page: Path, alias: str, expected_type: str
-) -> None:
+def test_visual_add_new_types(report_with_page: Path, alias: str, expected_type: str) -> None:
     """visual_add resolves v3.1.0 type aliases and writes correct visualType."""
     result = visual_add(report_with_page, "test_page", alias, name=f"v_{alias}")
 
     assert result["status"] == "created"
     assert result["visual_type"] == expected_type
 
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / f"v_{alias}" / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / f"v_{alias}" / "visual.json"
     assert vfile.exists()
     data = json.loads(vfile.read_text(encoding="utf-8"))
     assert data["visual"]["visualType"] == expected_type
@@ -655,10 +624,9 @@ def test_visual_add_new_types_default_sizes(report_with_page: Path) -> None:
 # Task 1 tests -- cardVisual and actionButton
 # ---------------------------------------------------------------------------
 
+
 def test_visual_add_card_visual(report_with_page: Path) -> None:
-    result = visual_add(
-        report_with_page, "test_page", "cardVisual", x=10, y=10
-    )
+    result = visual_add(report_with_page, "test_page", "cardVisual", x=10, y=10)
     assert result["status"] == "created"
     assert result["visual_type"] == "cardVisual"
     vdir = report_with_page / "pages" / "test_page" / "visuals" / result["name"]
@@ -671,16 +639,12 @@ def test_visual_add_card_visual(report_with_page: Path) -> None:
 
 
 def test_visual_add_card_visual_alias(report_with_page: Path) -> None:
-    result = visual_add(
-        report_with_page, "test_page", "card_visual", x=10, y=10
-    )
+    result = visual_add(report_with_page, "test_page", "card_visual", x=10, y=10)
     assert result["visual_type"] == "cardVisual"
 
 
 def test_visual_add_action_button(report_with_page: Path) -> None:
-    result = visual_add(
-        report_with_page, "test_page", "actionButton", x=0, y=0
-    )
+    result = visual_add(report_with_page, "test_page", "actionButton", x=0, y=0)
     assert result["status"] == "created"
     assert result["visual_type"] == "actionButton"
     vdir = report_with_page / "pages" / "test_page" / "visuals" / result["name"]
@@ -693,9 +657,7 @@ def test_visual_add_action_button(report_with_page: Path) -> None:
 
 def test_visual_add_action_button_aliases(report_with_page: Path) -> None:
     for alias in ("action_button", "button"):
-        result = visual_add(
-            report_with_page, "test_page", alias, x=0, y=0
-        )
+        result = visual_add(report_with_page, "test_page", alias, x=0, y=0)
         assert result["visual_type"] == "actionButton"
 
 
@@ -768,8 +730,9 @@ def test_visual_set_container_border_show(
     visual_set_container(defn, "test_page", vname, border_show=True)
     vfile = defn / "pages" / "test_page" / "visuals" / vname / "visual.json"
     data = json.loads(vfile.read_text())
-    val = data["visual"]["visualContainerObjects"]["border"][0][
-        "properties"]["show"]["expr"]["Literal"]["Value"]
+    val = data["visual"]["visualContainerObjects"]["border"][0]["properties"]["show"]["expr"][
+        "Literal"
+    ]["Value"]
     assert val == "true"
 
 
@@ -777,9 +740,7 @@ def test_visual_set_container_raises_for_missing_visual(
     report_with_page: Path,
 ) -> None:
     with pytest.raises(PbiCliError):
-        visual_set_container(
-            report_with_page, "test_page", "nonexistent_visual", border_show=False
-        )
+        visual_set_container(report_with_page, "test_page", "nonexistent_visual", border_show=False)
 
 
 def test_visual_set_container_no_op_returns_no_op_status(
@@ -797,10 +758,7 @@ def test_visual_set_container_no_op_returns_no_op_status(
 
 def test_visual_add_uses_correct_schema_version(report_with_page: Path) -> None:
     result = visual_add(report_with_page, "test_page", "barChart", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals"
-        / result["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / result["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     assert "2.7.0" in data["$schema"]
     assert "1.5.0" not in data["$schema"]
@@ -816,11 +774,14 @@ def test_visual_list_tags_group_containers_as_group(report_with_page: Path) -> N
     visuals_dir = report_with_page / "pages" / "test_page" / "visuals"
     grp_dir = visuals_dir / "grp1"
     grp_dir.mkdir()
-    _write_json(grp_dir / "visual.json", {
-        "$schema": "https://example.com/schema",
-        "name": "grp1",
-        "visualGroup": {"displayName": "Header Group", "visuals": []}
-    })
+    _write_json(
+        grp_dir / "visual.json",
+        {
+            "$schema": "https://example.com/schema",
+            "name": "grp1",
+            "visualGroup": {"displayName": "Header Group", "visuals": []},
+        },
+    )
     results = visual_list(report_with_page, "test_page")
     grp = next(r for r in results if r["name"] == "grp1")
     assert grp["visual_type"] == "group"
@@ -831,15 +792,16 @@ def test_visual_list_tags_group_containers_as_group(report_with_page: Path) -> N
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("vtype,alias", [
-    ("clusteredColumnChart", "clustered_column"),
-    ("clusteredBarChart", "clustered_bar"),
-    ("textSlicer", "text_slicer"),
-    ("listSlicer", "list_slicer"),
-])
-def test_visual_add_new_v35_types(
-    report_with_page: Path, vtype: str, alias: str
-) -> None:
+@pytest.mark.parametrize(
+    "vtype,alias",
+    [
+        ("clusteredColumnChart", "clustered_column"),
+        ("clusteredBarChart", "clustered_bar"),
+        ("textSlicer", "text_slicer"),
+        ("listSlicer", "list_slicer"),
+    ],
+)
+def test_visual_add_new_v35_types(report_with_page: Path, vtype: str, alias: str) -> None:
     r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
     assert r["visual_type"] == vtype
     r2 = visual_add(report_with_page, "test_page", alias, x=50, y=0)
@@ -848,10 +810,7 @@ def test_visual_add_new_v35_types(
 
 def test_list_slicer_template_has_active_flag(report_with_page: Path) -> None:
     r = visual_add(report_with_page, "test_page", "listSlicer", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals"
-        / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     values = data["visual"]["query"]["queryState"]["Values"]
     assert values.get("active") is True
@@ -862,13 +821,16 @@ def test_list_slicer_template_has_active_flag(report_with_page: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("vtype,alias", [
-    ("image", "img"),
-    ("textbox", "text_box"),
-    ("pageNavigator", "page_navigator"),
-    ("pageNavigator", "page_nav"),
-    ("pageNavigator", "navigator"),
-])
+@pytest.mark.parametrize(
+    "vtype,alias",
+    [
+        ("image", "img"),
+        ("textbox", "text_box"),
+        ("pageNavigator", "page_navigator"),
+        ("pageNavigator", "page_nav"),
+        ("pageNavigator", "navigator"),
+    ],
+)
 def test_visual_add_v36_alias_types(report_with_page: Path, vtype: str, alias: str) -> None:
     r = visual_add(report_with_page, "test_page", alias, x=0, y=0)
     assert r["visual_type"] == vtype
@@ -878,9 +840,7 @@ def test_visual_add_v36_alias_types(report_with_page: Path, vtype: str, alias: s
 def test_visual_add_no_query_v36(report_with_page: Path, vtype: str) -> None:
     """No-query types must not have a 'query' key in the written visual.json."""
     r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     assert "query" not in data["visual"]
     assert data["$schema"].endswith("2.7.0/schema.json")
@@ -890,9 +850,7 @@ def test_visual_add_no_query_v36(report_with_page: Path, vtype: str) -> None:
 def test_insert_visual_button_how_created(report_with_page: Path, vtype: str) -> None:
     """image, shape, pageNavigator must carry howCreated at top level."""
     r = visual_add(report_with_page, "test_page", vtype, x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     assert data.get("howCreated") == "InsertVisualButton"
 
@@ -900,9 +858,7 @@ def test_insert_visual_button_how_created(report_with_page: Path, vtype: str) ->
 def test_textbox_no_how_created(report_with_page: Path) -> None:
     """textbox is a content visual -- no howCreated key."""
     r = visual_add(report_with_page, "test_page", "textbox", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     assert "howCreated" not in data
 
@@ -912,9 +868,15 @@ def test_textbox_no_how_created(report_with_page: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("alias", [
-    "advancedSlicerVisual", "advanced_slicer", "adv_slicer", "tile_slicer",
-])
+@pytest.mark.parametrize(
+    "alias",
+    [
+        "advancedSlicerVisual",
+        "advanced_slicer",
+        "adv_slicer",
+        "tile_slicer",
+    ],
+)
 def test_advanced_slicer_aliases(report_with_page: Path, alias: str) -> None:
     r = visual_add(report_with_page, "test_page", alias, x=0, y=0)
     assert r["visual_type"] == "advancedSlicerVisual"
@@ -922,9 +884,7 @@ def test_advanced_slicer_aliases(report_with_page: Path, alias: str) -> None:
 
 def test_advanced_slicer_has_values_querystate(report_with_page: Path) -> None:
     r = visual_add(report_with_page, "test_page", "advancedSlicerVisual", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     assert "query" in data["visual"]
     assert "Values" in data["visual"]["query"]["queryState"]
@@ -939,9 +899,7 @@ def test_advanced_slicer_has_values_querystate(report_with_page: Path) -> None:
 def test_card_template_uses_values_role(report_with_page: Path) -> None:
     """card visual queryState must use 'Values' not 'Fields' (Desktop compat)."""
     r = visual_add(report_with_page, "test_page", "card", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "Values" in qs
@@ -952,9 +910,7 @@ def test_card_template_uses_values_role(report_with_page: Path) -> None:
 def test_multi_row_card_template_uses_values_role(report_with_page: Path) -> None:
     """multiRowCard visual queryState must use 'Values' not 'Fields'."""
     r = visual_add(report_with_page, "test_page", "multiRowCard", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "Values" in qs
@@ -969,9 +925,7 @@ def test_multi_row_card_template_uses_values_role(report_with_page: Path) -> Non
 def test_kpi_template_has_trend_line_role(report_with_page: Path) -> None:
     """kpi template must include TrendLine queryState key (confirmed from Desktop)."""
     r = visual_add(report_with_page, "test_page", "kpi", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "TrendLine" in qs
@@ -983,9 +937,7 @@ def test_kpi_template_has_trend_line_role(report_with_page: Path) -> None:
 def test_gauge_template_has_max_value_role(report_with_page: Path) -> None:
     """gauge template must include MaxValue queryState key (confirmed from Desktop)."""
     r = visual_add(report_with_page, "test_page", "gauge", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text())
     qs = data["visual"]["query"]["queryState"]
     assert "MaxValue" in qs
@@ -993,23 +945,31 @@ def test_gauge_template_has_max_value_role(report_with_page: Path) -> None:
     assert "Y" in qs
 
 
-@pytest.mark.parametrize("alias,expected_role", [
-    ("trend_line", "TrendLine"),
-    ("trend", "TrendLine"),
-    ("goal", "Goal"),
-])
+@pytest.mark.parametrize(
+    "alias,expected_role",
+    [
+        ("trend_line", "TrendLine"),
+        ("trend", "TrendLine"),
+        ("goal", "Goal"),
+    ],
+)
 def test_kpi_role_aliases(alias: str, expected_role: str) -> None:
     from pbi_cli.core.visual_backend import ROLE_ALIASES
+
     assert ROLE_ALIASES["kpi"][alias] == expected_role
 
 
-@pytest.mark.parametrize("alias,expected_role", [
-    ("max", "MaxValue"),
-    ("max_value", "MaxValue"),
-    ("target", "MaxValue"),
-])
+@pytest.mark.parametrize(
+    "alias,expected_role",
+    [
+        ("max", "MaxValue"),
+        ("max_value", "MaxValue"),
+        ("target", "MaxValue"),
+    ],
+)
 def test_gauge_role_aliases(alias: str, expected_role: str) -> None:
     from pbi_cli.core.visual_backend import ROLE_ALIASES
+
     assert ROLE_ALIASES["gauge"][alias] == expected_role
 
 
@@ -1055,9 +1015,7 @@ def test_azure_map_aliases(report_with_page: Path, alias: str) -> None:
 
 def test_azure_map_has_category_and_size_roles(report_with_page: Path) -> None:
     r = visual_add(report_with_page, "test_page", "azureMap", x=0, y=0)
-    vfile = (
-        report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
-    )
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / r["name"] / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     qs = data["visual"]["query"]["queryState"]
     assert "Category" in qs

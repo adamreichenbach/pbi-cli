@@ -114,9 +114,7 @@ def get_visuals_dir(definition_path: Path, page_name: str) -> Path:
     return visuals
 
 
-def get_visual_dir(
-    definition_path: Path, page_name: str, visual_name: str
-) -> Path:
+def get_visual_dir(definition_path: Path, page_name: str, visual_name: str) -> Path:
     """Return the directory for a specific visual."""
     return definition_path / "pages" / page_name / "visuals" / visual_name
 

@@ -12,8 +12,6 @@ from __future__ import annotations
 import importlib.resources
 import re
 
-import yaml
-
 
 def _load_skills() -> dict[str, str]:
     """Load all skill names and descriptions from bundled skills."""
@@ -24,8 +22,18 @@ def _load_skills() -> dict[str, str]:
             content = (item / "SKILL.md").read_text(encoding="utf-8")
             match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
             if match:
-                fm = yaml.safe_load(match.group(1))
-                skills[item.name] = fm.get("description", "").lower()
+                # Parse description from YAML frontmatter without pyyaml
+                # Handles both single-line and multi-line (>) formats
+                fm_text = match.group(1)
+                multi = re.search(r"description:\s*>?\s*\n((?:\s+.*\n)*)", fm_text)
+                single = re.search(r"description:\s+(.+)", fm_text)
+                if multi and multi.group(1).strip():
+                    desc = " ".join(
+                        line.strip() for line in multi.group(1).splitlines() if line.strip()
+                    )
+                    skills[item.name] = desc.lower()
+                elif single:
+                    skills[item.name] = single.group(1).strip().lower()
     return skills
 
 

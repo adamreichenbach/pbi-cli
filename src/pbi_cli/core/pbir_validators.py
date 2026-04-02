@@ -107,11 +107,13 @@ def validate_bindings_against_model(
                         ref = _extract_field_ref(sel, sources)
                         if ref and ref not in valid_fields:
                             rel = f"{page_dir.name}/visuals/{vdir.name}"
-                            findings.append(ValidationResult(
-                                "warning",
-                                rel,
-                                f"Field '{ref}' not found in semantic model",
-                            ))
+                            findings.append(
+                                ValidationResult(
+                                    "warning",
+                                    rel,
+                                    f"Field '{ref}' not found in semantic model",
+                                )
+                            )
             except (json.JSONDecodeError, KeyError, TypeError):
                 continue
 
@@ -151,20 +153,20 @@ def _validate_report_json(definition_path: Path) -> list[ValidationResult]:
         findings.append(ValidationResult("warning", "report.json", "Missing $schema reference"))
 
     if "themeCollection" not in data:
-        findings.append(ValidationResult(
-            "error", "report.json", "Missing required 'themeCollection'"
-        ))
+        findings.append(
+            ValidationResult("error", "report.json", "Missing required 'themeCollection'")
+        )
     else:
         tc = data["themeCollection"]
         if "baseTheme" not in tc:
-            findings.append(ValidationResult(
-                "warning", "report.json", "themeCollection missing 'baseTheme'"
-            ))
+            findings.append(
+                ValidationResult("warning", "report.json", "themeCollection missing 'baseTheme'")
+            )
 
     if "layoutOptimization" not in data:
-        findings.append(ValidationResult(
-            "error", "report.json", "Missing required 'layoutOptimization'"
-        ))
+        findings.append(
+            ValidationResult("error", "report.json", "Missing required 'layoutOptimization'")
+        )
 
     return findings
 
@@ -201,9 +203,9 @@ def _validate_pages_metadata(definition_path: Path) -> list[ValidationResult]:
 
     page_order = data.get("pageOrder", [])
     if not isinstance(page_order, list):
-        findings.append(ValidationResult(
-            "error", "pages/pages.json", "'pageOrder' must be an array"
-        ))
+        findings.append(
+            ValidationResult("error", "pages/pages.json", "'pageOrder' must be an array")
+        )
 
     return findings
 
@@ -234,14 +236,15 @@ def _validate_all_pages(definition_path: Path) -> list[ValidationResult]:
                 findings.append(ValidationResult("error", rel, f"Missing required '{req}'"))
 
         valid_options = {
-            "FitToPage", "FitToWidth", "ActualSize",
-            "ActualSizeTopLeft", "DeprecatedDynamic",
+            "FitToPage",
+            "FitToWidth",
+            "ActualSize",
+            "ActualSizeTopLeft",
+            "DeprecatedDynamic",
         }
         opt = data.get("displayOption")
         if opt and opt not in valid_options:
-            findings.append(ValidationResult(
-                "warning", rel, f"Unknown displayOption '{opt}'"
-            ))
+            findings.append(ValidationResult("warning", rel, f"Unknown displayOption '{opt}'"))
 
         if opt != "DeprecatedDynamic":
             if "width" not in data:
@@ -251,9 +254,9 @@ def _validate_all_pages(definition_path: Path) -> list[ValidationResult]:
 
         name = data.get("name", "")
         if name and len(name) > 50:
-            findings.append(ValidationResult(
-                "warning", rel, f"Name exceeds 50 chars: '{name[:20]}...'"
-            ))
+            findings.append(
+                ValidationResult("warning", rel, f"Name exceeds 50 chars: '{name[:20]}...'")
+            )
 
     return findings
 
@@ -294,18 +297,22 @@ def _validate_all_visuals(definition_path: Path) -> list[ValidationResult]:
                 pos = data["position"]
                 for req in ("x", "y", "width", "height"):
                     if req not in pos:
-                        findings.append(ValidationResult(
-                            "error", rel, f"Position missing required '{req}'"
-                        ))
+                        findings.append(
+                            ValidationResult("error", rel, f"Position missing required '{req}'")
+                        )
 
             visual_config = data.get("visual", {})
             vtype = visual_config.get("visualType", "")
             if not vtype:
                 # Could be a visualGroup, which is also valid
                 if "visualGroup" not in data:
-                    findings.append(ValidationResult(
-                        "warning", rel, "Missing 'visual.visualType' (not a visual group either)"
-                    ))
+                    findings.append(
+                        ValidationResult(
+                            "warning",
+                            rel,
+                            "Missing 'visual.visualType' (not a visual group either)",
+                        )
+                    )
 
     return findings
 
@@ -331,26 +338,28 @@ def _validate_page_order_consistency(definition_path: Path) -> list[ValidationRe
     pages_dir = definition_path / "pages"
 
     actual_pages = {
-        d.name
-        for d in pages_dir.iterdir()
-        if d.is_dir() and (d / "page.json").exists()
+        d.name for d in pages_dir.iterdir() if d.is_dir() and (d / "page.json").exists()
     }
 
     for name in page_order:
         if name not in actual_pages:
-            findings.append(ValidationResult(
-                "warning",
-                "pages/pages.json",
-                f"pageOrder references '{name}' but no such page folder exists",
-            ))
+            findings.append(
+                ValidationResult(
+                    "warning",
+                    "pages/pages.json",
+                    f"pageOrder references '{name}' but no such page folder exists",
+                )
+            )
 
     unlisted = actual_pages - set(page_order)
     for name in sorted(unlisted):
-        findings.append(ValidationResult(
-            "info",
-            "pages/pages.json",
-            f"Page '{name}' exists but is not listed in pageOrder",
-        ))
+        findings.append(
+            ValidationResult(
+                "info",
+                "pages/pages.json",
+                f"Page '{name}' exists but is not listed in pageOrder",
+            )
+        )
 
     return findings
 
@@ -381,11 +390,13 @@ def _validate_visual_name_uniqueness(definition_path: Path) -> list[ValidationRe
                 name = data.get("name", "")
                 if name in names_seen:
                     rel = f"pages/{page_dir.name}/visuals/{vdir.name}/visual.json"
-                    findings.append(ValidationResult(
-                        "error",
-                        rel,
-                        f"Duplicate visual name '{name}' (also in {names_seen[name]})",
-                    ))
+                    findings.append(
+                        ValidationResult(
+                            "error",
+                            rel,
+                            f"Duplicate visual name '{name}' (also in {names_seen[name]})",
+                        )
+                    )
                 else:
                     names_seen[name] = vdir.name
             except (json.JSONDecodeError, KeyError):
@@ -418,16 +429,12 @@ def _build_result(findings: list[ValidationResult]) -> dict[str, Any]:
     }
 
 
-def _extract_field_ref(
-    select_item: dict[str, Any], sources: dict[str, str]
-) -> str | None:
+def _extract_field_ref(select_item: dict[str, Any], sources: dict[str, str]) -> str | None:
     """Extract a Table[Column] reference from a semantic query select item."""
     for kind in ("Column", "Measure"):
         if kind in select_item:
             item = select_item[kind]
-            source_name = (
-                item.get("Expression", {}).get("SourceRef", {}).get("Source", "")
-            )
+            source_name = item.get("Expression", {}).get("SourceRef", {}).get("Source", "")
             prop = item.get("Property", "")
             table = sources.get(source_name, source_name)
             if table and prop:

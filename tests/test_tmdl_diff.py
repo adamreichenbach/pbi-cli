@@ -81,10 +81,7 @@ _TOTAL_REVENUE_BLOCK = (
     "\n\t\tlineageTag: msr-001\n"
 )
 _NEW_COL_SNIPPET = (
-    "\n\tcolumn Region"
-    "\n\t\tdataType: string"
-    "\n\t\tsummarizeBy: none"
-    "\n\t\tsourceColumn: Region\n"
+    "\n\tcolumn Region\n\t\tdataType: string\n\t\tsummarizeBy: none\n\t\tsourceColumn: Region\n"
 )
 _AMOUNT_COL_BLOCK = (
     "\n\tcolumn Amount"
@@ -94,19 +91,13 @@ _AMOUNT_COL_BLOCK = (
     "\n\t\tsourceColumn: Amount\n"
 )
 _NEW_REL_SNIPPET = (
-    "\nrelationship abc-def-999"
-    "\n\tfromColumn: Sales.RegionID"
-    "\n\ttoColumn: Region.ID\n"
+    "\nrelationship abc-def-999\n\tfromColumn: Sales.RegionID\n\ttoColumn: Region.ID\n"
 )
 _TRIMMED_RELS = (
-    "relationship abc-def-111"
-    "\n\tfromColumn: Sales.ProductID"
-    "\n\ttoColumn: Product.ProductID\n"
+    "relationship abc-def-111\n\tfromColumn: Sales.ProductID\n\ttoColumn: Product.ProductID\n"
 )
 _REL_222_BASE = (
-    "relationship abc-def-222"
-    "\n\tfromColumn: Sales.CustomerID"
-    "\n\ttoColumn: Customer.CustomerID"
+    "relationship abc-def-222\n\tfromColumn: Sales.CustomerID\n\ttoColumn: Customer.CustomerID"
 )
 _REL_222_CHANGED = (
     "relationship abc-def-222"

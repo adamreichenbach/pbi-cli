@@ -21,7 +21,8 @@ from pbi_cli.core.pbir_path import get_visual_dir
 
 def _read_json(path: Path) -> dict[str, Any]:
     """Read and parse a JSON file."""
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -42,8 +43,7 @@ def _load_visual(definition_path: Path, page_name: str, visual_name: str) -> dic
     visual_path = get_visual_dir(definition_path, page_name, visual_name) / "visual.json"
     if not visual_path.exists():
         raise PbiCliError(
-            f"Visual '{visual_name}' not found on page '{page_name}'. "
-            f"Expected: {visual_path}"
+            f"Visual '{visual_name}' not found on page '{page_name}'. Expected: {visual_path}"
         )
     return _read_json(visual_path)
 
@@ -176,20 +176,10 @@ def format_background_gradient(
                                 },
                                 "FillRule": {
                                     "linearGradient2": {
-                                        "min": {
-                                            "color": {
-                                                "Literal": {"Value": f"'{min_color}'"}
-                                            }
-                                        },
-                                        "max": {
-                                            "color": {
-                                                "Literal": {"Value": f"'{max_color}'"}
-                                            }
-                                        },
+                                        "min": {"color": {"Literal": {"Value": f"'{min_color}'"}}},
+                                        "max": {"color": {"Literal": {"Value": f"'{max_color}'"}}},
                                         "nullColoringStrategy": {
-                                            "strategy": {
-                                                "Literal": {"Value": "'asZero'"}
-                                            }
+                                            "strategy": {"Literal": {"Value": "'asZero'"}}
                                         },
                                     }
                                 },
@@ -259,9 +249,7 @@ def format_background_conditional(
     comparison_lower = comparison.strip().lower()
     if comparison_lower not in _COMPARISON_KINDS:
         valid = ", ".join(_COMPARISON_KINDS)
-        raise PbiCliError(
-            f"comparison must be one of {valid}, got '{comparison}'."
-        )
+        raise PbiCliError(f"comparison must be one of {valid}, got '{comparison}'.")
     comparison_kind = _COMPARISON_KINDS[comparison_lower]
 
     if field_query_ref is None:
@@ -302,16 +290,10 @@ def format_background_conditional(
                                                         "Function": 0,
                                                     }
                                                 },
-                                                "Right": {
-                                                    "Literal": {
-                                                        "Value": threshold_literal
-                                                    }
-                                                },
+                                                "Right": {"Literal": {"Value": threshold_literal}},
                                             }
                                         },
-                                        "Value": {
-                                            "Literal": {"Value": f"'{color_hex}'"}
-                                        },
+                                        "Value": {"Literal": {"Value": f"'{color_hex}'"}},
                                     }
                                 ]
                             }
@@ -373,9 +355,7 @@ def format_background_measure(
                     "color": {
                         "expr": {
                             "Measure": {
-                                "Expression": {
-                                    "SourceRef": {"Entity": measure_table}
-                                },
+                                "Expression": {"SourceRef": {"Entity": measure_table}},
                                 "Property": measure_property,
                             }
                         }

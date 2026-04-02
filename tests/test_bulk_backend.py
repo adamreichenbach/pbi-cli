@@ -156,9 +156,7 @@ def test_where_by_y_min(multi_visual_page: Path) -> None:
 
 def test_where_type_and_position_combined(multi_visual_page: Path) -> None:
     """Combining type and x_max narrows results correctly."""
-    result = visual_where(
-        multi_visual_page, "test_page", visual_type="barChart", x_max=400
-    )
+    result = visual_where(multi_visual_page, "test_page", visual_type="barChart", x_max=400)
 
     assert len(result) == 1
     assert result[0]["name"] == "BarChart_1"

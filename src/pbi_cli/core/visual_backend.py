@@ -26,7 +26,8 @@ from pbi_cli.core.pbir_path import get_visual_dir, get_visuals_dir
 
 
 def _read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -87,16 +88,24 @@ VISUAL_DATA_ROLES: dict[str, list[str]] = {
 }
 
 # Roles that should default to Measure references (not Column)
-MEASURE_ROLES: frozenset[str] = frozenset({
-    "Y", "Values", "Fields",  # "Fields" is used by cardNew only
-    "Indicator", "Goal",
-    # v3.1.0 additions
-    "ColumnY", "LineY", "X", "Size",
-    # v3.4.0 additions
-    "Data",
-    # v3.8.0 additions
-    "MaxValue",
-})
+MEASURE_ROLES: frozenset[str] = frozenset(
+    {
+        "Y",
+        "Values",
+        "Fields",  # "Fields" is used by cardNew only
+        "Indicator",
+        "Goal",
+        # v3.1.0 additions
+        "ColumnY",
+        "LineY",
+        "X",
+        "Size",
+        # v3.4.0 additions
+        "Data",
+        # v3.8.0 additions
+        "MaxValue",
+    }
+)
 
 # User-friendly role aliases to PBIR role names
 ROLE_ALIASES: dict[str, dict[str, str]] = {
@@ -127,7 +136,11 @@ ROLE_ALIASES: dict[str, dict[str, str]] = {
     "ribbonChart": {"category": "Category", "value": "Y", "legend": "Legend"},
     "waterfallChart": {"category": "Category", "value": "Y", "breakdown": "Breakdown"},
     "scatterChart": {
-        "x": "X", "y": "Y", "detail": "Details", "size": "Size", "legend": "Legend",
+        "x": "X",
+        "y": "Y",
+        "detail": "Details",
+        "size": "Size",
+        "legend": "Legend",
         "value": "Y",
     },
     "funnelChart": {"category": "Category", "value": "Y"},
@@ -192,8 +205,7 @@ def _build_visual_json(
 ) -> dict[str, Any]:
     """Fill placeholders in a template string and return parsed JSON."""
     filled = (
-        template_str
-        .replace("__VISUAL_NAME__", name)
+        template_str.replace("__VISUAL_NAME__", name)
         .replace("__X__", str(x))
         .replace("__Y__", str(y))
         .replace("__WIDTH__", str(width))
@@ -201,7 +213,8 @@ def _build_visual_json(
         .replace("__Z__", str(z))
         .replace("__TAB_ORDER__", str(tab_order))
     )
-    return json.loads(filled)
+    result: dict[str, Any] = json.loads(filled)
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -255,9 +268,7 @@ DEFAULT_SIZES: dict[str, tuple[float, float]] = {
 # ---------------------------------------------------------------------------
 
 
-def visual_list(
-    definition_path: Path, page_name: str
-) -> list[dict[str, Any]]:
+def visual_list(definition_path: Path, page_name: str) -> list[dict[str, Any]]:
     """List all visuals on a page."""
     visuals_dir = definition_path / "pages" / page_name / "visuals"
     if not visuals_dir.is_dir():
@@ -274,33 +285,35 @@ def visual_list(
 
         # Group container: has "visualGroup" key instead of "visual"
         if "visualGroup" in data and "visual" not in data:
-            results.append({
-                "name": data.get("name", vdir.name),
-                "visual_type": "group",
-                "x": 0,
-                "y": 0,
-                "width": 0,
-                "height": 0,
-            })
+            results.append(
+                {
+                    "name": data.get("name", vdir.name),
+                    "visual_type": "group",
+                    "x": 0,
+                    "y": 0,
+                    "width": 0,
+                    "height": 0,
+                }
+            )
             continue
 
         pos = data.get("position", {})
         visual_config = data.get("visual", {})
-        results.append({
-            "name": data.get("name", vdir.name),
-            "visual_type": visual_config.get("visualType", "unknown"),
-            "x": pos.get("x", 0),
-            "y": pos.get("y", 0),
-            "width": pos.get("width", 0),
-            "height": pos.get("height", 0),
-        })
+        results.append(
+            {
+                "name": data.get("name", vdir.name),
+                "visual_type": visual_config.get("visualType", "unknown"),
+                "x": pos.get("x", 0),
+                "y": pos.get("y", 0),
+                "width": pos.get("width", 0),
+                "height": pos.get("height", 0),
+            }
+        )
 
     return results
 
 
-def visual_get(
-    definition_path: Path, page_name: str, visual_name: str
-) -> dict[str, Any]:
+def visual_get(definition_path: Path, page_name: str, visual_name: str) -> dict[str, Any]:
     """Get detailed information about a visual."""
     visual_dir = get_visual_dir(definition_path, page_name, visual_name)
     vfile = visual_dir / "visual.json"
@@ -320,11 +333,13 @@ def visual_get(
         for proj in projections:
             field = proj.get("field", {})
             query_ref = proj.get("queryRef", "")
-            bindings.append({
-                "role": role,
-                "query_ref": query_ref,
-                "field": _summarize_field(field),
-            })
+            bindings.append(
+                {
+                    "role": role,
+                    "query_ref": query_ref,
+                    "field": _summarize_field(field),
+                }
+            )
 
     return {
         "name": data.get("name", visual_name),
@@ -465,16 +480,12 @@ def visual_set_container(
     visual_dir = get_visual_dir(definition_path, page_name, visual_name)
     visual_json_path = visual_dir / "visual.json"
     if not visual_json_path.exists():
-        raise PbiCliError(
-            f"Visual '{visual_name}' not found on page '{page_name}'."
-        )
+        raise PbiCliError(f"Visual '{visual_name}' not found on page '{page_name}'.")
 
     data = _read_json(visual_json_path)
     visual = data.get("visual")
     if visual is None:
-        raise PbiCliError(
-            f"Visual '{visual_name}' has invalid JSON -- missing 'visual' key."
-        )
+        raise PbiCliError(f"Visual '{visual_name}' has invalid JSON -- missing 'visual' key.")
 
     if border_show is None and background_show is None and title is None:
         return {
@@ -489,26 +500,17 @@ def visual_set_container(
     vco: dict[str, Any] = dict(visual.get("visualContainerObjects", {}))
 
     def _bool_entry(value: bool) -> list[dict[str, Any]]:
-        return [{
-            "properties": {
-                "show": {
-                    "expr": {"Literal": {"Value": str(value).lower()}}
-                }
-            }
-        }]
+        return [{"properties": {"show": {"expr": {"Literal": {"Value": str(value).lower()}}}}}]
 
     if border_show is not None:
         vco = {**vco, "border": _bool_entry(border_show)}
     if background_show is not None:
         vco = {**vco, "background": _bool_entry(background_show)}
     if title is not None:
-        vco = {**vco, "title": [{
-            "properties": {
-                "text": {
-                    "expr": {"Literal": {"Value": f"'{title}'"}}
-                }
-            }
-        }]}
+        vco = {
+            **vco,
+            "title": [{"properties": {"text": {"expr": {"Literal": {"Value": f"'{title}'"}}}}}],
+        }
 
     updated_visual = {**visual, "visualContainerObjects": vco}
     _write_json(visual_json_path, {**data, "visual": updated_visual})
@@ -523,9 +525,7 @@ def visual_set_container(
     }
 
 
-def visual_delete(
-    definition_path: Path, page_name: str, visual_name: str
-) -> dict[str, Any]:
+def visual_delete(definition_path: Path, page_name: str, visual_name: str) -> dict[str, Any]:
     """Delete a visual from a page."""
     visual_dir = get_visual_dir(definition_path, page_name, visual_name)
 
@@ -638,28 +638,34 @@ def visual_bind(
                     "Property": column,
                 }
             }
-        select_items.append({
-            **cmd_field_expr,
-            "Name": query_ref,
-        })
+        select_items.append(
+            {
+                **cmd_field_expr,
+                "Name": query_ref,
+            }
+        )
 
-        applied.append({
-            "role": pbir_role,
-            "field": field_ref,
-            "query_ref": query_ref,
-        })
+        applied.append(
+            {
+                "role": pbir_role,
+                "field": field_ref,
+                "query_ref": query_ref,
+            }
+        )
 
     # Set the semantic query Commands block (merges with existing)
     if from_entities and select_items:
-        query["Commands"] = [{
-            "SemanticQueryDataShapeCommand": {
-                "Query": {
-                    "Version": 2,
-                    "From": list(from_entities.values()),
-                    "Select": select_items,
+        query["Commands"] = [
+            {
+                "SemanticQueryDataShapeCommand": {
+                    "Query": {
+                        "Version": 2,
+                        "From": list(from_entities.values()),
+                        "Select": select_items,
+                    }
                 }
             }
-        }]
+        ]
 
     data["visual"] = visual_config
     _write_json(vfile, data)
@@ -690,9 +696,7 @@ def _parse_field_ref(ref: str) -> tuple[str, str]:
         column = match.group(2).strip()
         return table, column
 
-    raise PbiCliError(
-        f"Invalid field reference '{ref}'. Expected 'Table[Column]' format."
-    )
+    raise PbiCliError(f"Invalid field reference '{ref}'. Expected 'Table[Column]' format.")
 
 
 def _summarize_field(field: dict[str, Any]) -> str:
@@ -878,12 +882,14 @@ def visual_calc_list(
         for proj in state.get("projections", []):
             nvc = proj.get("field", {}).get("NativeVisualCalculation")
             if nvc is not None:
-                results.append({
-                    "name": nvc.get("Name", ""),
-                    "expression": nvc.get("Expression", ""),
-                    "role": role,
-                    "query_ref": proj.get("queryRef", "select"),
-                })
+                results.append(
+                    {
+                        "name": nvc.get("Name", ""),
+                        "expression": nvc.get("Expression", ""),
+                        "role": role,
+                        "query_ref": proj.get("queryRef", "select"),
+                    }
+                )
 
     return results
 
@@ -905,15 +911,14 @@ def visual_calc_delete(
         raise PbiCliError(f"Visual '{visual_name}' not found on page '{page_name}'.")
 
     data = _read_json(vfile)
-    query_state = (
-        data.get("visual", {}).get("query", {}).get("queryState", {})
-    )
+    query_state = data.get("visual", {}).get("query", {}).get("queryState", {})
 
     found = False
     for role, state in query_state.items():
         projections: list[dict[str, Any]] = state.get("projections", [])
         new_projections = [
-            proj for proj in projections
+            proj
+            for proj in projections
             if proj.get("field", {}).get("NativeVisualCalculation", {}).get("Name") != calc_name
         ]
         if len(new_projections) < len(projections):
@@ -921,9 +926,7 @@ def visual_calc_delete(
             found = True
 
     if not found:
-        raise PbiCliError(
-            f"Visual calculation '{calc_name}' not found in visual '{visual_name}'."
-        )
+        raise PbiCliError(f"Visual calculation '{calc_name}' not found in visual '{visual_name}'.")
 
     _write_json(vfile, data)
     return {"status": "deleted", "visual": visual_name, "name": calc_name}

@@ -48,9 +48,9 @@ def reload_desktop() -> dict[str, Any]:
 def _try_pywin32() -> dict[str, Any] | None:
     """Try to use pywin32 to send a reload shortcut to PBI Desktop."""
     try:
-        import win32api  # type: ignore[import-untyped]
-        import win32con  # type: ignore[import-untyped]
-        import win32gui  # type: ignore[import-untyped]
+        import win32api
+        import win32con
+        import win32gui
     except ImportError:
         return None
 
@@ -93,7 +93,7 @@ def _try_pywin32() -> dict[str, Any] | None:
 
 def _find_pbi_window_pywin32() -> int:
     """Find Power BI Desktop's main window handle via pywin32."""
-    import win32gui  # type: ignore[import-untyped]
+    import win32gui
 
     result = 0
 

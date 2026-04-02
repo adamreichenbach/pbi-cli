@@ -58,15 +58,18 @@ def _make_page(definition_path: Path, page_name: str, display_name: str = "Overv
     """Create a minimal page folder and return the page dir."""
     page_dir = definition_path / "pages" / page_name
     page_dir.mkdir(parents=True, exist_ok=True)
-    _write(page_dir / "page.json", {
-        "$schema": _SCHEMA_PAGE,
-        "name": page_name,
-        "displayName": display_name,
-        "displayOption": "FitToPage",
-        "width": 1280,
-        "height": 720,
-        "ordinal": 0,
-    })
+    _write(
+        page_dir / "page.json",
+        {
+            "$schema": _SCHEMA_PAGE,
+            "name": page_name,
+            "displayName": display_name,
+            "displayOption": "FitToPage",
+            "width": 1280,
+            "height": 720,
+            "ordinal": 0,
+        },
+    )
     return page_dir
 
 
@@ -74,17 +77,20 @@ def _make_visual(page_dir: Path, visual_name: str) -> Path:
     """Create a minimal visual folder and return the visual dir."""
     visual_dir = page_dir / "visuals" / visual_name
     visual_dir.mkdir(parents=True, exist_ok=True)
-    _write(visual_dir / "visual.json", {
-        "$schema": _SCHEMA_VISUAL_CONTAINER,
-        "name": visual_name,
-        "position": {"x": 0, "y": 0, "width": 400, "height": 300, "z": 0, "tabOrder": 0},
-        "visual": {
-            "$schema": _SCHEMA_VISUAL_CONFIG,
-            "visualType": "barChart",
-            "query": {"queryState": {}},
-            "objects": {},
+    _write(
+        visual_dir / "visual.json",
+        {
+            "$schema": _SCHEMA_VISUAL_CONTAINER,
+            "name": visual_name,
+            "position": {"x": 0, "y": 0, "width": 400, "height": 300, "z": 0, "tabOrder": 0},
+            "visual": {
+                "$schema": _SCHEMA_VISUAL_CONFIG,
+                "visualType": "barChart",
+                "query": {"queryState": {}},
+                "objects": {},
+            },
         },
-    })
+    )
     return visual_dir
 
 
@@ -123,9 +129,7 @@ def test_filter_list_empty_visual(definition_path: Path) -> None:
 
 def test_filter_list_with_filters(definition_path: Path) -> None:
     """filter_list returns the filters after one is added."""
-    filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Region", ["North", "South"]
-    )
+    filter_add_categorical(definition_path, "page_overview", "Sales", "Region", ["North", "South"])
     result = filter_list(definition_path, "page_overview")
     assert len(result) == 1
     assert result[0]["type"] == "Categorical"
@@ -193,9 +197,7 @@ def test_filter_add_categorical_json_structure(definition_path: Path) -> None:
 
 def test_filter_add_categorical_alias_from_table_name(definition_path: Path) -> None:
     """Source alias uses the first character of the table name, lowercased."""
-    filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Product", ["Widget"]
-    )
+    filter_add_categorical(definition_path, "page_overview", "Sales", "Product", ["Widget"])
     page_json = definition_path / "pages" / "page_overview" / "page.json"
     f = _read(page_json)["filterConfig"]["filters"][0]
     alias = f["filter"]["From"][0]["Name"]
@@ -243,7 +245,11 @@ def test_filter_add_categorical_visual_scope(definition_path: Path) -> None:
 def test_filter_list_visual_after_add(definition_path: Path) -> None:
     """filter_list on a visual returns the added filter."""
     filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Year", ["2024"],
+        definition_path,
+        "page_overview",
+        "Sales",
+        "Year",
+        ["2024"],
         visual_name="visual_abc123",
     )
     result = filter_list(definition_path, "page_overview", visual_name="visual_abc123")
@@ -281,8 +287,13 @@ def test_filter_remove_raises_for_unknown_name(definition_path: Path) -> None:
 def test_filter_remove_visual(definition_path: Path) -> None:
     """filter_remove works on visual-level filters."""
     filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Year", ["2024"],
-        visual_name="visual_abc123", name="vis_filter_x",
+        definition_path,
+        "page_overview",
+        "Sales",
+        "Year",
+        ["2024"],
+        visual_name="visual_abc123",
+        name="vis_filter_x",
     )
     result = filter_remove(
         definition_path, "page_overview", "vis_filter_x", visual_name="visual_abc123"
@@ -298,9 +309,7 @@ def test_filter_remove_visual(definition_path: Path) -> None:
 
 def test_filter_clear_removes_all(definition_path: Path) -> None:
     """filter_clear removes every filter and returns the correct count."""
-    filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Region", ["East"], name="f1"
-    )
+    filter_add_categorical(definition_path, "page_overview", "Sales", "Region", ["East"], name="f1")
     filter_add_categorical(
         definition_path, "page_overview", "Sales", "Product", ["Widget"], name="f2"
     )
@@ -319,7 +328,11 @@ def test_filter_clear_empty_page(definition_path: Path) -> None:
 def test_filter_clear_visual_scope(definition_path: Path) -> None:
     """filter_clear on a visual uses scope='visual'."""
     filter_add_categorical(
-        definition_path, "page_overview", "Sales", "Year", ["2024"],
+        definition_path,
+        "page_overview",
+        "Sales",
+        "Year",
+        ["2024"],
         visual_name="visual_abc123",
     )
     result = filter_clear(definition_path, "page_overview", visual_name="visual_abc123")
@@ -346,7 +359,11 @@ def test_multiple_adds_accumulate(definition_path: Path) -> None:
     """Each call to filter_add_categorical appends rather than replaces."""
     for i in range(3):
         filter_add_categorical(
-            definition_path, "page_overview", "Sales", "Region", [f"Region{i}"],
+            definition_path,
+            "page_overview",
+            "Sales",
+            "Region",
+            [f"Region{i}"],
             name=f"filter_{i}",
         )
     result = filter_list(definition_path, "page_overview")
@@ -361,9 +378,13 @@ def test_multiple_adds_accumulate(definition_path: Path) -> None:
 def test_filter_add_topn_returns_status(definition_path: Path) -> None:
     """filter_add_topn returns the expected status dict."""
     result = filter_add_topn(
-        definition_path, "page_overview",
-        table="financials", column="Country",
-        n=3, order_by_table="financials", order_by_column="Sales",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Country",
+        n=3,
+        order_by_table="financials",
+        order_by_column="Sales",
     )
     assert result["status"] == "added"
     assert result["type"] == "TopN"
@@ -376,9 +397,13 @@ def test_filter_add_topn_returns_status(definition_path: Path) -> None:
 def test_filter_add_topn_persisted(definition_path: Path) -> None:
     """filter_add_topn writes a TopN filter entry to page.json."""
     filter_add_topn(
-        definition_path, "page_overview",
-        table="financials", column="Country",
-        n=3, order_by_table="financials", order_by_column="Sales",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Country",
+        n=3,
+        order_by_table="financials",
+        order_by_column="Sales",
         name="topn_test",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
@@ -394,9 +419,13 @@ def test_filter_add_topn_persisted(definition_path: Path) -> None:
 def test_filter_add_topn_subquery_structure(definition_path: Path) -> None:
     """The TopN filter has the correct Subquery/From/Where structure."""
     filter_add_topn(
-        definition_path, "page_overview",
-        table="financials", column="Country",
-        n=5, order_by_table="financials", order_by_column="Sales",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Country",
+        n=5,
+        order_by_table="financials",
+        order_by_column="Sales",
         name="topn_struct",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
@@ -419,10 +448,15 @@ def test_filter_add_topn_subquery_structure(definition_path: Path) -> None:
 def test_filter_add_topn_direction_bottom(definition_path: Path) -> None:
     """direction='Bottom' produces PBI Direction=1 in the OrderBy."""
     filter_add_topn(
-        definition_path, "page_overview",
-        table="financials", column="Country",
-        n=3, order_by_table="financials", order_by_column="Profit",
-        direction="Bottom", name="topn_bottom",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Country",
+        n=3,
+        order_by_table="financials",
+        order_by_column="Profit",
+        direction="Bottom",
+        name="topn_bottom",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
     f = _read(page_json)["filterConfig"]["filters"][0]["filter"]
@@ -434,9 +468,13 @@ def test_filter_add_topn_invalid_direction(definition_path: Path) -> None:
     """filter_add_topn raises PbiCliError for an unknown direction."""
     with pytest.raises(PbiCliError):
         filter_add_topn(
-            definition_path, "page_overview",
-            table="financials", column="Country",
-            n=3, order_by_table="financials", order_by_column="Sales",
+            definition_path,
+            "page_overview",
+            table="financials",
+            column="Country",
+            n=3,
+            order_by_table="financials",
+            order_by_column="Sales",
             direction="Middle",
         )
 
@@ -444,9 +482,13 @@ def test_filter_add_topn_invalid_direction(definition_path: Path) -> None:
 def test_filter_add_topn_visual_scope(definition_path: Path) -> None:
     """filter_add_topn adds a visual filter with scope='visual' and no howCreated."""
     result = filter_add_topn(
-        definition_path, "page_overview",
-        table="financials", column="Country",
-        n=3, order_by_table="financials", order_by_column="Sales",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Country",
+        n=3,
+        order_by_table="financials",
+        order_by_column="Sales",
         visual_name="visual_abc123",
     )
     assert result["scope"] == "visual"
@@ -465,9 +507,12 @@ def test_filter_add_topn_visual_scope(definition_path: Path) -> None:
 def test_filter_add_relative_date_returns_status(definition_path: Path) -> None:
     """filter_add_relative_date returns the expected status dict."""
     result = filter_add_relative_date(
-        definition_path, "page_overview",
-        table="financials", column="Date",
-        amount=3, time_unit="months",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Date",
+        amount=3,
+        time_unit="months",
     )
     assert result["status"] == "added"
     assert result["type"] == "RelativeDate"
@@ -479,9 +524,12 @@ def test_filter_add_relative_date_returns_status(definition_path: Path) -> None:
 def test_filter_add_relative_date_persisted(definition_path: Path) -> None:
     """filter_add_relative_date writes a RelativeDate entry to page.json."""
     filter_add_relative_date(
-        definition_path, "page_overview",
-        table="financials", column="Date",
-        amount=3, time_unit="months",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Date",
+        amount=3,
+        time_unit="months",
         name="reldate_test",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
@@ -497,9 +545,12 @@ def test_filter_add_relative_date_persisted(definition_path: Path) -> None:
 def test_filter_add_relative_date_between_structure(definition_path: Path) -> None:
     """The RelativeDate filter uses a Between/DateAdd/DateSpan/Now structure."""
     filter_add_relative_date(
-        definition_path, "page_overview",
-        table="financials", column="Date",
-        amount=3, time_unit="months",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Date",
+        amount=3,
+        time_unit="months",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
     f = _read(page_json)["filterConfig"]["filters"][0]["filter"]
@@ -526,9 +577,12 @@ def test_filter_add_relative_date_between_structure(definition_path: Path) -> No
 def test_filter_add_relative_date_time_unit_years(definition_path: Path) -> None:
     """time_unit='years' maps to TimeUnit=3 in the DateAdd."""
     filter_add_relative_date(
-        definition_path, "page_overview",
-        table="financials", column="Date",
-        amount=1, time_unit="years",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Date",
+        amount=1,
+        time_unit="years",
     )
     page_json = definition_path / "pages" / "page_overview" / "page.json"
     f = _read(page_json)["filterConfig"]["filters"][0]["filter"]
@@ -541,18 +595,24 @@ def test_filter_add_relative_date_invalid_unit(definition_path: Path) -> None:
     """filter_add_relative_date raises PbiCliError for an unknown time_unit."""
     with pytest.raises(PbiCliError):
         filter_add_relative_date(
-            definition_path, "page_overview",
-            table="financials", column="Date",
-            amount=3, time_unit="quarters",
+            definition_path,
+            "page_overview",
+            table="financials",
+            column="Date",
+            amount=3,
+            time_unit="quarters",
         )
 
 
 def test_filter_add_relative_date_visual_scope(definition_path: Path) -> None:
     """filter_add_relative_date adds a visual filter with no howCreated key."""
     result = filter_add_relative_date(
-        definition_path, "page_overview",
-        table="financials", column="Date",
-        amount=7, time_unit="days",
+        definition_path,
+        "page_overview",
+        table="financials",
+        column="Date",
+        amount=7,
+        time_unit="days",
         visual_name="visual_abc123",
     )
     assert result["scope"] == "visual"

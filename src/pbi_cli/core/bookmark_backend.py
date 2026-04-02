@@ -34,7 +34,8 @@ SCHEMA_BOOKMARK = (
 
 def _read_json(path: Path) -> dict[str, Any]:
     """Read and parse a JSON file."""
-    return json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
+    return result
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -93,11 +94,13 @@ def bookmark_list(definition_path: Path) -> list[dict[str, Any]]:
             continue
         bm = _read_json(bm_file)
         exploration = bm.get("explorationState", {})
-        results.append({
-            "name": name,
-            "display_name": bm.get("displayName", ""),
-            "active_section": exploration.get("activeSection"),
-        })
+        results.append(
+            {
+                "name": name,
+                "display_name": bm.get("displayName", ""),
+                "active_section": exploration.get("activeSection"),
+            }
+        )
 
     return results
 

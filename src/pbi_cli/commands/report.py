@@ -46,9 +46,7 @@ def info(ctx: PbiContext, click_ctx: click.Context) -> None:
     help="Relative path to semantic model folder (e.g. ../MyModel.Dataset).",
 )
 @pass_context
-def create(
-    ctx: PbiContext, target_path: str, name: str, dataset_path: str | None
-) -> None:
+def create(ctx: PbiContext, target_path: str, name: str, dataset_path: str | None) -> None:
     """Scaffold a new PBIR report project."""
     from pbi_cli.core.report_backend import report_create
 
@@ -168,7 +166,10 @@ def get_theme(ctx: PbiContext, click_ctx: click.Context) -> None:
 
 @report.command(name="diff-theme")
 @click.option(
-    "--file", "-f", required=True, type=click.Path(exists=True),
+    "--file",
+    "-f",
+    required=True,
+    type=click.Path(exists=True),
     help="Proposed theme JSON file.",
 )
 @click.pass_context
@@ -196,9 +197,7 @@ def diff_theme(ctx: PbiContext, click_ctx: click.Context, file: str) -> None:
 @click.option("--color", "-c", required=True, help="Hex color e.g. '#F8F9FA'.")
 @click.pass_context
 @pass_context
-def set_background(
-    ctx: PbiContext, click_ctx: click.Context, page_name: str, color: str
-) -> None:
+def set_background(ctx: PbiContext, click_ctx: click.Context, page_name: str, color: str) -> None:
     """Set the background color of a page."""
     from pbi_cli.core.pbir_path import resolve_report_path
     from pbi_cli.core.report_backend import page_set_background
@@ -223,9 +222,7 @@ def set_background(
 )
 @click.pass_context
 @pass_context
-def set_visibility(
-    ctx: PbiContext, click_ctx: click.Context, page_name: str, hidden: bool
-) -> None:
+def set_visibility(ctx: PbiContext, click_ctx: click.Context, page_name: str, hidden: bool) -> None:
     """Hide or show a page in the report navigation."""
     from pbi_cli.core.pbir_path import resolve_report_path
     from pbi_cli.core.report_backend import page_set_visibility

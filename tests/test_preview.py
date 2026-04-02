@@ -24,63 +24,78 @@ def preview_report(tmp_path: Path) -> Path:
     defn = tmp_path / "Test.Report" / "definition"
     defn.mkdir(parents=True)
 
-    _write(defn / "report.json", {
-        "$schema": "...",
-        "themeCollection": {"baseTheme": {"name": "CY24SU06"}},
-        "layoutOptimization": "Disabled",
-    })
+    _write(
+        defn / "report.json",
+        {
+            "$schema": "...",
+            "themeCollection": {"baseTheme": {"name": "CY24SU06"}},
+            "layoutOptimization": "Disabled",
+        },
+    )
     _write(defn / "version.json", {"$schema": "...", "version": "1.0.0"})
-    _write(defn / "pages" / "pages.json", {
-        "$schema": "...",
-        "pageOrder": ["overview"],
-    })
+    _write(
+        defn / "pages" / "pages.json",
+        {
+            "$schema": "...",
+            "pageOrder": ["overview"],
+        },
+    )
 
     page_dir = defn / "pages" / "overview"
     page_dir.mkdir(parents=True)
-    _write(page_dir / "page.json", {
-        "$schema": "...",
-        "name": "overview",
-        "displayName": "Executive Overview",
-        "displayOption": "FitToPage",
-        "width": 1280,
-        "height": 720,
-        "ordinal": 0,
-    })
+    _write(
+        page_dir / "page.json",
+        {
+            "$schema": "...",
+            "name": "overview",
+            "displayName": "Executive Overview",
+            "displayOption": "FitToPage",
+            "width": 1280,
+            "height": 720,
+            "ordinal": 0,
+        },
+    )
 
     # Bar chart visual
     bar_dir = page_dir / "visuals" / "bar1"
     bar_dir.mkdir(parents=True)
-    _write(bar_dir / "visual.json", {
-        "$schema": "...",
-        "name": "bar1",
-        "position": {"x": 50, "y": 50, "width": 400, "height": 300, "z": 0},
-        "visual": {
-            "visualType": "barChart",
-            "query": {
-                "queryState": {
-                    "Category": {"projections": [{"queryRef": "g.Region", "field": {}}]},
-                    "Y": {"projections": [{"queryRef": "s.Amount", "field": {}}]},
+    _write(
+        bar_dir / "visual.json",
+        {
+            "$schema": "...",
+            "name": "bar1",
+            "position": {"x": 50, "y": 50, "width": 400, "height": 300, "z": 0},
+            "visual": {
+                "visualType": "barChart",
+                "query": {
+                    "queryState": {
+                        "Category": {"projections": [{"queryRef": "g.Region", "field": {}}]},
+                        "Y": {"projections": [{"queryRef": "s.Amount", "field": {}}]},
+                    },
                 },
             },
         },
-    })
+    )
 
     # Card visual
     card_dir = page_dir / "visuals" / "card1"
     card_dir.mkdir(parents=True)
-    _write(card_dir / "visual.json", {
-        "$schema": "...",
-        "name": "card1",
-        "position": {"x": 500, "y": 50, "width": 200, "height": 120, "z": 1},
-        "visual": {
-            "visualType": "card",
-            "query": {
-                "queryState": {
-                    "Fields": {"projections": [{"queryRef": "s.Revenue", "field": {}}]},
+    _write(
+        card_dir / "visual.json",
+        {
+            "$schema": "...",
+            "name": "card1",
+            "position": {"x": 500, "y": 50, "width": 200, "height": 120, "z": 1},
+            "visual": {
+                "visualType": "card",
+                "query": {
+                    "queryState": {
+                        "Fields": {"projections": [{"queryRef": "s.Revenue", "field": {}}]},
+                    },
                 },
             },
         },
-    })
+    )
 
     return defn
 
@@ -122,11 +137,14 @@ class TestRenderReport:
     def test_empty_report(self, tmp_path: Path) -> None:
         defn = tmp_path / "Empty.Report" / "definition"
         defn.mkdir(parents=True)
-        _write(defn / "report.json", {
-            "$schema": "...",
-            "themeCollection": {"baseTheme": {"name": "Default"}},
-            "layoutOptimization": "Disabled",
-        })
+        _write(
+            defn / "report.json",
+            {
+                "$schema": "...",
+                "themeCollection": {"baseTheme": {"name": "Default"}},
+                "layoutOptimization": "Disabled",
+            },
+        )
         html = render_report(defn)
         assert "No pages" in html
 

@@ -48,8 +48,7 @@ class VisualTypeError(PbiCliError):
     def __init__(self, visual_type: str) -> None:
         self.visual_type = visual_type
         super().__init__(
-            f"Unknown visual type '{visual_type}'. "
-            "Run 'pbi visual types' to see supported types."
+            f"Unknown visual type '{visual_type}'. Run 'pbi visual types' to see supported types."
         )
 
 
