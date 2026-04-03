@@ -34,7 +34,11 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/dual-layer.svg" alt="Two layers, one CLI" width="850"/>
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/layers.svg" alt="Dual-Layer Architecture" width="850"/>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/stats.svg" alt="pbi-cli at a Glance" width="850"/>
 </p>
 
 ---
