@@ -200,6 +200,7 @@ def _ensure_ready() -> None:
     any_missing = any(not (SKILLS_TARGET_DIR / name / "SKILL.md").exists() for name in bundled)
     if bundled and any_missing:
         print_info("Installing Claude Code skills...")
+        installed = 0
         for name, source in sorted(bundled.items()):
             target_dir = SKILLS_TARGET_DIR / name
             if (target_dir / "SKILL.md").exists():
@@ -208,6 +209,7 @@ def _ensure_ready() -> None:
             source_file = source / "SKILL.md"
             target_file = target_dir / "SKILL.md"
             target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
-        print_info("Skills installed.")
+            installed += 1
+        print_success(f"{installed} Claude Code skills installed to ~/.claude/skills/")
 
     ensure_claude_md_snippet()
