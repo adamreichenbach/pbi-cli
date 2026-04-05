@@ -52,9 +52,7 @@ def print_banner(version: str) -> None:
         # Fallback for terminals without Unicode support (e.g. legacy cmd.exe)
         art = "\n  PBI-CLI\n"
 
-    tagline = (
-        f"  {_DIM}{_TAGLINE}{_RESET}" if use_color else f"  {_TAGLINE}"
-    )
+    tagline = f"  {_DIM}{_TAGLINE}{_RESET}" if use_color else f"  {_TAGLINE}"
     ver_line = f"  {_DIM}v{version}{_RESET}" if use_color else f"  v{version}"
 
     print(art)
