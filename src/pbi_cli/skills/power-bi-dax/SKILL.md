@@ -12,7 +12,8 @@ Execute and validate DAX queries against connected Power BI models.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install
+pbi connect
 ```
 
 ## Executing Queries

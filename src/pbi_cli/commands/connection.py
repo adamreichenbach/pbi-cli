@@ -44,8 +44,6 @@ def connect(
 
     If --data-source is omitted, auto-detects a running Power BI Desktop instance.
     """
-    _ensure_ready()
-
     if data_source is None:
         data_source = _auto_discover_data_source()
 
@@ -76,6 +74,15 @@ def connect(
             )
         else:
             print_success(f"Connected: {effective_name} ({data_source})")
+            from pbi_cli.commands.skills_cmd import _is_installed, _get_bundled_skills
+
+            bundled = _get_bundled_skills()
+            any_missing = any(not _is_installed(name) for name in bundled)
+            if any_missing:
+                print_info(
+                    "Tip: Claude Code skills not yet installed. "
+                    "Run 'pbi-cli skills install' to register pbi-cli skills with Claude Code."
+                )
     except Exception as e:
         print_error(f"Connection failed: {e}")
         raise SystemExit(1)
@@ -186,30 +193,4 @@ def _auto_discover_data_source() -> str:
     return data_source
 
 
-def _ensure_ready() -> None:
-    """Auto-install skills if not already done.
 
-    Lets users go straight from install to connect in one step:
-        pipx install pbi-cli-tool
-        pbi connect -d localhost:54321
-    """
-    from pbi_cli.commands.skills_cmd import SKILLS_TARGET_DIR, _get_bundled_skills
-    from pbi_cli.core.claude_integration import ensure_claude_md_snippet
-
-    bundled = _get_bundled_skills()
-    any_missing = any(not (SKILLS_TARGET_DIR / name / "SKILL.md").exists() for name in bundled)
-    if bundled and any_missing:
-        print_info("Installing Claude Code skills...")
-        installed = 0
-        for name, source in sorted(bundled.items()):
-            target_dir = SKILLS_TARGET_DIR / name
-            if (target_dir / "SKILL.md").exists():
-                continue
-            target_dir.mkdir(parents=True, exist_ok=True)
-            source_file = source / "SKILL.md"
-            target_file = target_dir / "SKILL.md"
-            target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
-            installed += 1
-        print_success(f"{installed} Claude Code skills installed to ~/.claude/skills/")
-
-    ensure_claude_md_snippet()

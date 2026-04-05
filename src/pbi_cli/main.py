@@ -72,7 +72,6 @@ def _register_commands() -> None:
     from pbi_cli.commands.report import report
     from pbi_cli.commands.security import security_role
     from pbi_cli.commands.setup_cmd import setup
-    from pbi_cli.commands.skills_cmd import skills
     from pbi_cli.commands.table import table
     from pbi_cli.commands.trace import trace
     from pbi_cli.commands.transaction import transaction
@@ -100,7 +99,6 @@ def _register_commands() -> None:
     cli.add_command(transaction)
     cli.add_command(advanced)
     cli.add_command(repl)
-    cli.add_command(skills)
     cli.add_command(report)
     cli.add_command(visual)
     cli.add_command(filters)

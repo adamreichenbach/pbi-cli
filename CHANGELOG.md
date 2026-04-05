@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.3] - 2026-04-05
+
+### Changed
+- Claude Code integration is now fully opt-in. `pbi connect` no longer writes to `~/.claude/`. Run `pbi-cli skills install` explicitly to register skills with Claude Code. See [SECURITY.md](SECURITY.md) for full details.
+- `pbi-cli` is now a dedicated management entry point (`pbi-cli skills install/uninstall/list`). Skills subcommands have been removed from the `pbi` entry point.
+
+### Fixed
+- DLL licensing: Microsoft Analysis Services client library DLLs bundled in `src/pbi_cli/dlls/` are now correctly attributed under the Microsoft Software License Terms, not sublicensed under MIT. Full EULA text in `THIRD_PARTY_LICENSES.md`.
+- `pyproject.toml` updated to PEP 639 dual SPDX expression (`MIT AND LicenseRef-Microsoft-AS-Client-Libraries`) with `license-files` declaration.
+- README.md and README.pypi.md updated to reflect the correct 3-step setup flow: `pipx install` → `pbi-cli skills install` → `pbi connect`.
+
 ## [3.10.0] - 2026-04-02
 
 ### Added

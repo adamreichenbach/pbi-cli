@@ -12,7 +12,8 @@ Generate comprehensive documentation for Power BI semantic models.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install
+pbi connect
 ```
 
 ## Quick Model Overview

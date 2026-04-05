@@ -12,8 +12,6 @@ if TYPE_CHECKING:
 
 import click
 
-from pbi_cli.main import pass_context
-
 SKILLS_TARGET_DIR = Path.home() / ".claude" / "skills"
 
 
@@ -38,8 +36,7 @@ def skills() -> None:
 
 
 @skills.command("list")
-@pass_context
-def skills_list(ctx: object) -> None:
+def skills_list() -> None:
     """List available and installed skills."""
     bundled = _get_bundled_skills()
     if not bundled:
@@ -59,22 +56,39 @@ def skills_list(ctx: object) -> None:
 @skills.command("install")
 @click.option("--skill", "skill_name", default=None, help="Install a specific skill.")
 @click.option("--force", is_flag=True, default=False, help="Overwrite existing installations.")
-@pass_context
-def skills_install(ctx: object, skill_name: str | None, force: bool) -> None:
-    """Install skills to ~/.claude/skills/ for Claude Code discovery."""
+@click.option("--yes", "-y", is_flag=True, default=False, help="Skip confirmation prompt.")
+def skills_install(skill_name: str | None, force: bool, yes: bool) -> None:
+    """Install Power BI skills to ~/.claude/skills/ and register with CLAUDE.md."""
     bundled = _get_bundled_skills()
     if not bundled:
         click.echo("No bundled skills found.", err=True)
         return
 
-    to_install = (
-        {skill_name: bundled[skill_name]} if skill_name and skill_name in bundled else bundled
-    )
-
     if skill_name and skill_name not in bundled:
         raise click.ClickException(
             f"Unknown skill '{skill_name}'. Available: {', '.join(sorted(bundled))}"
         )
+
+    to_install = (
+        {skill_name: bundled[skill_name]} if skill_name and skill_name in bundled else bundled
+    )
+
+    if not yes:
+        click.echo(
+            "This command will modify your global Claude Code configuration:\n"
+        )
+        click.echo(
+            f"  {'~/.claude/skills/power-bi-*/':<52} copy {len(to_install)} skill file(s)"
+        )
+        click.echo(
+            f"  {'~/.claude/CLAUDE.md':<52} append pbi-cli skill trigger block"
+        )
+        click.echo(
+            "\nThis affects ALL Claude Code sessions, not just Power BI work."
+        )
+        if not click.confirm("\nProceed?", default=False):
+            click.echo("Aborted.")
+            return
 
     installed_count = 0
     for name, source in sorted(to_install.items()):
@@ -87,18 +101,21 @@ def skills_install(ctx: object, skill_name: str | None, force: bool) -> None:
         source_file = source / "SKILL.md"
         target_file = target_dir / "SKILL.md"
 
-        # Read from importlib resource and write to target
         target_file.write_text(source_file.read_text(encoding="utf-8"), encoding="utf-8")
         installed_count += 1
         click.echo(f"  {name}: installed", err=True)
+
+    if installed_count > 0:
+        from pbi_cli.core.claude_integration import ensure_claude_md_snippet
+
+        ensure_claude_md_snippet()
 
     click.echo(f"\n{installed_count} skill(s) installed to {SKILLS_TARGET_DIR}", err=True)
 
 
 @skills.command("uninstall")
 @click.option("--skill", "skill_name", default=None, help="Uninstall a specific skill.")
-@pass_context
-def skills_uninstall(ctx: object, skill_name: str | None) -> None:
+def skills_uninstall(skill_name: str | None) -> None:
     """Remove installed skills from ~/.claude/skills/."""
     bundled = _get_bundled_skills()
     names = [skill_name] if skill_name else sorted(bundled)

@@ -12,7 +12,8 @@ Manage table partitions, named expressions (M queries), and calendar tables.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install
+pbi connect
 ```
 
 ## Partitions

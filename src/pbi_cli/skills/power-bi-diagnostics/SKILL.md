@@ -12,7 +12,8 @@ Troubleshoot performance, trace queries, and verify the pbi-cli environment.
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install
+pbi connect
 ```
 
 ## Environment Check

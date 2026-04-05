@@ -47,10 +47,11 @@
 
 ```bash
 pipx install pbi-cli-tool    # 1. Install (handles PATH automatically)
-pbi connect                  # 2. Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install       # 2. Register Claude Code skills (one-time setup)
+pbi connect                  # 3. Connect to Power BI Desktop
 ```
 
-Open Power BI Desktop with a `.pbix` file, run `pbi connect`, and start asking Claude.
+Open Power BI Desktop with a `.pbix` file, run the three commands above, and start asking Claude.
 
 > **Requires:** Windows with Python 3.10+ and Power BI Desktop running.
 
@@ -191,7 +192,7 @@ Bundled DLLs ship inside the Python package (`pbi_cli/dlls/`).
 
 ## Skills
 
-After running `pbi connect`, Claude Code discovers **12 Power BI skills** automatically. Each skill teaches Claude a different area. You don't need to memorize commands.
+After running `pbi-cli skills install`, Claude Code discovers **12 Power BI skills**. Each skill teaches Claude a different area. You don't need to memorize commands.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/skills-hub.svg" alt="12 Skills" width="850"/>
@@ -289,6 +290,21 @@ pytest -m "not e2e"            # Run tests (488 tests)
 
 ---
 
+## Bundled third-party software
+
+`pbi-cli-tool` ships with Microsoft Analysis Services client library
+assemblies (`Microsoft.AnalysisServices.*.dll`) under `src/pbi_cli/dlls/`.
+These binaries are **not** covered by pbi-cli's MIT license. They are
+redistributed unmodified under the Microsoft Software License Terms for
+Microsoft Analysis Management Objects (AMO) and Microsoft Analysis
+Services - ADOMD.NET. Full terms are in
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) and the companion
+[NOTICE](NOTICE) file. By installing `pbi-cli-tool` you agree to those
+terms in addition to the MIT License that applies to the rest of the
+package.
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please open an issue first to discuss what you'd like to change.
@@ -306,5 +322,5 @@ Contributions are welcome! Please open an issue first to discuss what you'd like
 </p>
 
 <p align="center">
-  <sub>MIT License</sub>
+  <sub>MIT License — bundled Microsoft DLLs are licensed separately, see <a href="THIRD_PARTY_LICENSES.md">THIRD_PARTY_LICENSES.md</a></sub>
 </p>

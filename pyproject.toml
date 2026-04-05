@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pbi-cli-tool"
-version = "3.10.1"
+version = "3.10.3"
 description = "CLI for Power BI semantic models and PBIR reports - direct .NET connection for token-efficient AI agent usage"
 readme = "README.pypi.md"
-license = {text = "MIT"}
+license = "MIT AND LicenseRef-Microsoft-AS-Client-Libraries"
+license-files = ["LICENSE", "THIRD_PARTY_LICENSES.md", "NOTICE"]
 requires-python = ">=3.10"
 authors = [
     {name = "pbi-cli contributors"},
@@ -17,7 +18,6 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -37,6 +37,7 @@ dependencies = [
 
 [project.scripts]
 pbi = "pbi_cli.main:cli"
+pbi-cli = "pbi_cli.main_pbi_cli:cli"
 
 [project.urls]
 Homepage = "https://github.com/MinaSaad1/pbi-cli"
@@ -58,7 +59,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "pbi_cli.skills" = ["**/*.md"]
-"pbi_cli.dlls" = ["*.dll"]
+"pbi_cli.dlls" = ["*.dll", "*.json", "README.md"]
 "pbi_cli.templates" = ["**/*.json"]
 
 [tool.ruff]

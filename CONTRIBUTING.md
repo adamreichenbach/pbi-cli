@@ -61,7 +61,7 @@ tests/            # Mirrors src/ structure
 
 1. Create `src/pbi_cli/skills/your-skill/SKILL.md`
 2. Follow the frontmatter format from existing skills
-3. Test with `pbi skills list` and `pbi skills install`
+3. Test with `pbi-cli skills list` and `pbi-cli skills install`
 
 ## Reporting Issues
 

@@ -12,7 +12,8 @@ Manage model lifecycle with TMDL export/import, transactions, and version contro
 
 ```bash
 pipx install pbi-cli-tool
-pbi connect    # Auto-detects Power BI Desktop and installs skills
+pbi-cli skills install
+pbi connect
 ```
 
 ## Connecting to Targets

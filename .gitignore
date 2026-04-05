@@ -32,3 +32,13 @@ Thumbs.db
 
 # pbi-cli specific
 ~/.pbi-cli/
+
+# Extracted wheel/sdist build directories
+pbi_cli_tool-*/
+
+# Demo and scratch Power BI project files
+demo.Report/
+demo.SemanticModel/
+demo.pbip
+pbir_desktop_test/
+"pbib examples/"

@@ -1,0 +1,38 @@
+pbi-cli
+Copyright (c) 2026 pbi-cli contributors
+
+This product is licensed under the MIT License. See the LICENSE file for
+the full text of that license.
+
+This product bundles the following third-party software inside the
+`pbi-cli-tool` PyPI distribution. These components are NOT covered by the
+MIT License and retain their original license terms. See
+THIRD_PARTY_LICENSES.md for the full text of each license.
+
+--------------------------------------------------------------------------
+Microsoft Analysis Services Client Libraries
+Copyright (c) Microsoft Corporation. All rights reserved.
+--------------------------------------------------------------------------
+
+Licensed under the Microsoft Software License Terms - Microsoft Analysis
+Management Objects (AMO) and the Microsoft Software License Terms -
+Microsoft Analysis Services - ADOMD.NET. The full text of both licenses is
+reproduced in THIRD_PARTY_LICENSES.md at the root of this distribution.
+
+Bundled binaries (src/pbi_cli/dlls/):
+
+  - Microsoft.AnalysisServices.dll
+  - Microsoft.AnalysisServices.Core.dll
+  - Microsoft.AnalysisServices.Tabular.dll
+  - Microsoft.AnalysisServices.Tabular.Json.dll
+  - Microsoft.AnalysisServices.AdomdClient.dll
+
+These binaries are redistributed unmodified from the official Microsoft
+NuGet packages:
+
+  - Microsoft.AnalysisServices.NetCore.retail.amd64
+  - Microsoft.AnalysisServices.AdomdClient.retail.amd64
+
+By installing `pbi-cli-tool` you agree to the Microsoft license terms
+applicable to these bundled binaries in addition to the MIT License that
+applies to the rest of the package.
