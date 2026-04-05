@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import click
 
+from pbi_cli.commands.skills_cmd import _get_bundled_skills, _is_installed
 from pbi_cli.core.connection_store import (
     ConnectionInfo,
     add_connection,
@@ -19,7 +20,6 @@ from pbi_cli.core.output import (
     print_success,
     print_table,
 )
-from pbi_cli.commands.skills_cmd import _get_bundled_skills, _is_installed
 from pbi_cli.main import PbiContext, pass_context
 
 
