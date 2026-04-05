@@ -24,7 +24,7 @@ class PbiContext:
 pass_context = click.make_pass_decorator(PbiContext, ensure=True)
 
 
-@click.group()
+@click.group(invoke_without_command=True)
 @click.option(
     "--json",
     "json_output",
@@ -47,6 +47,12 @@ def cli(ctx: click.Context, json_output: bool, connection: str | None) -> None:
     """
     ctx.ensure_object(PbiContext)
     ctx.obj = PbiContext(json_output=json_output, connection=connection)
+
+    if ctx.invoked_subcommand is None and not json_output:
+        from pbi_cli.core.banner import print_banner
+
+        print_banner(__version__)
+        click.echo(ctx.get_help())
 
 
 def _register_commands() -> None:
