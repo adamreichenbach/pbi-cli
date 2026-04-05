@@ -281,8 +281,6 @@ def patch_session(monkeypatch: pytest.MonkeyPatch, mock_session: Any) -> Any:
         "pbi_cli.core.session.connect",
         lambda data_source, catalog="": mock_session,
     )
-    # Skip skill install in connect
-    monkeypatch.setattr("pbi_cli.commands.connection._ensure_ready", lambda: None)
     return mock_session
 
 

@@ -19,6 +19,7 @@ from pbi_cli.core.output import (
     print_success,
     print_table,
 )
+from pbi_cli.commands.skills_cmd import _get_bundled_skills, _is_installed
 from pbi_cli.main import PbiContext, pass_context
 
 
@@ -74,8 +75,6 @@ def connect(
             )
         else:
             print_success(f"Connected: {effective_name} ({data_source})")
-            from pbi_cli.commands.skills_cmd import _is_installed, _get_bundled_skills
-
             bundled = _get_bundled_skills()
             any_missing = any(not _is_installed(name) for name in bundled)
             if any_missing:

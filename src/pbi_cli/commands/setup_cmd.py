@@ -88,14 +88,6 @@ def _verify(json_output: bool) -> None:
             print_json({"status": "error", "errors": errors})
         raise SystemExit(1)
 
-    # Install skills
-    try:
-        from pbi_cli.commands.connection import _ensure_ready
-
-        _ensure_ready()
-    except Exception:
-        pass
-
     if json_output:
         print_json({"status": "ready"})
     else:
