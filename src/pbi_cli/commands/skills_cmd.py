@@ -74,18 +74,10 @@ def skills_install(skill_name: str | None, force: bool, yes: bool) -> None:
     )
 
     if not yes:
-        click.echo(
-            "This command will modify your global Claude Code configuration:\n"
-        )
-        click.echo(
-            f"  {'~/.claude/skills/power-bi-*/':<52} copy {len(to_install)} skill file(s)"
-        )
-        click.echo(
-            f"  {'~/.claude/CLAUDE.md':<52} append pbi-cli skill trigger block"
-        )
-        click.echo(
-            "\nThis affects ALL Claude Code sessions, not just Power BI work."
-        )
+        click.echo("This command will modify your global Claude Code configuration:\n")
+        click.echo(f"  {'~/.claude/skills/power-bi-*/':<52} copy {len(to_install)} skill file(s)")
+        click.echo(f"  {'~/.claude/CLAUDE.md':<52} append pbi-cli skill trigger block")
+        click.echo("\nThis affects ALL Claude Code sessions, not just Power BI work.")
         if not click.confirm("\nProceed?", default=False):
             click.echo("Aborted.")
             return

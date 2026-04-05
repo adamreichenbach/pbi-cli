@@ -190,6 +190,3 @@ def _auto_discover_data_source() -> str:
     data_source = f"localhost:{port}"
     print_info(f"Auto-detected Power BI Desktop on {data_source}")
     return data_source
-
-
-
