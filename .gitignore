@@ -46,6 +46,9 @@ pbir_desktop_test/
 # Marketing assets (local only, not for GitHub)
 marketing/
 
+# Local-only documents (private notes, call prep, etc.)
+docs/
+
 # Assets not referenced in README
 assets/*.png
 assets/Claude_AI_symbol.svg
