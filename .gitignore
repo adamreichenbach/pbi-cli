@@ -42,3 +42,24 @@ demo.SemanticModel/
 demo.pbip
 pbir_desktop_test/
 "pbib examples/"
+
+# Marketing assets (local only, not for GitHub)
+marketing/
+
+# Assets not referenced in README
+assets/*.png
+assets/Claude_AI_symbol.svg
+assets/New_Power_BI_Logo.svg
+assets/commands.svg
+assets/cta-start.svg
+assets/dax-skill.svg
+assets/deploy-secure.svg
+assets/docs-diagnostics.svg
+assets/dual-layer.svg
+assets/feature-grid.svg
+assets/header.svg
+assets/how-it-works.svg
+assets/modeling-skill.svg
+assets/release-vibe-bi.svg
+assets/token-cost.svg
+assets/workflow.svg
