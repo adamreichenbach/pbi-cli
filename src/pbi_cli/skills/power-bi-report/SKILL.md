@@ -94,6 +94,30 @@ Power BI Desktop's Developer Mode auto-detects TMDL changes but not PBIR
 changes. This command sends a keyboard shortcut to the Desktop window to
 trigger a reload. Requires the `reload` optional dependency: `pip install pbi-cli-tool[reload]`
 
+## Suppressing Auto-Sync (--no-sync)
+
+By default, every write command (`add-page`, `delete-page`, `set-background`,
+`set-theme`, etc.) automatically syncs Power BI Desktop after each operation.
+When building a report in multiple steps, this causes Desktop to reload after
+every single command.
+
+Use `--no-sync` on the `report` command group to suppress per-command syncs,
+then call `pbi report reload` once at the end:
+
+```bash
+# BAD: Desktop reloads after every command
+pbi report add-page --display-name "Overview" --name overview
+pbi report set-background overview --color "#F2F2F2"
+
+# GOOD: suppress sync during build, reload once at the end
+pbi report --no-sync add-page --display-name "Overview" --name overview
+pbi report --no-sync set-background overview --color "#F2F2F2"
+pbi report reload
+```
+
+`--no-sync` is available on: `report`, `visual`, `filters`, and `bookmarks`
+command groups.
+
 ## Convert
 
 ```bash

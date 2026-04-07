@@ -130,6 +130,24 @@ pbi filters add-topn --page overview \
 pbi filters list --page overview
 ```
 
+## Suppressing Auto-Sync (--no-sync)
+
+By default, every write command automatically syncs Power BI Desktop. When
+applying filters to multiple pages or visuals in sequence, Desktop reloads
+after each command.
+
+Use `--no-sync` on the `filters` command group to batch all filter changes,
+then call `pbi report reload` once at the end:
+
+```bash
+# Suppress sync while applying filters
+pbi filters --no-sync add-categorical --page overview --table "Calendar Lookup" --column "Year" --values "2024"
+pbi filters --no-sync add-categorical --page details --table "Product Lookup" --column "Category" --values "Bikes"
+
+# Single reload when all filters are done
+pbi report reload
+```
+
 ## JSON Output
 
 ```bash

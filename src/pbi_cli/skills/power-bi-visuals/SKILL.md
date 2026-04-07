@@ -212,6 +212,25 @@ accidental mass operations.
 | textbox            | textbox                      | (no data binding)                             |
 | page_navigator     | pageNavigator                | (no data binding)                             |
 
+## Suppressing Auto-Sync (--no-sync)
+
+By default, every write command automatically syncs Power BI Desktop. When
+adding or binding many visuals in sequence, Desktop reloads after each one.
+
+Use `--no-sync` on the `visual` command group to batch all changes, then call
+`pbi report reload` once at the end:
+
+```bash
+# Suppress sync while building visuals
+pbi visual --no-sync add --page overview --type card --name rev_card
+pbi visual --no-sync bind rev_card --page overview --field "Sales[Total Revenue]"
+pbi visual --no-sync add --page overview --type bar --name sales_bar
+pbi visual --no-sync bind sales_bar --page overview --category "Product[Category]" --value "Sales[Revenue]"
+
+# Single reload when all visuals are done
+pbi report reload
+```
+
 ## JSON Output
 
 All commands support `--json` for agent consumption:

@@ -142,6 +142,25 @@ Page commands inherit the report path from the parent `pbi report` group:
 2. Auto-detect: walks up from CWD looking for `*.Report/definition/`
 3. From `.pbip`: finds sibling `.Report` folder from `.pbip` file
 
+## Suppressing Auto-Sync (--no-sync)
+
+By default, every write command automatically syncs Power BI Desktop. When
+setting up multiple pages in sequence, Desktop reloads after each one.
+
+Use `--no-sync` on the `report` command group to batch all page changes, then
+call `pbi report reload` once at the end:
+
+```bash
+# Suppress sync while setting up pages
+pbi report --no-sync add-page --display-name "Overview" --name overview
+pbi report --no-sync add-page --display-name "Details" --name details
+pbi report --no-sync set-background overview --color "#F2F2F2"
+pbi report --no-sync set-background details --color "#F2F2F2"
+
+# Single reload when all page setup is done
+pbi report reload
+```
+
 ## JSON Output
 
 ```bash
