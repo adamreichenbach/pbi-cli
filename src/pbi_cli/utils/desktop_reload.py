@@ -56,11 +56,7 @@ def _try_pywin32() -> dict[str, Any] | None:
 
     hwnd = _find_pbi_window_pywin32()
     if hwnd == 0:
-        return {
-            "status": "error",
-            "method": "pywin32",
-            "message": "Power BI Desktop window not found. Is it running?",
-        }
+        return None  # window not found; let fallback chain continue
 
     try:
         # Bring window to foreground
@@ -93,17 +89,35 @@ def _try_pywin32() -> dict[str, Any] | None:
 
 def _find_pbi_window_pywin32() -> int:
     """Find Power BI Desktop's main window handle via pywin32."""
+    import win32api
+    import win32con
     import win32gui
+    import win32process
 
     result = 0
 
     def callback(hwnd: int, _: Any) -> bool:
         nonlocal result
-        if win32gui.IsWindowVisible(hwnd):
-            title = win32gui.GetWindowText(hwnd)
-            if "Power BI Desktop" in title:
+        if not win32gui.IsWindowVisible(hwnd):
+            return True
+        title = win32gui.GetWindowText(hwnd)
+        if "Power BI Desktop" in title:
+            result = hwnd
+            return False
+        # Newer PBI Desktop versions title the window with just the report
+        # name (e.g. "Sales_Demo") -- fall back to matching by process name.
+        try:
+            _, pid = win32process.GetWindowThreadProcessId(hwnd)
+            h_proc = win32api.OpenProcess(
+                win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid
+            )
+            exe_path = win32process.GetModuleFileNameEx(h_proc, 0)
+            win32api.CloseHandle(h_proc)
+            if exe_path.lower().endswith("pbidesktop.exe"):
                 result = hwnd
-                return False  # Stop enumeration
+                return False
+        except Exception:
+            pass
         return True
 
     try:
