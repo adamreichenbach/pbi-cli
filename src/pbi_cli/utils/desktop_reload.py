@@ -108,9 +108,7 @@ def _find_pbi_window_pywin32() -> int:
         # name (e.g. "Sales_Demo") -- fall back to matching by process name.
         try:
             _, pid = win32process.GetWindowThreadProcessId(hwnd)
-            h_proc = win32api.OpenProcess(
-                win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid
-            )
+            h_proc = win32api.OpenProcess(win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
             exe_path = win32process.GetModuleFileNameEx(h_proc, 0)
             win32api.CloseHandle(h_proc)
             if exe_path.lower().endswith("pbidesktop.exe"):
