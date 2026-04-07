@@ -1017,7 +1017,8 @@ def test_page_set_background_writes_color(sample_report: Path) -> None:
 def test_page_set_background_custom_transparency(sample_report: Path) -> None:
     result = page_set_background(sample_report, "page1", "#0E1117", transparency=50)
     assert result["transparency"] == 50
-    props = _read(sample_report / "pages" / "page1" / "page.json")["objects"]["background"][0]["properties"]
+    page_data = _read(sample_report / "pages" / "page1" / "page.json")
+    props = page_data["objects"]["background"][0]["properties"]
     assert props["transparency"]["expr"]["Literal"]["Value"] == "50D"
 
 

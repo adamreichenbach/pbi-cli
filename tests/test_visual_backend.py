@@ -233,8 +233,8 @@ def test_visual_add_no_empty_objects(report_with_page: Path) -> None:
     visual_add(report_with_page, "test_page", "bar_chart", name="clean_bar")
     vfile = report_with_page / "pages" / "test_page" / "visuals" / "clean_bar" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
-    assert "objects" not in data.get("visual", {}), \
-        "visual.json must not contain empty 'objects: {}' -- Desktop strips it and schema validators reject it"
+    # Desktop strips empty objects and schema validators reject it
+    assert "objects" not in data.get("visual", {})
 
 
 # ---------------------------------------------------------------------------
