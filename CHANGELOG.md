@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.6] - 2026-04-07
+
+### Fixed
+- `visual bind` no longer writes the legacy `Commands` block (SemanticQueryDataShapeCommand) to `visual.json`. PBIR 2.7.0 uses `additionalProperties: false` on the query object, so the `Commands` field is a hard schema violation. Only `queryState` projections are now written.
+- `pbi report validate` and the full PBIR validator no longer flag a missing `layoutOptimization` field as an error. The real Microsoft schema does not list it as required; the previous check was against a stale internal schema.
+- `pbi report set-background` now always writes `transparency: 0` alongside the color. Power BI Desktop defaults a missing `transparency` property to 100 (fully invisible), making the color silently unrendered. The new `--transparency` flag (0-100, default 0) lets callers override for semi-transparent backgrounds.
+
+### Added
+- `--no-sync` flag on `report`, `visual`, `filters`, and `bookmarks` command groups. Suppresses the per-command Desktop auto-sync for scripted multi-step builds. Use `pbi report reload` for a single explicit sync at the end of the script.
+
 ## [3.10.5] - 2026-04-06
 
 ### Fixed

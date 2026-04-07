@@ -15,11 +15,18 @@ from pbi_cli.main import PbiContext, pass_context
     default=None,
     help="Path to .Report folder (auto-detected from CWD if omitted).",
 )
+@click.option(
+    "--no-sync",
+    is_flag=True,
+    default=False,
+    help="Skip Desktop auto-sync after write commands. Use for scripted multi-step builds.",
+)
 @click.pass_context
-def visual(ctx: click.Context, path: str | None) -> None:
+def visual(ctx: click.Context, path: str | None, no_sync: bool) -> None:
     """Manage visuals in PBIR report pages."""
     ctx.ensure_object(dict)
     ctx.obj["report_path"] = path
+    ctx.obj["no_sync"] = no_sync
 
 
 def _get_report_path(click_ctx: click.Context) -> str | None:

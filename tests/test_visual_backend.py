@@ -194,7 +194,7 @@ def test_visual_add_matrix(report_with_page: Path) -> None:
 
 
 def test_visual_add_custom_position(report_with_page: Path) -> None:
-    """Explicitly provided x, y, width, height are stored verbatim."""
+    """Explicitly provided x, y, width, height are stored as integers, not floats."""
     result = visual_add(
         report_with_page,
         "test_page",
@@ -206,18 +206,35 @@ def test_visual_add_custom_position(report_with_page: Path) -> None:
         height=450.0,
     )
 
-    assert result["x"] == 100.0
-    assert result["y"] == 200.0
-    assert result["width"] == 600.0
-    assert result["height"] == 450.0
+    assert result["x"] == 100
+    assert result["y"] == 200
+    assert result["width"] == 600
+    assert result["height"] == 450
 
     vfile = report_with_page / "pages" / "test_page" / "visuals" / "positioned" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     pos = data["position"]
-    assert pos["x"] == 100.0
-    assert pos["y"] == 200.0
-    assert pos["width"] == 600.0
-    assert pos["height"] == 450.0
+    assert pos["x"] == 100
+    assert pos["y"] == 200
+    assert pos["width"] == 600
+    assert pos["height"] == 450
+    # Positions must be integers, not floats (Desktop normalises to int)
+    assert isinstance(pos["x"], int)
+    assert isinstance(pos["y"], int)
+
+
+# ---------------------------------------------------------------------------
+# 7b. visual_add - no empty objects key
+# ---------------------------------------------------------------------------
+
+
+def test_visual_add_no_empty_objects(report_with_page: Path) -> None:
+    """Scaffolded visuals must not contain an empty 'objects' key."""
+    visual_add(report_with_page, "test_page", "bar_chart", name="clean_bar")
+    vfile = report_with_page / "pages" / "test_page" / "visuals" / "clean_bar" / "visual.json"
+    data = json.loads(vfile.read_text(encoding="utf-8"))
+    assert "objects" not in data.get("visual", {}), \
+        "visual.json must not contain empty 'objects: {}' -- Desktop strips it and schema validators reject it"
 
 
 # ---------------------------------------------------------------------------
@@ -357,19 +374,19 @@ def test_visual_update_position(report_with_page: Path) -> None:
 
     assert result["status"] == "updated"
     assert result["name"] == "movable"
-    assert result["position"]["x"] == 50.0
-    assert result["position"]["y"] == 75.0
-    assert result["position"]["width"] == 350.0
-    assert result["position"]["height"] == 250.0
+    assert result["position"]["x"] == 50
+    assert result["position"]["y"] == 75
+    assert result["position"]["width"] == 350
+    assert result["position"]["height"] == 250
 
     # Confirm the file on disk reflects the change
     vfile = report_with_page / "pages" / "test_page" / "visuals" / "movable" / "visual.json"
     data = json.loads(vfile.read_text(encoding="utf-8"))
     pos = data["position"]
-    assert pos["x"] == 50.0
-    assert pos["y"] == 75.0
-    assert pos["width"] == 350.0
-    assert pos["height"] == 250.0
+    assert pos["x"] == 50
+    assert pos["y"] == 75
+    assert pos["width"] == 350
+    assert pos["height"] == 250
 
 
 # ---------------------------------------------------------------------------
@@ -469,8 +486,15 @@ def test_visual_bind_category_value(report_with_page: Path) -> None:
     assert cat_proj["queryRef"] == "Date.Year"
     assert cat_proj["nativeQueryRef"] == "Year"
 
-    # The semantic query Commands block should be present
-    assert "Commands" in data["visual"]["query"]
+    # PBIR 2.7.0: Commands is a legacy binary format field - must not be present
+    assert "Commands" not in data["visual"]["query"]
+
+    # Column (category) projections must have active: true so Desktop renders the axis
+    assert cat_proj.get("active") is True
+
+    # Measure (value) projections must NOT have active: true
+    val_proj = query_state["Y"]["projections"][0]
+    assert "active" not in val_proj
 
 
 # ---------------------------------------------------------------------------

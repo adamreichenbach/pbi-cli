@@ -17,11 +17,18 @@ from pbi_cli.main import PbiContext, pass_context
     default=None,
     help="Path to .Report folder (auto-detected from CWD if omitted).",
 )
+@click.option(
+    "--no-sync",
+    is_flag=True,
+    default=False,
+    help="Skip Desktop auto-sync after write commands. Use for scripted multi-step builds.",
+)
 @click.pass_context
-def report(ctx: click.Context, path: str | None) -> None:
+def report(ctx: click.Context, path: str | None, no_sync: bool) -> None:
     """Manage Power BI PBIR reports (pages, themes, validation)."""
     ctx.ensure_object(dict)
     ctx.obj["report_path"] = path
+    ctx.obj["no_sync"] = no_sync
 
 
 @report.command()
@@ -195,9 +202,19 @@ def diff_theme(ctx: PbiContext, click_ctx: click.Context, file: str) -> None:
 @report.command(name="set-background")
 @click.argument("page_name")
 @click.option("--color", "-c", required=True, help="Hex color e.g. '#F8F9FA'.")
+@click.option(
+    "--transparency",
+    "-t",
+    default=0,
+    show_default=True,
+    type=click.IntRange(0, 100),
+    help="Transparency 0 (opaque) to 100 (invisible). Defaults to 0 so the color is visible.",
+)
 @click.pass_context
 @pass_context
-def set_background(ctx: PbiContext, click_ctx: click.Context, page_name: str, color: str) -> None:
+def set_background(
+    ctx: PbiContext, click_ctx: click.Context, page_name: str, color: str, transparency: int
+) -> None:
     """Set the background color of a page."""
     from pbi_cli.core.pbir_path import resolve_report_path
     from pbi_cli.core.report_backend import page_set_background
@@ -210,6 +227,7 @@ def set_background(ctx: PbiContext, click_ctx: click.Context, page_name: str, co
         definition_path=definition_path,
         page_name=page_name,
         color=color,
+        transparency=transparency,
     )
 
 

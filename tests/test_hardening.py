@@ -159,14 +159,8 @@ class TestBindMerge:
         assert len(query["queryState"]["Category"]["projections"]) == 1
         assert len(query["queryState"]["Y"]["projections"]) == 1
 
-        # Commands block should have both From entities
-        cmds = query["Commands"][0]["SemanticQueryDataShapeCommand"]["Query"]
-        from_names = {e["Entity"] for e in cmds["From"]}
-        assert "Date" in from_names
-        assert "Sales" in from_names
-
-        # Commands Select should have both fields
-        assert len(cmds["Select"]) == 2
+        # PBIR 2.7.0: Commands is a legacy binary format field - must not be present
+        assert "Commands" not in query
 
 
 # ---------------------------------------------------------------------------

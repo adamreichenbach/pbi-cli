@@ -240,8 +240,6 @@ def report_validate(definition_path: Path) -> dict[str, Any]:
             data = _read_json(report_json)
             if "themeCollection" not in data:
                 errors.append("report.json missing required 'themeCollection'")
-            if "layoutOptimization" not in data:
-                errors.append("report.json missing required 'layoutOptimization'")
         except json.JSONDecodeError:
             pass  # Already caught above
 
@@ -420,14 +418,21 @@ def page_set_background(
     definition_path: Path,
     page_name: str,
     color: str,
+    transparency: int = 0,
 ) -> dict[str, Any]:
     """Set the background color of a page.
 
     Updates the ``objects.background`` property in ``page.json``.
     The color must be a hex string, e.g. ``'#F8F9FA'``.
+
+    ``transparency`` is 0 (fully opaque) to 100 (fully transparent). Desktop
+    defaults missing transparency to 100 (invisible), so this function always
+    writes it explicitly. Pass a value to override.
     """
     if not re.fullmatch(r"#[0-9A-Fa-f]{3,8}", color):
         raise PbiCliError(f"Invalid color '{color}' -- expected hex format like '#F8F9FA'.")
+    if not 0 <= transparency <= 100:
+        raise PbiCliError(f"Invalid transparency '{transparency}' -- must be 0-100.")
 
     page_dir = get_page_dir(definition_path, page_name)
     page_json_path = page_dir / "page.json"
@@ -437,12 +442,18 @@ def page_set_background(
     page_data = _read_json(page_json_path)
     background_entry = {
         "properties": {
-            "color": {"solid": {"color": {"expr": {"Literal": {"Value": f"'{color}'"}}}}}
+            "color": {"solid": {"color": {"expr": {"Literal": {"Value": f"'{color}'"}}}}},
+            "transparency": {"expr": {"Literal": {"Value": f"{transparency}D"}}},
         }
     }
     objects = {**page_data.get("objects", {}), "background": [background_entry]}
     _write_json(page_json_path, {**page_data, "objects": objects})
-    return {"status": "updated", "page": page_name, "background_color": color}
+    return {
+        "status": "updated",
+        "page": page_name,
+        "background_color": color,
+        "transparency": transparency,
+    }
 
 
 def page_set_visibility(

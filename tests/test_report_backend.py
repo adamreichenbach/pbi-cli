@@ -442,20 +442,6 @@ class TestReportValidate:
         assert result["valid"] is False
         assert any("themeCollection" in e for e in result["errors"])
 
-    def test_report_validate_missing_layout_optimization(self, sample_report: Path) -> None:
-        """report.json without 'layoutOptimization' is invalid."""
-        _write(
-            sample_report / "report.json",
-            {
-                "$schema": _SCHEMA_REPORT,
-                "themeCollection": {"baseTheme": {}},
-            },
-        )
-
-        result = report_validate(sample_report)
-        assert result["valid"] is False
-        assert any("layoutOptimization" in e for e in result["errors"])
-
     def test_report_validate_page_missing_page_json(self, sample_report: Path) -> None:
         """A page folder without page.json is flagged as invalid."""
         orphan_page = sample_report / "pages" / "orphan_page"
@@ -1020,9 +1006,24 @@ def test_page_set_background_writes_color(sample_report: Path) -> None:
     result = page_set_background(sample_report, "page1", "#F8F9FA")
     assert result["status"] == "updated"
     assert result["background_color"] == "#F8F9FA"
+    assert result["transparency"] == 0
     page_data = _read(sample_report / "pages" / "page1" / "page.json")
-    bg = page_data["objects"]["background"][0]["properties"]["color"]
-    assert bg["solid"]["color"]["expr"]["Literal"]["Value"] == "'#F8F9FA'"
+    props = page_data["objects"]["background"][0]["properties"]
+    assert props["color"]["solid"]["color"]["expr"]["Literal"]["Value"] == "'#F8F9FA'"
+    # transparency must always be written so Desktop renders the color as opaque
+    assert props["transparency"]["expr"]["Literal"]["Value"] == "0D"
+
+
+def test_page_set_background_custom_transparency(sample_report: Path) -> None:
+    result = page_set_background(sample_report, "page1", "#0E1117", transparency=50)
+    assert result["transparency"] == 50
+    props = _read(sample_report / "pages" / "page1" / "page.json")["objects"]["background"][0]["properties"]
+    assert props["transparency"]["expr"]["Literal"]["Value"] == "50D"
+
+
+def test_page_set_background_rejects_invalid_transparency(sample_report: Path) -> None:
+    with pytest.raises(PbiCliError, match="Invalid transparency"):
+        page_set_background(sample_report, "page1", "#000000", transparency=101)
 
 
 def test_page_set_background_preserves_other_objects(sample_report: Path) -> None:
@@ -1110,6 +1111,7 @@ def test_page_set_background_accepts_valid_color(sample_report: Path) -> None:
     result = page_set_background(sample_report, "page1", "#F8F9FA")
     assert result["status"] == "updated"
     assert result["background_color"] == "#F8F9FA"
+    assert result["transparency"] == 0
 
 
 # ---------------------------------------------------------------------------

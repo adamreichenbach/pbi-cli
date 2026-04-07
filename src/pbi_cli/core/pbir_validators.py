@@ -163,11 +163,6 @@ def _validate_report_json(definition_path: Path) -> list[ValidationResult]:
                 ValidationResult("warning", "report.json", "themeCollection missing 'baseTheme'")
             )
 
-    if "layoutOptimization" not in data:
-        findings.append(
-            ValidationResult("error", "report.json", "Missing required 'layoutOptimization'")
-        )
-
     return findings
 
 

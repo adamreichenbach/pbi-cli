@@ -115,18 +115,6 @@ class TestValidateReportFull:
         assert result["valid"] is False
         assert any("themeCollection" in e["message"] for e in result["errors"])
 
-    def test_missing_layout_optimization(self, valid_report: Path) -> None:
-        _write(
-            valid_report / "report.json",
-            {
-                "$schema": "...",
-                "themeCollection": {"baseTheme": {"name": "CY24SU06"}},
-            },
-        )
-        result = validate_report_full(valid_report)
-        assert result["valid"] is False
-        assert any("layoutOptimization" in e["message"] for e in result["errors"])
-
     def test_page_missing_required_fields(self, valid_report: Path) -> None:
         _write(
             valid_report / "pages" / "page1" / "page.json",

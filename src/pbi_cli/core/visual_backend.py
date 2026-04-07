@@ -206,10 +206,10 @@ def _build_visual_json(
     """Fill placeholders in a template string and return parsed JSON."""
     filled = (
         template_str.replace("__VISUAL_NAME__", name)
-        .replace("__X__", str(x))
-        .replace("__Y__", str(y))
-        .replace("__WIDTH__", str(width))
-        .replace("__HEIGHT__", str(height))
+        .replace("__X__", str(int(x)))
+        .replace("__Y__", str(int(y)))
+        .replace("__WIDTH__", str(int(width)))
+        .replace("__HEIGHT__", str(int(height)))
         .replace("__Z__", str(z))
         .replace("__TAB_ORDER__", str(tab_order))
     )
@@ -566,11 +566,6 @@ def visual_bind(
     query = visual_config.setdefault("query", {})
     query_state = query.setdefault("queryState", {})
 
-    # Collect existing Commands From/Select to merge (fix: don't overwrite)
-    from_entities: dict[str, dict[str, Any]] = {}
-    select_items: list[dict[str, Any]] = []
-    _collect_existing_commands(query, from_entities, select_items)
-
     role_map = ROLE_ALIASES.get(visual_type, {})
     applied: list[dict[str, str]] = []
 
@@ -587,14 +582,6 @@ def visual_bind(
 
         # Determine measure vs column: explicit flag, or role-based heuristic
         is_measure = force_measure or pbir_role in MEASURE_ROLES
-
-        # Track source alias for Commands block (use full name to avoid collisions)
-        source_alias = table.replace(" ", "_").lower() if table else "t"
-        from_entities[source_alias] = {
-            "Name": source_alias,
-            "Entity": table,
-            "Type": 0,
-        }
 
         # Build queryState projection (uses Entity directly, matching Desktop)
         query_ref = f"{table}.{column}"
@@ -613,37 +600,17 @@ def visual_bind(
                 }
             }
 
-        projection = {
+        projection: dict[str, Any] = {
             "field": field_expr,
             "queryRef": query_ref,
             "nativeQueryRef": column,
         }
+        if not is_measure:
+            projection["active"] = True
 
         # Add to query state
         role_state = query_state.setdefault(pbir_role, {"projections": []})
         role_state["projections"].append(projection)
-
-        # Build Commands select item (uses Source alias)
-        if is_measure:
-            cmd_field_expr: dict[str, Any] = {
-                "Measure": {
-                    "Expression": {"SourceRef": {"Source": source_alias}},
-                    "Property": column,
-                }
-            }
-        else:
-            cmd_field_expr = {
-                "Column": {
-                    "Expression": {"SourceRef": {"Source": source_alias}},
-                    "Property": column,
-                }
-            }
-        select_items.append(
-            {
-                **cmd_field_expr,
-                "Name": query_ref,
-            }
-        )
 
         applied.append(
             {
@@ -652,20 +619,6 @@ def visual_bind(
                 "query_ref": query_ref,
             }
         )
-
-    # Set the semantic query Commands block (merges with existing)
-    if from_entities and select_items:
-        query["Commands"] = [
-            {
-                "SemanticQueryDataShapeCommand": {
-                    "Query": {
-                        "Version": 2,
-                        "From": list(from_entities.values()),
-                        "Select": select_items,
-                    }
-                }
-            }
-        ]
 
     data["visual"] = visual_config
     _write_json(vfile, data)
@@ -712,21 +665,6 @@ def _summarize_field(field: dict[str, Any]) -> str:
                 return f"{source}.[{prop}]"
             return f"{source}.{prop}"
     return str(field)
-
-
-def _collect_existing_commands(
-    query: dict[str, Any],
-    from_entities: dict[str, dict[str, Any]],
-    select_items: list[dict[str, Any]],
-) -> None:
-    """Extract existing From entities and Select items from Commands block."""
-    for cmd in query.get("Commands", []):
-        sq = cmd.get("SemanticQueryDataShapeCommand", {}).get("Query", {})
-        for entity in sq.get("From", []):
-            name = entity.get("Name", "")
-            if name:
-                from_entities[name] = entity
-        select_items.extend(sq.get("Select", []))
 
 
 def _next_y_position(definition_path: Path, page_name: str) -> float:

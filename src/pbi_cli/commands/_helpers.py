@@ -62,7 +62,7 @@ def run_command(
 
 
 def _is_report_write(result: Any) -> bool:
-    """Check if the result indicates a report-layer write."""
+    """Check if the result indicates a report-layer write that should trigger sync."""
     if not isinstance(result, dict):
         return False
     status = result.get("status", "")
@@ -74,11 +74,13 @@ def _is_report_write(result: Any) -> bool:
     if click_ctx is None:
         return False
 
-    # Walk up to the group to find report_path
+    # Walk up to the group to find report_path; also check for --no-sync flag
     parent = click_ctx.parent
     while parent is not None:
         obj = parent.obj
         if isinstance(obj, dict) and "report_path" in obj:
+            if obj.get("no_sync", False):
+                return False
             return True
         parent = parent.parent
     return False
