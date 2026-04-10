@@ -166,7 +166,7 @@ def build_svg(series: list[tuple[date, int]]) -> str:
 
   <!-- Title -->
   <text x="{WIDTH // 2}" y="33" font-family="'Segoe UI', Arial, sans-serif" font-size="17" fill="{ACCENT_YELLOW}" text-anchor="middle" font-weight="bold">pbi-cli Downloads Over Time</text>
-  <text x="{WIDTH // 2}" y="52" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="{TEXT_SECONDARY}" text-anchor="middle">Cumulative installs from PyPI &bull; mirrors excluded &bull; source: pypistats.org</text>
+  <text x="{WIDTH // 2}" y="52" font-family="'Segoe UI', Arial, sans-serif" font-size="11" fill="{TEXT_SECONDARY}" text-anchor="middle">Cumulative installs from PyPI \u2022 mirrors excluded \u2022 source: pypistats.org</text>
 
   <!-- Gridlines & y-labels -->
   {"".join(gridlines)}
@@ -189,7 +189,7 @@ def build_svg(series: list[tuple[date, int]]) -> str:
   {"".join(x_labels)}
 
   <!-- Footer: date range -->
-  <text x="{PLOT_LEFT}" y="{HEIGHT - 12}" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="{TEXT_SECONDARY}">{first_date} &rarr; {last_date}</text>
+  <text x="{PLOT_LEFT}" y="{HEIGHT - 12}" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="{TEXT_SECONDARY}">{first_date} \u2192 {last_date}</text>
   <text x="{PLOT_RIGHT}" y="{HEIGHT - 12}" font-family="'Segoe UI', Arial, sans-serif" font-size="10" fill="{TEXT_SECONDARY}" text-anchor="end">{n} days of data</text>
 </svg>
 """
