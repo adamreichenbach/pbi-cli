@@ -41,6 +41,14 @@
   <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/stats.svg" alt="pbi-cli at a Glance" width="850"/>
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MinaSaad1/pbi-cli/master/assets/downloads-chart.svg" alt="pbi-cli cumulative downloads from PyPI" width="850"/>
+</p>
+
+<p align="center">
+  <sub>Cumulative downloads, refreshed daily from <a href="https://pypistats.org/packages/pbi-cli-tool">pypistats.org</a> via GitHub Actions.</sub>
+</p>
+
 ---
 
 ## Get Started
