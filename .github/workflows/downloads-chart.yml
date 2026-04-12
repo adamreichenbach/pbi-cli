@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.PAT }}
 
       - uses: actions/setup-python@v6
         with:
@@ -22,7 +24,7 @@ jobs:
       - name: Regenerate cumulative downloads chart
         run: python scripts/generate_downloads_chart.py
 
-      - name: Commit updated chart
+      - name: Commit and push updated chart
         run: |
           if git diff --quiet assets/downloads-chart.svg; then
             echo "No changes to downloads chart."
